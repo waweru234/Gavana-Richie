@@ -1,7 +1,9 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { HelpAssistant } from '@/components/help-assistant'
 import { ScrollReveal } from '@/components/scroll-reveal'
+import { WhatsAppFab } from '@/components/whatsapp-fab'
 
 export const metadata: Metadata = {
   title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu',
@@ -19,5 +21,15 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className="antialiased">{children}<ScrollReveal />{process.env.NODE_ENV === 'production' && <Analytics />}</body></html>
+  return (
+    <html lang="en">
+      <body className="antialiased">
+        {children}
+        <HelpAssistant />
+        <WhatsAppFab />
+        <ScrollReveal />
+        {process.env.NODE_ENV === 'production' && <Analytics />}
+      </body>
+    </html>
+  )
 }

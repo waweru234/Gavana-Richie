@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { AboutVideo } from '@/components/about-video'
+import { SocialIcons } from '@/components/social-icons'
 import { ActionBand, PageIntro, SiteShell, StatStrip } from '@/components/site-shell'
 export default function AboutPage() {
   return <SiteShell>
@@ -38,8 +39,54 @@ export default function AboutPage() {
       </div>
     </section>
 
-    <section className="section page-story" data-reveal="fade-up"><div className="container page-story-grid"><div className="page-story-art"><span className="page-story-circle" /><img src="/richie-cutout.png" alt="Richard Githatu, candidate for Governor of Nakuru County" /></div><div className="page-story-copy"><p className="eyebrow">THE PERSON BEHIND THE MOVEMENT</p><h2>Leadership that<br /><em>opens doors.</em></h2><p>Richard Githatu is running for Governor of Nakuru County in 2027 with a new-generation approach: listen first, act practically, and build opportunity into the systems that serve our people.</p></div></div></section>
+    <section className="section page-story" data-reveal="fade-up"><div className="container page-story-grid"><div className="page-story-art"><span className="page-story-circle" /><img src="/richie-cutout.png" alt="Richard Githatu, candidate for Governor of Nakuru County" /></div><div className="page-story-copy"><p className="eyebrow">THE PERSON BEHIND THE MOVEMENT</p><h2>Leadership that<br /><em>opens doors.</em></h2><p>Richard Githatu is running for Governor of Nakuru County in 2027 with a new-generation approach: listen first, act practically, and build opportunity into the systems that serve our people.</p><p>Turning <strong>30</strong> on 18 August 2026 — shaped by Nakuru, now stepping forward to lead it.</p></div></div></section>
+
     <section className="section text-section" data-reveal="fade-up"><div className="container two-col"><div><p className="eyebrow">THE VISION</p><h2>A county where<br /><em>everyone can rise.</em></h2></div><div className="prose"><p>Richard Githatu believes leadership is measured by the opportunities it creates. A student supported today can become a professional, an employer, a parent, and a stronger neighbour tomorrow.</p><p>This is a campaign for a Nakuru that invests in its people: quality education, meaningful youth opportunity, accountable public service, and communities that are proud of what they are building together.</p><Link href="/manifesto" className="button">Read the manifesto <span>↗</span></Link></div></div></section>
+
+    <section className="section about-moments-strip" data-reveal="fade-up">
+      <div className="container">
+        <div className="about-moments-pill">
+          <span className="about-moments-eyebrow">RECENT</span>
+          <span className="about-moments-dot" aria-hidden>·</span>
+          <span>Richie Githatu turned <b>30</b> on <b>18 AUG 2026</b></span>
+          <span className="about-moments-dot" aria-hidden>·</span>
+          <span>A Sunday message followed on <b>14 SEP 2026</b> — &ldquo;ADOPT-A-STUDENT. Give today.&rdquo;</span>
+          <Link href="/updates" className="text-link">See both on the Updates page <span>→</span></Link>
+        </div>
+      </div>
+    </section>
+
+    <section className="section about-contact" data-reveal="fade-up">
+      <div className="container">
+        <div className="section-heading">
+          <div><p className="eyebrow"><i /> CONTACT</p><h2>Reach the campaign<br /><em>directly.</em></h2></div>
+          <p>Call, email, or follow on socials — every channel is owned by the campaign team. Replies within 24 hours on weekdays.</p>
+        </div>
+        <div className="about-contact-grid">
+          <article className="about-contact-card">
+            <span className="about-contact-icon" aria-hidden>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79a14.21 14.21 0 0 0 6.38 6.38l2.13-2.13a1 1 0 0 1 1.05-.24 11.65 11.65 0 0 0 3.65.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.62a1 1 0 0 1 1 1 11.65 11.65 0 0 0 .58 3.65 1 1 0 0 1-.24 1.05l-2.34 2.09Z" /></svg>
+            </span>
+            <b>Phone</b>
+            <a href="tel:+254738972179">0738 972 179</a>
+            <small>WhatsApp-friendly · 24-hr reply</small>
+          </article>
+          <article className="about-contact-card">
+            <span className="about-contact-icon" aria-hidden>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13Zm2.46-.5 6.54 6.45 6.54-6.45H5.46Zm15.04 1-7.07 6.97a1 1 0 0 1-1.39 0L4.5 6V18.5a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5V6Z" /></svg>
+            </span>
+            <b>Email</b>
+            <a href="mailto:richardgithatu@gavanarichie.com">richardgithatu@gavanarichie.com</a>
+            <small>For media, partnership, or volunteer enquiries</small>
+          </article>
+          <article className="about-contact-card about-contact-socials-card">
+            <b>Socials</b>
+            <SocialIcons variant="navy" size="lg" />
+            <small>Tag your posts with <b>@gavanarichie</b></small>
+          </article>
+        </div>
+      </div>
+    </section>
     <ActionBand title="Ready to build with us?" text="Every voice, every skill, and every small act of support matters." />
   </SiteShell>
 }

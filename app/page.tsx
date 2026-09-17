@@ -17,13 +17,13 @@ export default function Home() {
           <div><p className="eyebrow"><i /> ADOPT-A-STUDENT PROGRAMME</p><h2>Students<br /><em>ready to learn.</em></h2></div>
           <p>Pick a student. Pay directly to their school. Any amount will be appreciated.</p>
         </div>
-        <div className="student-grid" data-reveal="stagger">{featuredStudents.map(student => <Link href={`/students/${student.slug}`} className="student-card student-card-link" key={student.slug}><div className="student-image"><img src={student.image} alt={student.name} /><span>{student.number} · {student.tag.toUpperCase()}</span></div><div className="student-body"><span className="label">{student.name.toUpperCase()}</span><h3>{student.school}</h3><p>{student.short}</p><div className="student-details"><span>PAY BILL <b>{student.paybill}</b></span><span>ACCOUNT <b>{student.account}</b></span></div><div className="need"><b>{student.need}</b><span>Goal · any amount will help</span></div><span className="card-link">View full profile <span>→</span></span></div></Link>)}</div>
+        <div className="student-grid" data-reveal="stagger">{featuredStudents.map(student => <Link href={`/students/${student.slug}`} className={'student-card student-card-link' + (student.sponsored ? ' student-card-sponsored' : '')} key={student.slug}><div className="student-image"><img src={student.image} alt={student.name} />{student.sponsored && <span className="student-sponsored-badge"><span className="student-sponsored-tick" aria-hidden>✓</span> SPONSORED</span>}<span>{student.number} · {student.tag.toUpperCase()}</span></div><div className="student-body"><span className="label">{student.name.toUpperCase()}</span><h3>{student.school}</h3><p>{student.short}</p><div className="student-details"><span>PAY BILL <b>{student.paybill}</b></span><span>ACCOUNT <b>{student.account}</b></span></div>{student.sponsored ? <div className="need need-sponsored"><b>✓ FULLY SPONSORED</b><span>{student.sponsoredBy ? `Covered by ${student.sponsoredBy} · ${student.sponsoredDate ?? ''}` : 'Already covered · pick the next student'}</span></div> : <div className="need"><b>{student.need}</b><span>Goal · any amount will help</span></div>}<span className="card-link">View full profile <span>→</span></span></div></Link>)}</div>
 
         <div className="students-more-prompt" data-reveal="soft-pop">
           <div>
-            <p className="eyebrow"><i /> {moreStudents.length} MORE WAITING</p>
-            <strong>There are {moreStudents.length} more students in this programme.</strong>
-            <span>Francis is studying automotive engineering at Rift Valley Institute of Business Studies. Paul is studying catering and management at the same school. Their stories — and their accounts — are waiting on the next page.</span>
+            <p className="eyebrow"><i /> {moreStudents.length === 1 ? '1 MORE WAITING' : `${moreStudents.length} MORE WAITING`}</p>
+            <strong>{moreStudents.length === 1 ? 'There is 1 more student' : `There are ${moreStudents.length} more students`} in this programme.</strong>
+            <span>Francis is studying automotive engineering at Rift Valley Institute of Business Studies — his full story and his account details are waiting on the next page.</span>
           </div>
           <Link href="/students" className="button button-primary">See all {studentProfiles.length} profiles <span>↗</span></Link>
         </div>
@@ -53,6 +53,45 @@ export default function Home() {
     <section className="section feature-section feature-section-redesign"><div className="container"><div className="section-heading" data-reveal="fade-up"><div><p className="eyebrow">THE AGENDA</p><h2>Ideas that move<br /><em>people forward.</em></h2></div><p>Two ideas leading the manifesto, anchored by eight pillars of transformation — built to put county spending and county markets to work for Nakuru&apos;s young people.</p></div><div className="feature-grid feature-grid-four" data-reveal="stagger"><Link href="/manifesto" className="feature-card feature-card-dark"><span>01 · YOUTH</span><h3>Vijana na Tender</h3><p>Every county tender above KSh 5M takes on 5 youth interns for 6 months — paid by the county.</p><i className="feature-stat">2,840</i><small>internships a term from 568 contracts</small><b>Explore the policy →</b></Link><Link href="/students" className="feature-card feature-card-blue"><span>02 · EDUCATION</span><h3>Adopt-a-Student</h3><p>Pay directly to a student&apos;s school. Keep a child in class and learning toward their dream.</p><i className="feature-stat">{studentProfiles.length}</i><small>students you can support today</small><b>Meet the students →</b></Link><Link href="/manifesto" className="feature-card feature-card-red"><span>03 · MARKETS</span><h3>Soko Bila Rent</h3><p>Regular ward market days across all 11 sub-counties — direct access to customers, no shop rent.</p><i className="feature-stat">0</i><small>shop rent to reach first customers</small><b>Read the policy →</b></Link><Link href="/manifesto" className="feature-card feature-card-navy"><span>04 · GOVERNANCE</span><h3>Procurement Scorecard</h3><p>Publish every award. Public interns tracking. Performance contracts. Accountability by design.</p><i className="feature-stat">0</i><small>tolerance for corruption and wastage</small><b>Read pillar 8 →</b></Link></div></div></section>
 
     <section className="section support-section" data-reveal="fade-right"><div className="container support-grid"><div><p className="eyebrow">SUPPORT THE MOVEMENT</p><h2>Stand with Richie.<br /><em>Keep the movement moving.</em></h2><p>Small support from many people creates a powerful path forward for Nakuru. Help us keep the campaign open, people-powered, and moving — alongside the {studentProfiles.length} students in your Adopt-a-Student programme.</p><Link href="/donate" className="button button-primary">Support the movement <span>↗</span></Link></div><div className="support-visual"><img src="/richie-standing-cutout.png" alt="Richie Githatu standing and smiling" /><div><strong>People-powered.</strong><br />Built together.</div></div></div></section>
+
+    <section className="section homepage-newsroom" data-reveal="fade-up">
+      <div className="container">
+        <div className="section-heading">
+          <div><p className="eyebrow"><i /> LATEST</p><h2>Newsroom.<br /><em>Three things, one at a time.</em></h2></div>
+          <p>The latest three things from the campaign — one after another, in order.</p>
+        </div>
+        <ol className="newsroom-list" data-reveal="stagger">
+          <li className="newsroom-item">
+            <span className="newsroom-number">01</span>
+            <div className="newsroom-body">
+              <span className="newsroom-tag">CAMPAIGN · 14 SEP 2026</span>
+              <h3>A Sunday word from Richie</h3>
+              <p>&ldquo;ADOPT-A-STUDENT. Give today. Every shilling from many people is the path that puts a child back in class.&rdquo;</p>
+            </div>
+            <Link href="/updates" className="text-link">Read it <span>→</span></Link>
+          </li>
+          <li className="newsroom-item">
+            <span className="newsroom-number">02</span>
+            <div className="newsroom-body">
+              <span className="newsroom-tag">EVENT · 18 AUG 2026</span>
+              <h3>Richie Githatu turned 30</h3>
+              <p>A community homecoming that sharpened what we&apos;re walking into: a county-shaped person stepping forward to lead the county.</p>
+            </div>
+            <Link href="/updates" className="text-link">Read it <span>→</span></Link>
+          </li>
+          <li className="newsroom-item">
+            <span className="newsroom-number">03</span>
+            <div className="newsroom-body">
+              <span className="newsroom-tag">STUDENT · AUG 2026</span>
+              <h3>Shawn&apos;s fees were covered</h3>
+              <p>The first Adopt-a-Student success story. Shawn Ndungu Mbugua is back in class — fully sponsored — and on track to finish his technical education.</p>
+            </div>
+            <Link href="/students/shawn-ndungu" className="text-link">Read it <span>→</span></Link>
+          </li>
+        </ol>
+        <p className="newsroom-foot">Want the full feed? <Link href="/updates" className="text-link">See all updates from the campaign <span>→</span></Link></p>
+      </div>
+    </section>
 
     <section className="join-cta" data-reveal="rise"><div className="container join-cta-inner"><div><p className="eyebrow">2027 GOVERNOR CAMPAIGN</p><h2>Bring your voice.<br /><em>Choose your future.</em></h2></div><Link href="/join" className="button">Join the movement <span>↗</span></Link></div></section>
   </SiteShell>

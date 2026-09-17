@@ -1,4 +1,4 @@
-export type StudentProfile = {
+﻿export type StudentProfile = {
   slug: string
   name: string
   school: string
@@ -11,6 +11,10 @@ export type StudentProfile = {
   number: string
   short: string
   bio: string[]
+  sponsored?: boolean
+  sponsoredBy?: string
+  sponsoredDate?: string
+  sponsoredQuote?: string
 }
 
 export const studentProfiles: StudentProfile[] = [
@@ -43,11 +47,15 @@ export const studentProfiles: StudentProfile[] = [
     poster: '/ChatGPT Image Sep 17, 2026, 06_28_23 AM.png',
     tag: 'Technical education',
     number: '02',
-    short: 'Give Shawn the support to finish his technical education and step confidently into work.',
+    sponsored: true,
+    sponsoredBy: 'A Richie Githatu 2027 supporter',
+    sponsoredDate: 'August 2026',
+    sponsoredQuote: 'Shawn&apos;s KSh 29,000 fees have been fully covered by an early supporter. He is now back in class and on track to complete his course.',
+    short: 'Shawn is back in class — fully sponsored. Meet the next student waiting.',
     bio: [
       'Shawn Ndungu Mbugua is a technical student at Nyeri National Polytechnic, building practical skills that lead directly to employment and self-reliance.',
-      'He is close to completing his course, but the remaining fees stand between him and his qualification. KSh 29,000 covers what he needs to finish strong.',
-      'By supporting Shawn, you are investing in a young person ready to work, earn, and give back to Nakuru County.',
+      'His full KSh 29,000 was covered by an early supporter of the Adopt-a-Student programme. He is back in class and on track to complete his qualification.',
+      'Shawn is what this campaign is about — when we put small support from many people together, a determined young person finishes school. Pick the next student waiting and do the same.',
     ],
   },
   {
@@ -72,17 +80,17 @@ export const studentProfiles: StudentProfile[] = [
     slug: 'paul-prince',
     name: 'Paul Prince',
     school: 'Rift Valley Institute of Business Studies',
-    need: 'KSh 17,900',
+    need: 'KSh 18,900',
     account: 'PAUL',
     paybill: '537816',
-    image: '/student_paul_prince_face.jpg',
-    poster: '/student_paul_prince_face.jpg',
+    image: '/Paul_Prince_student_portrait.jpg',
+    poster: '/Paul_Prince_student_portrait.jpg',
     tag: 'Catering and Management',
     number: '04',
     short: 'Help Paul complete his catering and management training and step into a hospitality career serving Nakuru.',
     bio: [
       'Paul Prince is a catering and management student at the Rift Valley Institute of Business Studies, building the practical service, kitchen and hospitality skills that put food on tables and people in work.',
-      'He is close to finishing his course, but the remaining KSh 17,900 in fees stands between him and his qualification. Pay directly to his school (Paybill 537816, account PAUL) and send us a note so we can credit your contribution.',
+      'He is close to finishing his course, but the remaining KSh 18,900 in fees stands between him and his qualification. Pay directly to his school (Paybill 537816, account PAUL) and send us a note so we can credit your contribution.',
       'By supporting Paul, you are investing in a young hospitality professional ready to cook, host, employ, and give back to Nakuru County.',
     ],
   },

@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { AgendaVideo } from '@/components/agenda-video'
+import { SocialIcons } from '@/components/social-icons'
 import { ActionBand, PageIntro, SiteShell, StatStrip } from '@/components/site-shell'
 
 type Pillar = {
@@ -98,31 +100,43 @@ const pillars: Pillar[] = [
   },
 ]
 
-const values = [
-  { title: 'Integrity & Accountability', text: 'Zero tolerance to corruption in the management of public resources.' },
-  { title: 'Inclusive Leadership', text: 'Equitable development where no community is left behind.' },
-  { title: 'Innovation & Excellence', text: 'Technology and continuous improvement in service delivery.' },
-  { title: 'Sustainability', text: 'Responsible stewardship of our environment and resources.' },
-]
-
 export default function ManifestoPage() {
   return (
     <SiteShell>
-      <PageIntro
-        eyebrow="THE NAKURU TRANSFORMATION AGENDA"
-        title="Solutions built for"
-        accent="Nakuru&apos;s youth, first."
-        text="A practical, ready-to-implement roadmap — anchored by two ideas that put county spending and county markets directly to work for young people, and built out across eight pillars of transformation."
-      />
+      {/* VIDEO HERO — first thing on the page */}
+      <section className="section agenda-video-section">
+        <span className="about-video-glow" aria-hidden />
+        <div className="container about-video-container" data-reveal="fade-up">
+          <div className="about-video-meta">
+            <span className="about-video-meta-tag">The Agenda</span>
+            <span className="about-video-meta-tag">Nakuru County</span>
+            <span className="about-video-meta-tag">2027 · New Generation</span>
+          </div>
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow"><i /> THE NAKURU TRANSFORMATION AGENDA</p>
+              <h2>Watch the agenda.<br /><em>Then read it.</em></h2>
+            </div>
+            <p>The full Nakuru Kwetu vision, in Richie&apos;s own words — and in the structured plan that brings it to life across the county. Press play on the video below, then scroll through the agenda.</p>
+          </div>
+          <div className="about-video-frame-wrapper">
+            <span className="about-video-frame-corner tl" aria-hidden />
+            <span className="about-video-frame-corner tr" aria-hidden />
+            <span className="about-video-frame-corner bl" aria-hidden />
+            <span className="about-video-frame-corner br" aria-hidden />
+            <AgendaVideo src="/agenda-video.mov" poster="/richie-cutout.png" />
+          </div>
+          <p className="about-video-caption">The agenda in Richie&apos;s voice — auto-played once, with sound if your browser allows. Use the controls to pause, scrub, or make it fullscreen.</p>
+          <div className="about-video-actions">
+            <Link href="#target-2027-2032" className="button">Skip to the targets <span>↓</span></Link>
+            <Link href="/updates" className="text-link" style={{ color: 'rgba(255,255,255,.7)' }}>Latest from the trail <span>→</span></Link>
+          </div>
+          <p className="about-video-attribution">Recorded by Richie Githatu · Nakuru Kwetu 2027</p>
+        </div>
+      </section>
 
-      <StatStrip
-        items={[
-          { value: '568', label: 'county contracts per term' },
-          { value: '11/11', label: 'sub-counties served' },
-          { value: '1,000,000', label: 'jobs targeted in term one' },
-          { value: '20M', label: 'trees in our first term' },
-        ]}
-      />
+      <PageIntro eyebrow="THE TRANSFORMATION AGENDA" title="Vision, mission," accent="and the plan." text="A practical, ready-to-implement roadmap — anchored by two ideas that put county spending and county markets to work for young people, and built out across eight pillars of transformation." />
+      <StatStrip items={[{ value: '568', label: 'county contracts per term' }, { value: '11/11', label: 'sub-counties served' }, { value: '1,000,000', label: 'jobs targeted in term one' }, { value: '20M', label: 'trees in our first term' }]} />
 
       {/* Two leading ideas */}
       <section className="section leading-ideas">
@@ -177,7 +191,7 @@ export default function ManifestoPage() {
         </div>
       </section>
 
-      {/* Foreword */}
+      {/* Foreword + Richard cutout */}
       <section className="section manifesto-foreword">
         <div className="container manifesto-foreword-grid">
           <div>
@@ -188,6 +202,10 @@ export default function ManifestoPage() {
             <p>Nakuru stands at a defining moment in its history. As Kenya&apos;s newest city and one of the country&apos;s most important economic, agricultural, tourism, and transport hubs, our county possesses immense potential — yet many of our people still face unemployment, inadequate infrastructure, limited healthcare, water shortages, housing deficits, and growing inequality.</p>
             <p>This manifesto is more than a political document; it is a social contract between my leadership and the people of Nakuru County — a practical, achievable roadmap for transforming our county into a model of prosperity, integrity, sustainability, and opportunity.</p>
             <p className="manifesto-foreword-sign"><b>Richard Muriuki</b><small>Candidate for Governor, Nakuru County</small></p>
+          </div>
+          <div className="manifesto-foreword-art">
+            <img src="/richie-cutout.png" alt="Richie Githatu, Candidate for Governor of Nakuru County" />
+            <span>Richie Githatu<br /><b>Nakuru Kwetu.</b></span>
           </div>
         </div>
       </section>
@@ -216,7 +234,12 @@ export default function ManifestoPage() {
           <div className="vm-values">
             <p className="eyebrow"><i /> OUR CORE VALUES</p>
             <div className="values-grid">
-              {values.map(v => (
+              {[
+                { title: 'Integrity & Accountability', text: 'Zero tolerance to corruption in the management of public resources.' },
+                { title: 'Inclusive Leadership', text: 'Equitable development where no community is left behind.' },
+                { title: 'Innovation & Excellence', text: 'Technology and continuous improvement in service delivery.' },
+                { title: 'Sustainability', text: 'Responsible stewardship of our environment and resources.' },
+              ].map(v => (
                 <article className="value-card" key={v.title}>
                   <h3>{v.title}</h3>
                   <p>{v.text}</p>
@@ -263,8 +286,25 @@ export default function ManifestoPage() {
         </div>
       </section>
 
+      {/* Richard on the agenda — seated moment */}
+      <section className="section agenda-richie-image">
+        <div className="container agenda-richie-grid">
+          <div className="agenda-richie-art" data-reveal="fade-left">
+            <div className="agenda-richie-circle" />
+            <img src="/richie-seated-cutout.png" alt="Richie Githatu seated and listening" />
+            <span className="agenda-richie-tag">TOGETHER WE RISE</span>
+          </div>
+          <div className="agenda-richie-copy" data-reveal="fade-right">
+            <p className="eyebrow"><i /> THE PERSON BEHIND THE AGENDA</p>
+            <h2>This plan belongs<br /><em>to you, the people.</em></h2>
+            <p>Every pillar on this page came from a conversation — with market women, students, boda-boda riders, ward elders, teachers, parents, and small-business owners across Nakuru County. The agenda is what the county asked for; Richie Githatu&apos;s job is to make sure it actually arrives on the ground.</p>
+            <Link href="/about" className="button">Meet Richie Githatu <span>↗</span></Link>
+          </div>
+        </div>
+      </section>
+
       {/* First-term targets */}
-      <section className="section manifesto-targets">
+      <section id="target-2027-2032" className="section manifesto-targets">
         <div className="container">
           <div className="section-heading">
             <div>
@@ -293,7 +333,11 @@ export default function ManifestoPage() {
           <h2>The time for a new Nakuru<br /><em>is now.</em></h2>
           <p>The Nakuru Transformation Agenda is a contract between leadership and the people. Together, we will build a county that creates jobs, supports farmers, empowers youth, protects the environment, attracts investment, and delivers quality services to every resident.</p>
           <p className="manifesto-tag">A County of Opportunity. A County of Integrity. <em>A County That Works for Everyone.</em></p>
-          <p className="manifesto-sign"><b>Richard Muriuki</b><small>Candidate for Governor, Nakuru County · “Changing Kenya County by County”</small></p>
+          <p className="manifesto-sign"><b>Richard Muriuki</b><small>Candidate for Governor, Nakuru County · &ldquo;Changing Kenya County by County&rdquo;</small></p>
+          <div className="manifesto-conclusion-socials">
+            <span>Follow the campaign across</span>
+            <SocialIcons variant="light" size="md" />
+          </div>
         </div>
       </section>
 

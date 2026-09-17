@@ -49,21 +49,30 @@ export default function StudentsPage() {
           </div>
           <div className="student-grid" data-reveal="stagger">
             {studentProfiles.map(student => (
-              <Link href={`/students/${student.slug}`} className="student-card student-card-link" key={student.slug}>
-                <div className="student-image"><img src={student.image} alt={`${student.name} student profile`} /><span>{student.number} · {student.tag.toUpperCase()}</span></div>
+              <Link href={`/students/${student.slug}`} className={'student-card student-card-link' + (student.sponsored ? ' student-card-sponsored' : '')} key={student.slug}>
+                <div className="student-image">
+                  <img src={student.image} alt={`${student.name} student profile`} />
+                  {student.sponsored && <span className="student-sponsored-badge"><span className="student-sponsored-tick" aria-hidden>✓</span> SPONSORED</span>}
+                  <span>{student.number} · {student.tag.toUpperCase()}</span>
+                </div>
                 <div className="student-body">
                   <span className="label">{student.name.toUpperCase()}</span>
                   <h3>{student.school}</h3>
                   <p>{student.short}</p>
                   <div className="student-details"><span>PAY BILL <b>{student.paybill}</b></span><span>ACCOUNT <b>{student.account}</b></span></div>
-                  <div className="need"><b>Any amount</b><span>toward {student.need}</span></div>
-                  <span className="card-link">View full profile <span>→</span></span>
+                  {student.sponsored ? (
+                    <div className="need need-sponsored"><b>✓ FULLY SPONSORED</b><span>{student.sponsoredBy ? `Covered by ${student.sponsoredBy} · ${student.sponsoredDate ?? ''}` : 'Already covered · pick the next student'}</span></div>
+                  ) : (
+                    <div className="need"><b>{student.need}</b><span>Goal · any amount will help</span></div>
+                  )}
+                  <span className="card-link">View {student.sponsored ? 'success story' : 'full profile'} <span>→</span></span>
                 </div>
               </Link>
             ))}
           </div>
         </div>
       </section>
+
 
       {/* Campaign Background */}
       <section className="section programme-section">
