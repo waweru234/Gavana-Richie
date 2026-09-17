@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { ScrollReveal } from '@/components/scroll-reveal'
 
 export const metadata: Metadata = {
   title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu',
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
   openGraph: { title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu', description: 'A new-generation campaign for Governor of Nakuru County.', url: 'https://gavanarichie.com', siteName: 'Richie Githatu for Governor', images: [{ url: '/richie-portrait.jpeg', width: 853, height: 1280, alt: 'Richie Githatu' }] },
   generator: 'v0.app',
-  icons: { icon: '/logo.png', apple: '/logo.png' },
+  icons: { icon: '/richie-cutout.png', apple: '/richie-cutout.png' },
 }
 
 export const viewport: Viewport = {
@@ -18,5 +19,5 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className="antialiased">{children}{process.env.NODE_ENV === 'production' && <Analytics />}</body></html>
+  return <html lang="en"><body className="antialiased">{children}<ScrollReveal />{process.env.NODE_ENV === 'production' && <Analytics />}</body></html>
 }
