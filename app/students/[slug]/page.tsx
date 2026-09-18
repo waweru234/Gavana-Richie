@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
+import { JawabuKenyaBanner } from '@/components/jawabu-kenya-banner'
 import { studentProfiles } from '@/lib/student-profiles'
 
 export function generateStaticParams() {
@@ -90,6 +91,8 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
             </div>
           </>
         )}
+
+        <div className="student-jawabu-strip"><JawabuKenyaBanner compact /></div>
       </div>
     </div></section>
     <ActionBand

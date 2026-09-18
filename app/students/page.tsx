@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { ActionBand, PageIntro, SiteShell, StatStrip } from '@/components/site-shell'
+import { JawabuKenyaBanner } from '@/components/jawabu-kenya-banner'
+import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
 import { studentProfiles } from '@/lib/student-profiles'
 
 const coreValues = [
@@ -30,6 +32,9 @@ const hashtags = ['#KeepAChildInSchool', '#EveryChildDeservesAChance', '#Educati
 export default function StudentsPage() {
   return (
     <SiteShell>
+      <JawabuKenyaHero />
+      <span className="jawaban-stripe" aria-hidden />
+
       <PageIntro
         eyebrow="ADOPT-A-STUDENT"
         title="Every child"
@@ -38,7 +43,7 @@ export default function StudentsPage() {
       />
 
 {/* STUDENTS FIRST */}
-      <section className="section students">
+      <section id="meet-students" className="section students">
         <div className="container">
           <div className="section-heading" data-reveal="fade-up">
             <div>
@@ -70,12 +75,14 @@ export default function StudentsPage() {
               </Link>
             ))}
           </div>
+
+          <JawabuKenyaBanner />
         </div>
       </section>
 
 
       {/* Campaign Background */}
-      <section className="section programme-section">
+      <section id="why-adopt" className="section programme-section">
         <div className="container programme-narrow">
           <p className="eyebrow"><i /> CAMPAIGN BACKGROUND</p>
           <h2>Why<br /><em>ADOPT-A-STUDENT.</em></h2>
@@ -208,7 +215,7 @@ export default function StudentsPage() {
         </div>
       </section>
 
-      <ActionBand title="Every child deserves a chance to learn." text="ADOPT-A-STUDENT. Give today — and pay directly to keep a child in school." />
+      <ActionBand title="Every child deserves a chance to learn." text="ADOPT-A-STUDENT. Give today — and pay directly to keep a child in school." variant="jabu" />
     </SiteShell>
   )
 }

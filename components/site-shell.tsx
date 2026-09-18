@@ -73,8 +73,11 @@ export function PageIntro({ eyebrow, title, accent, text }: { eyebrow: string; t
   return <section className="page-intro"><div className="container page-intro-grid"><div><p className="eyebrow"><i /> {eyebrow}</p><h1>{title}<br /><em>{accent}</em></h1></div><p>{text}</p></div></section>
 }
 
-export function ActionBand({ title = 'Your KSh 10 counts.', text = 'Small support from many people creates a powerful path forward for Nakuru.' }: { title?: string; text?: string }) {
-  return <section className="action-band"><div className="container action-band-inner"><div><p className="eyebrow">TAFakARI HAYO</p><h2>{title}</h2><p>{text}</p></div><Link href="/donate" className="button button-primary">Support the movement <span>↗</span></Link></div></section>
+export function ActionBand({ title = 'Your KSh 10 counts.', text = 'Small support from many people creates a powerful path forward for Nakuru.', variant }: { title?: string; text?: string; variant?: 'jermany' | 'red' | 'jabu' }) {
+  const cls = variant === 'jabu' ? 'action-band action-band-jawabu' : variant === 'jermany' ? 'action-band action-band-jermany' : 'action-band'
+  const eyebrow = variant === 'jabu' ? 'JAWABU KENYA · ADOPT-A-STUDENT' : variant === 'jermany' ? 'JAWABU KENYA · JA-MANYASO' : 'TAFakARI HAYO'
+  const cta = variant === 'jabu' ? { href: '/students', label: 'Choose a student' } : variant === 'jermany' ? { href: '/students', label: 'Stand with a student' } : { href: '/donate', label: 'Support the movement' }
+  return <section className={cls}><div className="container action-band-inner"><div><p className="eyebrow">{eyebrow}</p><h2>{title}</h2><p>{text}</p></div><Link href={cta.href} className="button button-primary">{cta.label} <span>↗</span></Link></div></section>
 }
 
 export function StatStrip({ items }: { items: { value: string; label: string }[] }) {

@@ -124,7 +124,7 @@ export default function ManifestoPage() {
             <span className="about-video-frame-corner tr" aria-hidden />
             <span className="about-video-frame-corner bl" aria-hidden />
             <span className="about-video-frame-corner br" aria-hidden />
-            <AgendaVideo src="/agenda-video.mov" poster="/richie-cutout.png" />
+            <AgendaVideo src="/agenda-video.mov" poster="/richie-main.png" />
           </div>
           <p className="about-video-caption">The agenda in Richie&apos;s voice — auto-played once, with sound if your browser allows. Use the controls to pause, scrub, or make it fullscreen.</p>
           <div className="about-video-actions">
@@ -204,7 +204,7 @@ export default function ManifestoPage() {
             <p className="manifesto-foreword-sign"><b>Richard Muriuki</b><small>Candidate for Governor, Nakuru County</small></p>
           </div>
           <div className="manifesto-foreword-art">
-            <img src="/richie-cutout.png" alt="Richie Githatu, Candidate for Governor of Nakuru County" />
+            <img src="/richie-main.png" alt="Richie Githatu, Candidate for Governor of Nakuru County" />
             <span>Richie Githatu<br /><b>Nakuru Kwetu.</b></span>
           </div>
         </div>
@@ -291,7 +291,7 @@ export default function ManifestoPage() {
         <div className="container agenda-richie-grid">
           <div className="agenda-richie-art" data-reveal="fade-left">
             <div className="agenda-richie-circle" />
-            <img src="/richie-seated-cutout.png" alt="Richie Githatu seated and listening" />
+            <img src="/richie-standing-cutout.png" alt="Richie Githatu standing on the agenda" />
             <span className="agenda-richie-tag">TOGETHER WE RISE</span>
           </div>
           <div className="agenda-richie-copy" data-reveal="fade-right">
