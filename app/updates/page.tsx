@@ -7,18 +7,45 @@ export default function UpdatesPage() {
       eyebrow="FROM THE CAMPAIGN"
       title="What is happening"
       accent="in Nakuru."
-      text="Two recent moments — a Sunday word and a birthday — from the trail of Richie Githatu&apos;s 2027 campaign."
+      text="Three recent moments — a community engagement with Wanavijiji, a Sunday word, and a birthday — from the trail of Richie Githatu&apos;s 2027 campaign."
     />
 
     <section className="section updates-magazine">
       <div className="container">
         <div className="section-heading" data-reveal="fade-up">
-          <div><p className="eyebrow"><i /> THIS WEEK</p><h2>Two recent moments<br /><em>from the trail.</em></h2></div>
-          <p>One word, one moment. Updated as the campaign moves through Nakuru County.</p>
+          <div><p className="eyebrow"><i /> THIS WEEK</p><h2>Three recent moments<br /><em>from the trail.</em></h2></div>
+          <p>One engagement, one word, one moment. Updated as the campaign moves through Nakuru County.</p>
         </div>
 
         <div className="updates-magazine-list">
-          {/* Sunday message — the most recent of the two */}
+          {/* Wanavijiji engagement — most recent */}
+          <article className="updates-card updates-card-wanavijiji" data-reveal="fade-up">
+            <div className="updates-card-meta">
+              <span className="updates-card-tag">ENGAGEMENT · 17 SEP 2026 · WANAVIJIJI</span>
+              <span className="updates-card-date"><b>17</b><span>SEP 2026</span></span>
+            </div>
+            <div className="updates-card-image updates-card-image-wanavijiji">
+              <img src="/wanavijiji-1.jpg" alt="Richie Githatu with Wanavijiji Housing Cooperative Society members during a solidarity engagement in Nakuru" loading="lazy" />
+            </div>
+            <div className="updates-card-body">
+              <h3>With <em>Wanavijiji</em> Housing Cooperative, bringing warmth where it is needed most.</h3>
+              <p className="updates-card-lede">Nakuru Wanavijiji Housing Cooperative Society hosted Richie at a community engagement where 30 needy members received blankets — and the host took time to walk through one member group and the housing construction site.</p>
+              <blockquote className="updates-card-quote">
+                <span className="updates-card-quote-mark" aria-hidden>&ldquo;</span>
+                Today, Nakuru Wanavijiji Housing Cooperative Society was honoured to host Richard Githatu of Nakuru Ni Yetu, a gubernatorial aspirant, in a meaningful engagement with our community.
+                <br /><br />
+                As a gesture of solidarity and compassion, Mr. Githatu donated blankets to 30 needy Wanavijiji members, bringing warmth, hope and encouragement to families in need.
+                <br /><br />
+                He also had an opportunity to visit one of our members&apos; groups, engage with the community, and later tour our housing construction site. He was impressed by what Wanavijiji members are achieving through unity, commitment, savings and collective action.
+                <span className="updates-card-quote-mark" aria-hidden>&rdquo;</span>
+              </blockquote>
+              <p>&ldquo;Our journey is a powerful reminder that when ordinary people come together with a shared vision, they can create extraordinary change. From saving together to building homes together, Wanavijiji continues to demonstrate that community power can transform lives and restore dignity.&rdquo;</p>
+              <p>The cooperative is now asking for the next layer of support: building materials and mattresses. That call sits under Jawabu Kenya — see the <Link href="/students" className="text-link">ADOPT-A-STUDENT &middot; Jawabu Kenya</Link> page for how to contribute.</p>
+              <Link href="/students#wanavijiji" className="text-link">Stand with the Wanavijiji builders <span>→</span></Link>
+            </div>
+          </article>
+
+          {/* Sunday message — the second most recent */}
           <article className="updates-card" data-reveal="fade-up">
             <div className="updates-card-meta">
               <span className="updates-card-tag">SUNDAY · A MESSAGE</span>
