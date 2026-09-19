@@ -41,7 +41,7 @@ export default function UpdatesPage() {
               </blockquote>
               <p>&ldquo;Our journey is a powerful reminder that when ordinary people come together with a shared vision, they can create extraordinary change. From saving together to building homes together, Wanavijiji continues to demonstrate that community power can transform lives and restore dignity.&rdquo;</p>
               <p>The cooperative is now asking for the next layer of support: building materials and mattresses. That call sits under Jawabu Kenya — see the <Link href="/students" className="text-link">ADOPT-A-STUDENT &middot; Jawabu Kenya</Link> page for how to contribute.</p>
-              <Link href="/students#wanavijiji" className="text-link">Stand with the Wanavijiji builders <span>→</span></Link>
+              <Link href="/updates" className="text-link">See more updates from the campaign <span>→</span></Link>
             </div>
           </article>
 

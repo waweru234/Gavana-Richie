@@ -35,24 +35,6 @@ export default function StudentsPage() {
       <JawabuKenyaHero />
       <span className="jawaban-stripe" aria-hidden />
 
-      <section className="section jawaban-partner-note" data-reveal="fade-up">
-        <div className="container jawaban-partner-note-inner">
-          <div className="jawaban-partner-note-art">
-            <img src="/wanavijiji-2.jpg" alt="Wanavijiji Housing Cooperative Society community solidarity engagement" loading="lazy" />
-            <span className="jawaban-partner-note-tag">JAWABU KENYA · SIBLING PROGRAMME</span>
-          </div>
-          <div className="jawaban-partner-note-copy">
-            <p className="eyebrow"><i /> ANOTHER PROGRAMME UNDER JAWABU KENYA</p>
-            <h2>Building homes with <em>Nakuru Wanavijiji Housing Cooperative Society.</em></h2>
-            <p>The Jawabu Kenya partnership has now grown into a second programme — a solidarity engagement with Wanavijiji, where 30 members received blankets and the campaign walked through the housing construction site. We are asking for the next layer: building materials, mattresses, and more blankets to keep the build moving.</p>
-            <div className="jawaban-partner-note-actions">
-              <Link href="#wanavijiji" className="button button-primary">See what we need <span>↓</span></Link>
-              <Link href="/updates" className="text-link">Read the latest update <span>→</span></Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <PageIntro
         eyebrow="ADOPT-A-STUDENT"
         title="Every child"
@@ -95,54 +77,6 @@ export default function StudentsPage() {
           </div>
 
           <JawabuKenyaBanner />
-        </div>
-      </section>
-
-      {/* Wanavijiji — a Jawabu Kenya partner programme */}
-      <section id="wanavijiji" className="section programme-section wanavijiji-section">
-        <div className="container">
-          <div className="section-heading" data-reveal="fade-up">
-            <div>
-              <p className="eyebrow"><i /> ANOTHER JAWABU KENYA PROGRAMME</p>
-              <h2>Building homes with<br /><em>Wanavijiji.</em></h2>
-            </div>
-            <p>ADOPT-A-STUDENT keeps children in school. Wanavijiji keeps families in homes. Jawabu Kenya runs both — and right now the housing cooperative is asking for the next layer of solidarity.</p>
-          </div>
-
-          <div className="wanavijiji-gallery" data-reveal="stagger">
-            <figure className="wanavijiji-photo">
-              <img src="/wanavijiji-1.jpg" alt="Wanavijiji members receiving donated blankets during the solidarity engagement" loading="lazy" />
-              <figcaption>30 members received blankets.</figcaption>
-            </figure>
-            <figure className="wanavijiji-photo">
-              <img src="/wanavijiji-2.jpg" alt="Wanavijiji members group engagement with the campaign" loading="lazy" />
-              <figcaption>A member group in conversation.</figcaption>
-            </figure>
-            <figure className="wanavijiji-photo">
-              <img src="/wanavijiji-3.jpg" alt="Wanavijiji housing construction site tour" loading="lazy" />
-              <figcaption>The housing construction site.</figcaption>
-            </figure>
-          </div>
-
-          <div className="wanavijiji-quote" data-reveal="fade-up">
-            <span className="wanavijiji-quote-mark" aria-hidden>&ldquo;</span>
-            <p>When ordinary people come together with a shared vision, they can create extraordinary change. From saving together to building homes together, Wanavijiji continues to demonstrate that community power can transform lives and restore dignity.</p>
-            <span className="wanavijiji-quote-mark" aria-hidden>&rdquo;</span>
-            <cite>Wanavijiji Housing Cooperative Society · Nakuru</cite>
-          </div>
-
-          <div className="wanavijiji-need" data-reveal="fade-up">
-            <p className="eyebrow"><i /> WHAT WE ARE ASKING FOR · FROM THE JAWABU KENYA PARTNER LIST</p>
-            <h3>Building materials, mattresses, &amp; <em>more blankets.</em></h3>
-            <ul className="wanavijiji-need-list">
-              <li><b>Building materials</b> &mdash; cement, ballast, sand, timber, iron sheets, roofing nails.</li>
-              <li><b>Mattresses</b> &mdash; single and family sizes for newly-built units.</li>
-              <li><b>Blankets</b> &mdash; 30 already delivered; more families queue every month.</li>
-              <li><b>Savings match</b> &mdash; top up a member&apos;s monthly saving to unlock the next home.</li>
-              <li><b>Skilled fundis</b> &mdash; volunteer masons, electricians, plumbers willing to spend a Saturday.</li>
-            </ul>
-            <p className="wanavijiji-foot">Direct the support to the Jawabu Kenya office in Milimani Estate, Elgeyo Road &mdash; or send a note via the Join form so the cooperative can schedule the next drop-off.</p>
-          </div>
         </div>
       </section>
 

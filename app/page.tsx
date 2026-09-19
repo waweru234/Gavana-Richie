@@ -15,36 +15,6 @@ export default function Home() {
     <JawabuKenyaHero />
     <span className="jawaban-stripe" aria-hidden />
 
-    <section className="section wanavijiji-concurrent" data-reveal="fade-up">
-      <div className="container wanavijiji-concurrent-inner">
-        <div className="wanavijiji-concurrent-art">
-          <img src="/wanavijiji-1.jpg" alt="Wanavijiji Housing Cooperative Society members solidarity engagement" loading="lazy" />
-          <img src="/wanavijiji-2.jpg" alt="Wanavijiji Housing Cooperative Society community members engagement" loading="lazy" />
-          <img src="/wanavijiji-3.jpg" alt="Wanavijiji Housing Cooperative Society housing construction site" loading="lazy" />
-          <span className="wanavijiji-concurrent-stamp">Jawabu Kenya · Sibling Programme</span>
-        </div>
-        <div className="wanavijiji-concurrent-copy">
-          <p className="eyebrow"><i /> PROGRAMME 02 · WANAVIJIJI HOUSING COOPERATIVE</p>
-          <h2>Building homes with <em>Wanavijiji.</em></h2>
-          <p>ADOPT-A-STUDENT keeps children in school. Wanavijiji keeps families in homes. Both programmes run under Jawabu Kenya &mdash; and both ask the same question: <b>where can your small contribution move someone forward today?</b></p>
-          <ul className="wanavijiji-concurrent-asks">
-            <li><b>Building materials</b><span>cement, ballast, sand, timber, iron sheets</span></li>
-            <li><b>Mattresses</b><span>single &amp; family sizes for newly-built units</span></li>
-            <li><b>Blankets</b><span>30 already delivered &mdash; more families queue each month</span></li>
-            <li><b>Skilled fundis</b><span>volunteer masons, plumbers, electricians</span></li>
-          </ul>
-          <div className="wanavijiji-concurrent-actions">
-            <Link href="/students#wanavijiji" className="button">See what we need <span>↓</span></Link>
-            <Link href="/updates" className="text-link">Read the latest engagement <span>→</span></Link>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div className="jawaban-concurrent-divider" aria-hidden>
-      <span className="jawaban-concurrent-pill">JAWABU KENYA · TWO PROGRAMMES, ONE MOVEMENT</span>
-    </div>
-
     <section className="section students students-home" data-reveal="fade-up">
       <div className="container">
         <div className="section-heading">
