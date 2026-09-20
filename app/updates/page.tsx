@@ -34,7 +34,8 @@ export default function UpdatesPage() {
 
               <div className="trees-video-wrap" data-reveal="soft-pop">
                 <TreesUpdateVideo
-                  src="/IMG_5180.MOV"
+                  src="/trees-update.mp4"
+                  fallbackSrc="/IMG_5180.MOV"
                   poster="/WhatsApp Image 2026-09-20 at 14.37.52.jpeg"
                   caption="Selfie vlog, 20 Sep 2026 &middot; vertical phone footage from the trail"
                 />

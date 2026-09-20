@@ -2,10 +2,21 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-export function TreesUpdateVideo({ src, poster, caption }: { src: string; poster?: string; caption?: string }) {
+export function TreesUpdateVideo({ 
+  src, 
+  fallbackSrc, 
+  poster, 
+  caption 
+}: { 
+  src: string; 
+  fallbackSrc?: string; 
+  poster?: string; 
+  caption?: string 
+}) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [needsUnmute, setNeedsUnmute] = useState(false)
   const [failed, setFailed] = useState(false)
+  const [useFallback, setUseFallback] = useState(false)
 
   useEffect(() => {
     const v = videoRef.current
@@ -13,8 +24,7 @@ export function TreesUpdateVideo({ src, poster, caption }: { src: string; poster
 
     const supported =
       !!v.canPlayType('video/mp4; codecs="avc1.42E01E,mp4a.40.2"') ||
-      !!v.canPlayType('video/mp4') ||
-      !!v.canPlayType('video/quicktime')
+      !!v.canPlayType('video/mp4')
     if (!supported) {
       setFailed(true)
       return
@@ -37,9 +47,21 @@ export function TreesUpdateVideo({ src, poster, caption }: { src: string; poster
     }
     tryAutoplayWithSound()
 
-    const onError = () => setFailed(true)
+    const onError = () => {
+      if (fallbackSrc && !useFallback) {
+        setUseFallback(true)
+      } else {
+        setFailed(true)
+      }
+    }
     const onStalled = () => {
-      if (v.readyState < 2) setFailed(true)
+      if (v.readyState < 2) {
+        if (fallbackSrc && !useFallback) {
+          setUseFallback(true)
+        } else {
+          setFailed(true)
+        }
+      }
     }
     v.addEventListener('error', onError)
     v.addEventListener('stalled', onStalled)
@@ -47,7 +69,7 @@ export function TreesUpdateVideo({ src, poster, caption }: { src: string; poster
       v.removeEventListener('error', onError)
       v.removeEventListener('stalled', onStalled)
     }
-  }, [])
+  }, [fallbackSrc, useFallback])
 
   const enableSound = () => {
     const v = videoRef.current
@@ -57,13 +79,15 @@ export function TreesUpdateVideo({ src, poster, caption }: { src: string; poster
     setNeedsUnmute(false)
   }
 
+  const currentSrc = useFallback ? fallbackSrc : src
+
   return (
     <div className="trees-video-frame">
       {!failed ? (
         <video
           ref={videoRef}
           className="trees-video"
-          src={src}
+          src={currentSrc}
           poster={poster}
           controls
           autoPlay
