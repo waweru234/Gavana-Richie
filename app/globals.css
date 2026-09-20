@@ -848,3 +848,25 @@ footer .footer-social-block .eyebrow i { background: var(--jbrand-yellow); }
 /* Divider pill between Wanavijiji and Adopt-a-Student on homepage */
 .jawaban-concurrent-divider { display: grid; place-items: center; padding: 0; margin: -1px 0; }
 .jawaban-concurrent-pill { display: inline-flex; align-items: center; gap: 10px; padding: 8px 22px; background: linear-gradient(90deg, var(--jbrand-amber), var(--jbrand-yellow)); color: var(--jbrand-deep); border-radius: 99px; font: 900 11px var(--font-heading); letter-spacing: .22em; box-shadow: 0 12px 26px rgba(201,131,0,.30); position: relative; margin-top: -22px; z-index: 1; border: 3px solid #fff; }
+
+/* === TREES OF NAKURU — UPDATES CARD + VERTICAL VIDEO === */
+.updates-card-trees .updates-card-tag { background: #173a70; color: #fff; padding: 5px 10px; border-radius: 6px; }
+.updates-card-trees .updates-card-image-trees { background: linear-gradient(180deg, #cfd9c0, #a8bf96); aspect-ratio: 16 / 6.4; max-height: 240px; }
+.trees-video-wrap { margin: 18px auto 22px; max-width: 320px; display: grid; place-items: center; position: relative; }
+.trees-video-frame { position: relative; display: grid; place-items: center; aspect-ratio: 9 / 16; width: 100%; max-width: 320px; background: #050b1f; border-radius: 18px; overflow: hidden; box-shadow: 0 18px 42px rgba(6,23,64,.30); border: 2px solid #fff; isolation: isolate; }
+.trees-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.trees-video-fallback { position: relative; width: 100%; height: 100%; display: grid; place-items: center; padding: 0; background: linear-gradient(180deg, #050b1f, #0a1635); overflow: hidden; isolation: isolate; }
+.trees-video-fallback img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: .82; filter: saturate(1.05); }
+.trees-video-fallback::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(5,11,31,.92) 100%); pointer-events: none; z-index: 1; }
+.trees-video-fallback-inner { position: relative; z-index: 2; display: grid; gap: 10px; justify-items: center; padding: 26px 22px; max-width: 460px; text-align: center; }
+.trees-video-fallback-tag { margin: 0; color: var(--gold); font: 900 10px var(--font-heading); letter-spacing: .22em; text-transform: uppercase; }
+.trees-video-fallback-open { display: inline-flex; align-items: center; gap: 12px; padding: 14px 26px; background: #173a70; color: #fff; border-radius: 99px; font: 800 13px var(--font-heading); letter-spacing: .04em; text-decoration: none; box-shadow: 0 16px 32px rgba(23,58,112,.42); transition: transform .2s, background .2s; }
+.trees-video-fallback-open:hover { background: var(--red); transform: translateY(-2px); color: #fff; }
+.trees-video-fallback-play { display: grid; place-items: center; width: 28px; height: 28px; background: rgba(255,255,255,.18); color: inherit; border-radius: 50%; font-size: 12px; }
+.trees-video-fallback-note { margin: 4px 0 0; color: rgba(255,255,255,.74); font-size: 12.5px; line-height: 1.55; }
+.trees-video-unmute { position: absolute; left: 14px; bottom: 56px; z-index: 3; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 0; border-radius: 99px; background: rgba(5,11,31,.78); color: #fff; font: 800 11px var(--font-heading); letter-spacing: .12em; cursor: pointer; transition: background .2s, transform .2s; }
+.trees-video-unmute:hover { background: var(--red); transform: translateY(-1px); }
+.trees-video-unmute-icon { display: grid; place-items: center; width: 22px; height: 22px; background: var(--gold); color: var(--navy); border-radius: 50%; font-size: 11px; }
+.trees-video-caption { position: absolute; left: 12px; bottom: 12px; z-index: 2; max-width: calc(100% - 24px); padding: 6px 10px; background: rgba(5,11,31,.68); color: rgba(255,255,255,.85); font: 600 11px/1.4 var(--font-body); letter-spacing: .02em; border-radius: 8px; backdrop-filter: blur(4px); }
+.updates-card-trees .programs-list { border-left-color: #173a70; background: #f7fbff; }
+@media (max-width: 600px) { .trees-video-frame { max-width: 280px; } }
