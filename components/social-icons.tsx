@@ -1,7 +1,7 @@
-export type SocialLink = {
+﻿export type SocialLink = {
   href: string
   label: string
-  kind: 'instagram' | 'facebook' | 'tiktok' | 'email' | 'phone'
+  kind: 'instagram' | 'facebook' | 'tiktok' | 'email'
 }
 
 export const socialLinks: SocialLink[] = [
@@ -9,7 +9,6 @@ export const socialLinks: SocialLink[] = [
   { href: 'https://www.facebook.com/share/19cytJWheC/', label: 'Facebook', kind: 'facebook' },
   { href: 'https://www.tiktok.com/@gavanarichard?_r=1&_t=ZS-99nmsGZOssr', label: 'TikTok', kind: 'tiktok' },
   { href: 'mailto:richardgithatu@gavanarichie.com', label: 'richardgithatu@gavanarichie.com', kind: 'email' },
-  { href: 'tel:+254738972179', label: '0738 972 179', kind: 'phone' },
 ]
 
 export function SocialIcon({ kind, size = 18 }: { kind: SocialLink['kind']; size?: number }) {

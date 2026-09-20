@@ -30,8 +30,6 @@ export default function JoinPage() {
           </ul>
           <div className="join-side-cta">
             <p>Or skip the form:</p>
-            <a className="text-link" href="tel:+254738972179">Call 0738 972 179 <span>→</span></a>
-            <a className="text-link" href="https://wa.me/254738972179" target="_blank" rel="noreferrer">WhatsApp the campaign <span>→</span></a>
             <a className="text-link" href="mailto:richardgithatu@gavanarichie.com">Email richardgithatu@gavanarichie.com <span>→</span></a>
           </div>
         </div>

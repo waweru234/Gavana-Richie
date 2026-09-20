@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { HelpAssistant } from '@/components/help-assistant'
 import { ScrollReveal } from '@/components/scroll-reveal'
-import { WhatsAppFab } from '@/components/whatsapp-fab'
 
 export const metadata: Metadata = {
   title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu',
@@ -26,7 +25,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="antialiased">
         {children}
         <HelpAssistant />
-        <WhatsAppFab />
         <ScrollReveal />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

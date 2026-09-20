@@ -45,8 +45,8 @@ export default function DonatePage() {
         <div className="donate-message-art" data-reveal="fade-left">
           <div className="donate-message-circle" />
           <div className="donate-message-frame">
-            <img src="/richie-cutout.png" alt="Richie Githatu — the campaign you can reach on M-Pesa, phone, email, WhatsApp, and socials" />
-            <span className="donate-message-tag">REACH US · 0738 972 179</span>
+            <img src="/richie-cutout.png" alt="Richie Githatu — the campaign you can reach on M-Pesa, email, and socials" />
+            <span className="donate-message-tag">REACH US · EMAIL OR SOCIAL</span>
           </div>
           <div className="donate-message-frame-note">
             <p>&ldquo;Pay, then say hi. The next Sunday word lands first thing.&rdquo;</p>
@@ -63,12 +63,6 @@ export default function DonatePage() {
           <div className="donate-contact-bar">
             <p className="eyebrow"><i /> OR REACH US DIRECTLY</p>
             <ul className="donate-contact-list">
-              <li>
-                <span className="donate-contact-icon" aria-hidden>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79a14.21 14.21 0 0 0 6.38 6.38l2.13-2.13a1 1 0 0 1 1.05-.24 11.65 11.65 0 0 0 3.65.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.62a1 1 0 0 1 1 1 11.65 11.65 0 0 0 .58 3.65 1 1 0 0 1-.24 1.05l-2.34 2.09Z" /></svg>
-                </span>
-                <span><b>Phone</b><a href="tel:+254738972179">0738 972 179</a></span>
-              </li>
               <li>
                 <span className="donate-contact-icon" aria-hidden>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13Zm2.46-.5 6.54 6.45 6.54-6.45H5.46Zm15.04 1-7.07 6.97a1 1 0 0 1-1.39 0L4.5 6V18.5a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5V6Z" /></svg>
@@ -95,7 +89,7 @@ export default function DonatePage() {
           <p>Every KSh 10 from many people is what keeps this campaign people-powered — not driven by single big donors, but by the daily support of Kenyans who believe Nakuru can do better.</p>
           <div className="donate-richie-socials">
             <SocialIcons variant="navy" size="md" />
-            <p>Or call directly:<br /><a href="tel:+254738972179">0738 972 179</a> · <a href="mailto:richardgithatu@gavanarichie.com">richardgithatu@gavanarichie.com</a></p>
+            <p>Reach the campaign directly:<br /><a href="mailto:richardgithatu@gavanarichie.com">richardgithatu@gavanarichie.com</a></p>
           </div>
         </div>
         <div className="donate-richie-art" data-reveal="fade-right">

@@ -43,14 +43,14 @@ export function HelpAssistant() {
         body: JSON.stringify({ messages: next }),
       })
       const data = await res.json()
-      const reply = (data?.text as string | undefined) ?? "I'm having trouble reaching my notes right now. Try again, or reach the team on 0738 972 179."
+      const reply = (data?.text as string | undefined) ?? "I'm having trouble reaching my notes right now. Try again, or Reach the team via the Join form on the website."
       setMessages([...next, { role: 'model', text: reply }])
     } catch {
       setMessages([
         ...next,
         {
           role: 'model',
-          text: "I couldn't reach my notes just now. Reach the team directly: 0738 972 179 · richardgithatu@gavanarichie.com.",
+          text: "I couldn't reach my notes just now. Reach the team directly via the Join form or richardgithatu@gavanarichie.com.",
         },
       ])
     } finally {
@@ -68,7 +68,7 @@ export function HelpAssistant() {
             </div>
             <div className="help-header-copy">
               <b>Ask Richie&apos;s campaign</b>
-              <small>Powered by Gemini · Nakuru Kwetu 2027</small>
+              <small>Powered by Gemini Â· Nakuru Kwetu 2027</small>
             </div>
             <button type="button" className="help-close" aria-label="Close assistant" onClick={() => setOpen(false)}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>
@@ -104,7 +104,7 @@ export function HelpAssistant() {
           >
             <input
               type="text"
-              placeholder="Ask anything about the campaign…"
+              placeholder="Ask anything about the campaignâ€¦"
               value={draft}
               onChange={e => setDraft(e.target.value)}
               disabled={sending}

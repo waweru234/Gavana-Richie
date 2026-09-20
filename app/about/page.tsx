@@ -67,17 +67,17 @@ export default function AboutPage() {
         <div className="about-contact-grid">
           <article className="about-contact-card">
             <span className="about-contact-icon" aria-hidden>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79a14.21 14.21 0 0 0 6.38 6.38l2.13-2.13a1 1 0 0 1 1.05-.24 11.65 11.65 0 0 0 3.65.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.62a1 1 0 0 1 1 1 11.65 11.65 0 0 0 .58 3.65 1 1 0 0 1-.24 1.05l-2.34 2.09Z" /></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13Zm2.46-.5 6.54 6.45 6.54-6.45H5.46Zm15.04 1-7.07 6.97a1 1 0 0 1-1.39 0L4.5 6V18.5a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5V6Z" /></svg>
             </span>
-            <b>Phone</b>
-            <a href="tel:+254738972179">0738 972 179</a>
-            <small>WhatsApp-friendly · 24-hr reply</small>
+            <b>Email</b>
+            <a href="mailto:richardgithatu@gavanarichie.com">Email the campaign</a>
+            <small>Replies within 24 hours · Mon–Sat</small>
           </article>
           <article className="about-contact-card">
             <span className="about-contact-icon" aria-hidden>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13Zm2.46-.5 6.54 6.45 6.54-6.45H5.46Zm15.04 1-7.07 6.97a1 1 0 0 1-1.39 0L4.5 6V18.5a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5V6Z" /></svg>
             </span>
-            <b>Email</b>
+            <b>Press &amp; Media</b>
             <a href="mailto:richardgithatu@gavanarichie.com">richardgithatu@gavanarichie.com</a>
             <small>For media, partnership, or volunteer enquiries</small>
           </article>
