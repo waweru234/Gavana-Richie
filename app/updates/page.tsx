@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
-import { TreesUpdateVideo } from '@/components/trees-update-video'
+import { UpdatesVideo } from '@/components/updates-video'
 
 export default function UpdatesPage() {
   return <SiteShell>
@@ -8,32 +8,68 @@ export default function UpdatesPage() {
       eyebrow="FROM THE CAMPAIGN"
       title="What is happening"
       accent="in Nakuru."
-      text="Four recent moments — a frontline look at the trees being cut down on a busy Nakuru street, a community engagement with Wanavijiji, a Sunday word, and a birthday — from the trail of Richie Githatu&apos;s 2027 campaign."
+      text="Five recent moments — a frontline look at the KNH cardiac surgery camp, trees being cut down on a busy Nakuru street, a community engagement with Wanavijiji, a Sunday word, and a birthday — from the trail of Richie Githatu&apos;s 2027 campaign."
     />
 
     <section className="section updates-magazine">
       <div className="container">
         <div className="section-heading" data-reveal="fade-up">
-          <div><p className="eyebrow"><i /> THIS WEEK</p><h2>Four recent moments<br /><em>from the trail.</em></h2></div>
-          <p>One street, one cooperative, one word, one birthday. Updated as the campaign moves through Nakuru County.</p>
+          <div><p className="eyebrow"><i /> THIS WEEK</p><h2>Five recent moments<br /><em>from the trail.</em></h2></div>
+          <p>One hospital, one street, one cooperative, one word, one birthday. Updated as the campaign moves through Nakuru County.</p>
         </div>
 
         <div className="updates-magazine-list">
-          {/* Trees of Nakuru — most recent */}
+          {/* KNH Cardiac Surgery Camp — most recent */}
+          <article className="updates-card updates-card-knh" data-reveal="fade-up">
+            <div className="updates-card-meta">
+              <span className="updates-card-tag">HEALTH · 21 SEP 2026 · KNH & KIHF</span>
+              <span className="updates-card-date"><b>21</b><span>SEP 2026</span></span>
+            </div>
+            <div className="updates-card-body">
+              <h3>Kenyatta National Hospital hosts a 10-day Specialist Cardiac Surgery Camp with Kibos International Health Foundation.</h3>
+              <p className="updates-card-lede">From 20–30 September 2026, a visiting team of cardiac surgeons and cardiologists from Japan, the US, Canada, Sweden and the UAE — led by Professor Hiroshi Niinami of Tokyo Women&apos;s Medical University — will perform open-heart and other cardiac surgeries at KNH in partnership with the Kibos International Health Foundation (KIHF).</p>
+
+              <div className="updates-video-wrap" data-reveal="soft-pop">
+                <UpdatesVideo
+                  src="/WhatsApp Video 2026-09-21 at 07.23.17.mp4"
+                  poster="/WhatsApp Image 2026-09-20 at 14.37.52.jpeg"
+                  caption="Dr. Gladys Njihia, Cardiologist and Head of Cardiology at KNH, on the mission &middot; filmed around the hospital grounds"
+                />
+              </div>
+
+              <blockquote className="updates-card-quote">
+                <span className="updates-card-quote-mark" aria-hidden>&ldquo;</span>
+                This is the first of many such collaborations. We want to build the skills of our own cardiac surgeons and cardiologists so we can keep offering this care.
+                <span className="updates-card-quote-mark" aria-hidden>&rdquo;</span>
+                <cite>&mdash; Dr. Gladys Njihia</cite>
+              </blockquote>
+
+              <p><b>What the mission covers:</b></p>
+              <ul className="programs-list">
+                <li><b>Procedures:</b> bypass surgery and heart valve repair or replacement.</li>
+                <li><b>Cost:</b> World-class care &ldquo;quite affordable&rdquo; for patients enrolled in SHA (Social Health Authority) — the government insurance scheme. (The Standard reports the camp as free; confirm eligibility directly with KNH cardiology.)</li>
+                <li><b>Coordination:</b> cardiologists, cardiothoracic surgeons, perfusionists, laboratory, blood transfusion unit, and radiology — each team aligned through extensive pre-mission planning.</li>
+                <li><b>Long-term aim:</b> ongoing partnership with KIHF so KNH builds sustainable local capacity for advanced cardiovascular care.</li>
+              </ul>
+
+              <p>If you or someone you know may be eligible, contact KNH&apos;s Cardiology Department directly to confirm enrollment and next steps. This is the kind of specialist care that should be available in every county — not only when a visiting mission arrives.</p>
+
+              <Link href="/manifesto" className="text-link">Read the health agenda for Nakuru <span>→</span></Link>
+            </div>
+          </article>
+
+          {/* Trees of Nakuru — second most recent */}
           <article className="updates-card updates-card-trees" data-reveal="fade-up">
             <div className="updates-card-meta">
               <span className="updates-card-tag">FIELD · 20 SEP 2026 · THE GREEN CITY</span>
               <span className="updates-card-date"><b>20</b><span>SEP 2026</span></span>
             </div>
-            <div className="updates-card-image updates-card-image-trees">
-              <img src="/WhatsApp Image 2026-09-20 at 14.37.52.jpeg" alt="Stumps and sawn timber on the verge of a busy Nakuru street where trees used to stand" loading="lazy" />
-            </div>
             <div className="updates-card-body">
               <h3>The trees are coming down on a busy Nakuru street.<br /><em>Who is signing the permits?</em></h3>
               <p className="updates-card-lede">A 1:24 vlog from the trail &mdash; trees being cut down along a popular Nakuru street, a fresh tree trunk broken off the stump, and a concrete hoarding that reads &ldquo;NO HAWKERS.&rdquo; Below it, a 2026-built structure is going up where the avenue used to be.</p>
 
-              <div className="trees-video-wrap" data-reveal="soft-pop">
-                <TreesUpdateVideo
+              <div className="updates-video-wrap" data-reveal="soft-pop">
+                <UpdatesVideo
                   src="/trees-update.mp4"
                   fallbackSrc="/IMG_5180.MOV"
                   poster="/WhatsApp Image 2026-09-20 at 14.37.52.jpeg"
