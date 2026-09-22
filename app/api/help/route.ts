@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 type Incoming = { role: 'user' | 'model'; text: string }
 
 const CAMPAIGN = {

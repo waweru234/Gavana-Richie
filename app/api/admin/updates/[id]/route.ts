@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import { UpdatePost, CreateUpdatePostData } from '@/lib/update-types'
 
+export const dynamic = 'force-dynamic'
+
 function generateSlug(title: string): string {
   return title
     .toLowerCase()
