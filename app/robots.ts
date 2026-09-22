@@ -4,11 +4,18 @@ export default function robots(): MetadataRoute.Robots {
   const baseUrl = 'https://gavanarichie.com'
 
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/api/', '/_next/', '/private/'],
-    },
+    rules: [
+      {
+        userAgent: 'Googlebot',
+        allow: ['/', '/_next/'],
+        disallow: ['/api/', '/private/'],
+      },
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/api/', '/private/'],
+      },
+    ],
     sitemap: `${baseUrl}/sitemap.xml`,
   }
 }
