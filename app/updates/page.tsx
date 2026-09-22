@@ -8,18 +8,51 @@ export default function UpdatesPage() {
       eyebrow="FROM THE CAMPAIGN"
       title="What is happening"
       accent="in Nakuru."
-      text="Five recent moments — a frontline look at the KNH cardiac surgery camp, trees being cut down on a busy Nakuru street, a community engagement with Wanavijiji, a Sunday word, and a birthday — from the trail of Richie Githatu&apos;s 2027 campaign."
+      text="Six recent moments — Richie on the Uwazi Festival stage, a frontline look at the KNH cardiac surgery camp, trees being cut down on a busy Nakuru street, a community engagement with Wanavijiji, a Sunday word, and a birthday — from the trail of Richie Githatu&apos;s 2027 campaign."
     />
 
     <section className="section updates-magazine">
       <div className="container">
         <div className="section-heading" data-reveal="fade-up">
-          <div><p className="eyebrow"><i /> THIS WEEK</p><h2>Five recent moments<br /><em>from the trail.</em></h2></div>
-          <p>One hospital, one street, one cooperative, one word, one birthday. Updated as the campaign moves through Nakuru County.</p>
+          <div><p className="eyebrow"><i /> THIS WEEK</p><h2>Six recent moments<br /><em>from the trail.</em></h2></div>
+          <p>One stage, one hospital, one street, one cooperative, one word, one birthday. Updated as the campaign moves through Nakuru County.</p>
         </div>
 
         <div className="updates-magazine-list">
-          {/* KNH Cardiac Surgery Camp — most recent */}
+          {/* Uwazi Festival — most recent */}
+          <article className="updates-card updates-card-uwazi" data-reveal="fade-up">
+            <div className="updates-card-meta">
+              <span className="updates-card-tag">CIVIC · 22 SEP 2026 · PAWA RADIO</span>
+              <span className="updates-card-date"><b>22</b><span>SEP 2026</span></span>
+            </div>
+            <div className="updates-card-body">
+              <h3>Richie joins the <em>Uwazi Festival</em> panel at Rift Valley Sports Club — &ldquo;Which Way Kenya?&rdquo;</h3>
+              <p className="updates-card-lede">Pawa Radio&apos;s live civic forum brought together voices from across Nakuru to debate the country&apos;s direction. Richie, wearing the Nakuru Kwetu badge, took the mic to speak on governance, youth participation, and why local leadership must answer to the people — not power.</p>
+
+              <div className="updates-video-wrap" data-reveal="soft-pop">
+                <UpdatesVideo
+                  src="/AQPFI_2lV5XeSLrXUCkB-VW-BOJVWKXb7-vCnHqkJ_1mWBM6OCog28LOoqNBf5RxYaKuG0s6syXUP3y19vJXgwTTRWcyeM1qLhaMaWFK0g.mp4"
+                  poster="/WhatsApp Image 2026-09-20 at 14.37.52.jpeg"
+                  caption="Richie Githatu on the Uwazi Festival panel &middot; Pawa Radio live at Rift Valley Sports Club, Nakuru"
+                />
+              </div>
+
+              <blockquote className="updates-card-quote">
+                <span className="updates-card-quote-mark" aria-hidden>&ldquo;</span>
+                We are not waiting for permission to build the Nakuru we deserve. The power to change things is already in our hands — it&apos;s called showing up.
+                <span className="updates-card-quote-mark" aria-hidden>&rdquo;</span>
+                <cite>&mdash; Richie Githatu</cite>
+              </blockquote>
+
+              <p>The &ldquo;Which Way Kenya?&rdquo; theme cuts to the heart of what this campaign is about: citizens refusing to be spectators. From the cost of living to the state of our streets, from healthcare access to youth unemployment — the answers don&apos;t come from Nairobi. They come from communities organizing, asking hard questions, and demanding accountability.</p>
+
+              <p>Richie shared the stage with fellow panelists in a lively back-and-forth that turned a talk show into a town hall. The energy in the room was the point: when people speak freely, the conversation shifts from problems to possibilities.</p>
+
+              <Link href="/manifesto" className="text-link">Read the civic engagement agenda <span>→</span></Link>
+            </div>
+          </article>
+
+          {/* KNH Cardiac Surgery Camp — second most recent */}
           <article className="updates-card updates-card-knh" data-reveal="fade-up">
             <div className="updates-card-meta">
               <span className="updates-card-tag">HEALTH · 21 SEP 2026 · KNH & KIHF</span>

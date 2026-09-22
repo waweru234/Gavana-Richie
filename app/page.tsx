@@ -3,11 +3,43 @@ import { ActionBand, SiteShell, StatStrip } from '@/components/site-shell'
 import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
 import { studentProfiles } from '@/lib/student-profiles'
 
+const siteUrl = 'https://nakurukwetu.co.ke'
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'PoliticalOrganization',
+  name: 'Nakuru Kwetu — Richie Githatu for Governor 2027',
+  url: siteUrl,
+  logo: `${siteUrl}/richie-cutout.png`,
+  image: `${siteUrl}/richie-portrait.jpeg`,
+  description: 'The official campaign platform for Richie Githatu, candidate for Governor of Nakuru County in 2027.',
+  sameAs: [
+    'https://twitter.com/NakuruKwetu',
+    'https://facebook.com/NakuruKwetu',
+    'https://instagram.com/nakurukwetu',
+  ],
+  leader: {
+    '@type': 'Person',
+    name: 'Richie Githatu',
+    image: `${siteUrl}/richie-portrait.jpeg`,
+    jobTitle: 'Gubernatorial Candidate',
+    worksFor: { '@type': 'Organization', name: 'Nakuru Kwetu' },
+  },
+  areaServed: { '@type': 'AdministrativeArea', name: 'Nakuru County, Kenya' },
+  event: {
+    '@type': 'Event',
+    name: 'Nakuru County Gubernatorial Election 2027',
+    startDate: '2027-08-09',
+    location: { '@type': 'Place', name: 'Nakuru County, Kenya' },
+  },
+}
+
 export default function Home() {
   const featuredStudents = studentProfiles.slice(0, 2)
   const moreStudents = studentProfiles.slice(2)
 
   return <SiteShell>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
     <section className="hero hero-richie"><div className="container hero-grid"><div className="hero-copy"><p className="eyebrow"><i /> 2027 GOVERNOR · NAKURU COUNTY</p><h1>RICHIE GITHATU<br /><em>Nakuru Kwetu.</em></h1><p className="hero-kicker">New Generation leadership for Nakuru County</p><p className="hero-text">Richie Githatu is running for Governor of Nakuru County in 2027 — with a practical agenda for opportunity, accountable leadership, and a county that works for everyone.</p><div className="hero-actions"><Link href="/about" className="button button-primary">Meet Richie Githatu <span>↗</span></Link><Link href="/students" className="button button-secondary">Adopt a Student <span>↗</span></Link><Link href="/manifesto" className="text-link">Read the agenda <span>→</span></Link></div><div className="hero-election-badge"><strong>2027</strong><span>YOUR VOICE<br />YOUR CHOICE</span></div><div className="promise"><b>032</b><span><strong>Linda Nakuru.</strong><br />Nakuru Kwetu · New Generation</span></div></div><div className="hero-visual hero-cutout"><div className="hero-orbit hero-orbit-one" /><div className="hero-orbit hero-orbit-two" /><img src="/richie-cutout.png" alt="Richie Githatu in a white shirt" /><div className="floating-note"><b>NAKURU</b><span>KWETU.</span></div><div className="hero-signature">Richie Githatu</div></div></div></section>
 
     <section className="programme-banner programme-feature" data-reveal="fade-up"><div className="container programme-banner-inner"><div className="programme-mark">01</div><div><p className="eyebrow">ADOPT-A-STUDENT PROGRAMME</p><h2>No bright mind<br /><em>left behind.</em></h2><p>Stand with {studentProfiles.length} determined Nakuru students. Pick a profile, pay directly to their school, and help keep a child learning.</p></div><Link href="/students" className="button button-primary">ADOPT-A-STUDENT. GIVE TODAY. <span>↗</span></Link></div></section>
