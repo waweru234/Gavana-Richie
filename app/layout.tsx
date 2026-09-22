@@ -4,7 +4,7 @@ import './globals.css'
 import { HelpAssistant } from '@/components/help-assistant'
 import { ScrollReveal } from '@/components/scroll-reveal'
 
-const siteUrl = 'https://nakurukwetu.co.ke'
+const siteUrl = 'https://gavanarichie.com'
 const siteName = 'Richie Githatu for Governor 2027 | Nakuru Kwetu'
 
 export const metadata: Metadata = {

@@ -3,7 +3,7 @@ import { ActionBand, SiteShell, StatStrip } from '@/components/site-shell'
 import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
 import { studentProfiles } from '@/lib/student-profiles'
 
-const siteUrl = 'https://nakurukwetu.co.ke'
+const siteUrl = 'https://gavanarichie.com'
 
 const structuredData = {
   '@context': 'https://schema.org',
