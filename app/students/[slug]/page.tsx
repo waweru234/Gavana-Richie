@@ -53,7 +53,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: student.name,
-    url: `https://gavanarichie.com/students/${student.slug}`,
+    url: `${siteUrl}/students/${student.slug}`,
     image: student.image,
     jobTitle: student.tag,
   }
