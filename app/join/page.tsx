@@ -59,6 +59,7 @@ export default function JoinPage() {
           <div className="join-side-cta">
             <p>Or skip the form:</p>
             <a className="text-link" href="mailto:richardgithatu@gavanarichie.com">Email richardgithatu@gavanarichie.com <span>→</span></a>
+            <a className="text-link" href="tel:+254716774555" style={{ marginLeft: '1rem' }}>Call 0716 774 555 <span>→</span></a>
           </div>
         </div>
         <div className="join-form-slot" data-reveal="fade-left">

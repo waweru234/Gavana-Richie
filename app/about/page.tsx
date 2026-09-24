@@ -93,7 +93,15 @@ export default function AboutPage() {
           <div><p className="eyebrow"><i /> CONTACT</p><h2>Reach the campaign<br /><em>directly.</em></h2></div>
           <p>Call, email, or follow on socials — every channel is owned by the campaign team. Replies within 24 hours on weekdays.</p>
         </div>
-        <div className="about-contact-grid">
+<div className="about-contact-grid">
+          <article className="about-contact-card">
+            <span className="about-contact-icon" aria-hidden>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35-.03.74-.25 1.02l-2.2 2.2z" /></svg>
+            </span>
+            <b>Call</b>
+            <a href="tel:+254716774555">0716 774 555</a>
+            <small>Available Mon–Sat, 8am–6pm</small>
+          </article>
           <article className="about-contact-card">
             <span className="about-contact-icon" aria-hidden>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13Zm2.46-.5 6.54 6.45 6.54-6.45H5.46Zm15.04 1-7.07 6.97a1 1 0 0 1-1.39 0L4.5 6V18.5a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5V6Z" /></svg>
@@ -106,7 +114,7 @@ export default function AboutPage() {
             <span className="about-contact-icon" aria-hidden>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13Zm2.46-.5 6.54 6.45 6.54-6.45H5.46Zm15.04 1-7.07 6.97a1 1 0 0 1-1.39 0L4.5 6V18.5a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5V6Z" /></svg>
             </span>
-            <b>Press &amp; Media</b>
+            <b>Press & Media</b>
             <a href="mailto:richardgithatu@gavanarichie.com">richardgithatu@gavanarichie.com</a>
             <small>For media, partnership, or volunteer enquiries</small>
           </article>

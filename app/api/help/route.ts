@@ -8,7 +8,8 @@ const CAMPAIGN = {
   candidate: 'Richie Githatu',
   race: 'Governor of Nakuru County, 2027',
   slogan: 'Nakuru Kwetu · New Generation',
-  phone: '0738 972 179',
+  phone: '0716 774 555',
+  phoneAlt: '0738 972 179',
   whatsapp: 'https://wa.me/254738972179',
   email: 'richardgithatu@gavanarichie.com',
   paybill: '600100',
@@ -66,7 +67,7 @@ function replyFor(input: string): string {
   }
 
   if (/(phone|call|contact|reach|email|whatsapp)/.test(q)) {
-    return `Reach the campaign directly:\n\n• Phone: ${CAMPAIGN.phone}\n• WhatsApp: wa.me/254738972179\n• Email: ${CAMPAIGN.email}\n\nFor movement matters use the Join form so the local coordinator picks it up.`
+    return `Reach the campaign directly:\n\n• Phone: ${CAMPAIGN.phone}\n• Phone (alt): ${CAMPAIGN.phoneAlt}\n• WhatsApp: ${CAMPAIGN.whatsapp}\n• Email: ${CAMPAIGN.email}\n\nFor movement matters use the Join form so the local coordinator picks it up.`
   }
 
   if (/(update|news|sunday|latest)/.test(q)) {
