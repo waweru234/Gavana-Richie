@@ -3,12 +3,13 @@ import { createServerClient } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
 
-function generateSlug(title: string): string {
-  return title
+function generateSlug(name: string): string {
+  const cleanName = name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
-    .substring(0, 100)
+  const randomSuffix = Math.random().toString(36).substring(2, 6)
+  return `${cleanName}-${randomSuffix}`
 }
 
 export async function GET(
@@ -20,26 +21,25 @@ export async function GET(
     const { id } = await params
 
     if (!id) {
-      return NextResponse.json({ error: 'Missing update ID' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing student ID' }, { status: 400 })
     }
 
     const { data, error } = await supabase
-      .from('updates')
+      .from('students')
       .select('*')
       .eq('id', id)
       .single()
 
     if (error) {
       if (error.code === 'PGRST116') {
-        return NextResponse.json({ error: 'Update not found' }, { status: 404 })
+        return NextResponse.json({ error: 'Student not found' }, { status: 404 })
       }
-      console.error('Supabase error:', error)
-      return NextResponse.json({ error: 'Failed to fetch update', details: error.message }, { status: 500 })
+      throw error
     }
 
     return NextResponse.json({ data })
   } catch (error) {
-    console.error('Error fetching update:', error)
+    console.error('Error fetching student:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -54,7 +54,7 @@ export async function PUT(
     const body = await request.json()
 
     if (!id) {
-      return NextResponse.json({ error: 'Missing update ID' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing student ID' }, { status: 400 })
     }
 
     const updateData: Record<string, unknown> = {
@@ -62,9 +62,9 @@ export async function PUT(
     }
 
     const allowedFields = [
-      'title', 'excerpt', 'content', 'featured_image_url', 'featured_video_url',
-      'featured_file_url', 'media_type', 'category', 'tags', 'seo_title',
-      'seo_description', 'seo_keywords', 'published', 'published_at'
+      'name', 'school', 'need', 'paybill', 'account', 'image', 'poster',
+      'tag', 'number', 'short', 'bio', 'sponsored', 'sponsored_by',
+      'sponsored_date', 'sponsored_quote', 'published', 'sort_order', 'slug'
     ]
 
     for (const field of allowedFields) {
@@ -79,18 +79,12 @@ export async function PUT(
       }
     }
 
-    if (body.title) {
-      updateData.slug = generateSlug(body.title)
-    }
-
-    if (body.published === true && !body.published_at) {
-      updateData.published_at = new Date().toISOString()
-    } else if (body.published === false) {
-      updateData.published_at = null
+    if (body.name && !body.slug) {
+      updateData.slug = generateSlug(body.name)
     }
 
     const { data, error } = await supabase
-      .from('updates')
+      .from('students')
       .update(updateData as any)
       .eq('id', id)
       .select()
@@ -98,15 +92,14 @@ export async function PUT(
 
     if (error) {
       if (error.code === 'PGRST116') {
-        return NextResponse.json({ error: 'Update not found' }, { status: 404 })
+        return NextResponse.json({ error: 'Student not found' }, { status: 404 })
       }
-      console.error('Supabase update error:', error)
-      return NextResponse.json({ error: 'Failed to update update', details: error.message }, { status: 500 })
+      throw error
     }
 
     return NextResponse.json({ data })
   } catch (error) {
-    console.error('Error updating update:', error)
+    console.error('Error updating student:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -120,22 +113,19 @@ export async function DELETE(
     const { id } = await params
 
     if (!id) {
-      return NextResponse.json({ error: 'Missing update ID' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing student ID' }, { status: 400 })
     }
 
     const { error } = await supabase
-      .from('updates')
+      .from('students')
       .delete()
       .eq('id', id)
 
-    if (error) {
-      console.error('Supabase delete error:', error)
-      return NextResponse.json({ error: 'Failed to delete update', details: error.message }, { status: 500 })
-    }
+    if (error) throw error
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting update:', error)
+    console.error('Error deleting student:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -1006,3 +1006,18 @@ footer .footer-social-block .eyebrow i { background: var(--jbrand-yellow); }
 .update-footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(0,0,0,.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
 .back-link { font: 600 14px var(--font-body); color: #173a70; text-decoration: none; }
 .back-link:hover { color: var(--gold); }
+
+/* === ADMIN STUDENTS PAGES === */
+.admin-student-form { padding: 40px 0 80px; }
+.admin-student-form h1 { font: 800 32px var(--font-heading); color: var(--navy); margin: 0; }
+.admin-student-form h2 { margin: 0 0 20px; font: 700 18px var(--font-heading); color: var(--navy); padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,.06); }
+.bio-item { position: relative; margin-bottom: 16px; }
+.bio-item textarea { width: 100%; padding: 12px 40px 12px 14px; }
+.remove-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; font-size: 18px; color: #c00; opacity: .6; transition: opacity .2s; }
+.remove-btn:hover { opacity: 1; }
+.button.small { padding: 8px 16px; font-size: 13px; }
+.upload-status { font-size: 12px; color: rgba(0,0,0,.5); margin-top: 8px; }
+.sponsor-toggle { padding: 6px 12px; font: 600 12px var(--font-body); border-radius: 99px; border: 1px solid rgba(0,0,0,.12); cursor: pointer; transition: all .2s; background: #fff; }
+.sponsor-toggle.sponsored { background: #e6f4ea; color: #1b5e20; border-color: #1b5e20; }
+.admin-filters button { padding: 8px 16px; border: 1px solid rgba(0,0,0,.12); background: #fff; border-radius: 8px; font: 600 13px var(--font-body); cursor: pointer; transition: all .2s; }
+.admin-filters button.active { background: var(--navy); color: #fff; border-color: var(--navy); }

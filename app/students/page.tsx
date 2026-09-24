@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { ActionBand, PageIntro, SiteShell, StatStrip } from '@/components/site-shell'
+import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
 import { JawabuKenyaBanner } from '@/components/jawabu-kenya-banner'
 import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
-import { studentProfiles } from '@/lib/student-profiles'
+import { getPublishedStudents } from '@/lib/students'
 
 const coreValues = [
   { title: 'Dignity & Inclusion', text: 'Every child deserves respect, fairness and equal opportunity.' },
@@ -29,7 +29,26 @@ const beneficiaries = [
 
 const hashtags = ['#KeepAChildInSchool', '#EveryChildDeservesAChance', '#EducationForAll', '#YourSupportTheirFuture', '#InvestInEducation']
 
-export default function StudentsPage() {
+export default async function StudentsPage() {
+  const students = await getPublishedStudents()
+
+  if (!students || students.length === 0) {
+    return (
+      <SiteShell>
+        <PageIntro
+          eyebrow="ADOPT-A-STUDENT"
+          title="Every child"
+          accent="deserves education."
+          text="A people-powered campaign to keep vulnerable children in school."
+        />
+        <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
+          <p>No students are currently listed. Please check back soon.</p>
+        </div>
+        <ActionBand title="Every child deserves a chance to learn." text="ADOPT-A-STUDENT. Give today — and pay directly to keep a child in school." variant="jabu" />
+      </SiteShell>
+    )
+  }
+
   return (
     <SiteShell>
       <JawabuKenyaHero />
@@ -50,20 +69,20 @@ export default function StudentsPage() {
               <p className="eyebrow"><i /> MEET THE STUDENTS</p>
               <h2>Pick a student.<br /><em>Pay the school directly.</em></h2>
             </div>
-            <p>Choose a student below to view their full profile. Use the M-Pesa details on their card or profile — payments go directly to their school.</p>
+            <p>Choose a student below to view their full profile. Use the M-Pesa details on their card or profile — payments go directly to their school. ({students.length} students ready for support)</p>
           </div>
           <div className="student-grid" data-reveal="stagger">
-            {studentProfiles.map(student => (
-              <Link href={`/students/${student.slug}`} className={'student-card student-card-link' + (student.sponsored ? ' student-card-sponsored' : '')} key={student.slug}>
+            {students.map(student => (
+              <Link href={`/students/${student.slug}`} className={'student-card student-card-link' + (student.sponsored ? ' student-card-sponsored' : '')} key={student.id}>
                 <div className="student-image">
-                  <img src={student.image} alt={`${student.name} student profile`} />
+                  <img src={student.image || '/placeholder-student.jpg'} alt={`${student.name} student profile`} loading="lazy" />
                   {student.sponsored && <span className="student-sponsored-badge"><span className="student-sponsored-tick" aria-hidden>✓</span> SPONSORED</span>}
                   <span>{student.number} · {student.tag.toUpperCase()}</span>
                 </div>
                 <div className="student-body">
                   <span className="label">{student.name.toUpperCase()}</span>
                   <h3>{student.school}</h3>
-                  <p>{student.short}</p>
+                  <p>{student.short || student.need}</p>
                   <div className="student-details"><span>PAY BILL <b>{student.paybill}</b></span><span>ACCOUNT <b>{student.account}</b></span></div>
                   {student.sponsored ? (
                     <div className="need need-sponsored"><b>✓ FULLY SPONSORED</b><span>{student.sponsoredBy ? `Covered by ${student.sponsoredBy} · ${student.sponsoredDate ?? ''}` : 'Already covered · pick the next student'}</span></div>

@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: UpdatePageProps): Promise<Met
       url: updateUrl,
       title: update.seo_title || update.title,
       description: update.seo_description || update.excerpt,
-      publishedTime: update.published_at,
+      publishedTime: update.published_at || undefined,
       modifiedTime: update.updated_at,
       authors: ['Richie Githatu'],
       tags: update.tags,

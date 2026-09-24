@@ -135,3 +135,49 @@ CREATE TRIGGER set_updates_published_at
   BEFORE UPDATE ON updates
   FOR EACH ROW
   EXECUTE FUNCTION set_published_at();
+
+-- === STUDENTS TABLE ===
+CREATE TABLE IF NOT EXISTS students (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  slug TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  school TEXT NOT NULL,
+  need TEXT NOT NULL,
+  paybill TEXT NOT NULL,
+  account TEXT NOT NULL,
+  image TEXT,
+  poster TEXT,
+  tag TEXT NOT NULL,
+  "number" TEXT NOT NULL,
+  short TEXT,
+  bio TEXT[],
+  sponsored BOOLEAN DEFAULT FALSE,
+  sponsored_by TEXT,
+  sponsored_date TEXT,
+  sponsored_quote TEXT,
+  published BOOLEAN NOT NULL DEFAULT TRUE,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Indexes for students
+CREATE INDEX IF NOT EXISTS idx_students_published ON students(published);
+CREATE INDEX IF NOT EXISTS idx_students_sort_order ON students(sort_order);
+CREATE INDEX IF NOT EXISTS idx_students_slug ON students(slug);
+CREATE INDEX IF NOT EXISTS idx_students_number ON students("number");
+
+-- Trigger for student updated_at
+DROP TRIGGER IF EXISTS update_students_updated_at ON students;
+CREATE TRIGGER update_students_updated_at
+  BEFORE UPDATE ON students
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger for student slug generation
+DROP TRIGGER IF NOT EXISTS generate_students_slug ON students;
+CREATE TRIGGER generate_students_slug
+  BEFORE INSERT OR UPDATE ON students
+  FOR EACH ROW
+  WHEN (NEW.slug IS NULL OR NEW.slug = '')
+  EXECUTE FUNCTION generate_slug_from_title();

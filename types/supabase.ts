@@ -69,6 +69,78 @@ export interface Database {
         }
         Relationships: []
       }
+      students: {
+        Row: {
+          id: string
+          slug: string
+          name: string
+          school: string
+          need: string
+          paybill: string
+          account: string
+          image: string | null
+          poster: string | null
+          tag: string
+          number: string
+          short: string | null
+          bio: string[] | null
+          sponsored: boolean
+          sponsored_by: string | null
+          sponsored_date: string | null
+          sponsored_quote: string | null
+          published: boolean
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          name: string
+          school: string
+          need: string
+          paybill: string
+          account: string
+          image?: string | null
+          poster?: string | null
+          tag: string
+          number: string
+          short?: string | null
+          bio?: string[] | null
+          sponsored?: boolean
+          sponsored_by?: string | null
+          sponsored_date?: string | null
+          sponsored_quote?: string | null
+          published?: boolean
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          slug?: string
+          name?: string
+          school?: string
+          need?: string
+          paybill?: string
+          account?: string
+          image?: string | null
+          poster?: string | null
+          tag?: string
+          number?: string
+          short?: string | null
+          bio?: string[] | null
+          sponsored?: boolean
+          sponsored_by?: string | null
+          sponsored_date?: string | null
+          sponsored_quote?: string | null
+          published?: boolean
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

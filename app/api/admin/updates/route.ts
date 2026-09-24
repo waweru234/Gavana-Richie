@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
       featured_file_url: body.featured_file_url?.trim() || null,
       media_type: body.media_type || null,
       category: body.category.trim().toUpperCase(),
-      tags: Array.isArray(body.tags) ? body.tags.filter(Boolean).map(t => t.trim()) : [],
+      tags: Array.isArray(body.tags) ? body.tags.filter(Boolean).map((t: string) => t.trim()) : [],
       seo_title: body.seo_title?.trim() || null,
       seo_description: body.seo_description?.trim() || null,
       seo_keywords: body.seo_keywords?.trim() || null,
