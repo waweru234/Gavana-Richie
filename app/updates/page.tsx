@@ -161,7 +161,7 @@ export default function UpdatesPage() {
               </ul>
 
               <p>A county administration that loses its trees in its last term cannot ask the next generation to plant them. The Green City cannot be rebuilt in a single rainy season after a decade of chainsaws. The outgoing governor is signing off on a Nakuru we do not want our children to inherit.</p>
-              <p>The video is &mdash; by Richie&apos;s own admission &mdash; rough: phone footage, no studio, captions and all. But the stumps in frame are not rough. They are what Nakuru is becoming under the watch of a governor who will leave office knowing exactly what his last term took from this county.</p>
+              <p>The video is &mdash; by Richie&apos;s own admission &mdash; rough: phone footage, no studio, captions and all. But the stumps in frame are not rough. They are what Nakuru is becoming under the watch of a governor who will leave office knowing exactly what her last term took from this county.</p>
 
               <Link href="/manifesto" className="text-link">Read the agenda for a green Nakuru <span>→</span></Link>
             </div>

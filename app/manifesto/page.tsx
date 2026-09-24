@@ -76,11 +76,10 @@ const pillars: Pillar[] = [
     title: 'Universal Healthcare and Social Protection',
     will: [
       'Upgrade hospitals and health centres; ensure medicines, equipment, labs, and staffing; expand maternal and child health services.',
-      'Establish a sustainable county-supported health insurance programme.',
       'Build modern ambulance and emergency response systems in every sub-county.',
       'Expand support for older persons, persons with disabilities, vulnerable households, and orphans.',
     ],
-    outcomes: ['Improved healthcare access', 'Reduced disease burden', 'Lower healthcare costs', 'Improved quality of life'],
+    outcomes: ['Improved healthcare access', 'Reduced disease burden', 'Improved quality of life'],
   },
   {
     number: 'Pillar 05',
