@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: UpdatePageProps): Promise<Met
     return { title: 'Update Not Found' }
   }
 
-  const siteUrl = 'https://gavanarichie.com'
+  const siteUrl = 'https://www.gavanarichie.com'
   const updateUrl = `${siteUrl}/updates/${update.slug}`
 
   return {

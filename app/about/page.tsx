@@ -1,7 +1,36 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { AboutVideo } from '@/components/about-video'
 import { SocialIcons } from '@/components/social-icons'
 import { ActionBand, PageIntro, SiteShell, StatStrip } from '@/components/site-shell'
+
+const siteUrl = 'https://www.gavanarichie.com'
+
+export const metadata: Metadata = {
+  title: 'About Richie Githatu | Nakuru Kwetu 2027',
+  description: 'Learn about Richie Githatu, candidate for Governor of Nakuru County in 2027. A new-generation leader shaped by Nakuru, focused on education, youth opportunity, and accountable governance.',
+  keywords: ['Richie Githatu', 'Nakuru Governor candidate', 'about Richie Githatu', 'Nakuru politics'],
+  authors: [{ name: 'Richie Githatu' }],
+  robots: 'index, follow',
+  openGraph: {
+    type: 'profile',
+    url: `${siteUrl}/about`,
+    title: 'About Richie Githatu | Nakuru Kwetu 2027',
+    description: 'Learn about Richie Githatu, candidate for Governor of Nakuru County in 2027.',
+    siteName: 'Nakuru Kwetu',
+    images: [{ url: `${siteUrl}/richie-portrait.jpeg`, width: 1200, height: 630, alt: 'Richie Githatu' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Richie Githatu | Nakuru Kwetu 2027',
+    description: 'Learn about Richie Githatu, candidate for Governor of Nakuru County in 2027.',
+    images: [`${siteUrl}/richie-portrait.jpeg`],
+  },
+  alternates: {
+    canonical: `${siteUrl}/about`,
+  },
+}
+
 export default function AboutPage() {
   return <SiteShell>
     <PageIntro eyebrow="ABOUT RICHARD GITHATU" title="Leadership with" accent="a practical heart." text="A campaign shaped by listening, service, and the belief that Nakuru can lead with ideas that touch real lives." />

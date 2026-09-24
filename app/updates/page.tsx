@@ -1,6 +1,34 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
 import { UpdatesVideo } from '@/components/updates-video'
+
+const siteUrl = 'https://www.gavanarichie.com'
+
+export const metadata: Metadata = {
+  title: 'Campaign Updates | Richie Githatu for Governor 2027',
+  description: 'Latest news and updates from the Richie Githatu 2027 gubernatorial campaign trail in Nakuru County. Civic engagement, health initiatives, community events, and more.',
+  keywords: ['campaign updates', 'Richie Githatu', 'Nakuru news', 'Nakuru politics 2027'],
+  authors: [{ name: 'Richie Githatu' }],
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    url: `${siteUrl}/updates`,
+    title: 'Campaign Updates | Richie Githatu for Governor 2027',
+    description: 'Latest news and updates from the Richie Githatu 2027 gubernatorial campaign trail in Nakuru County.',
+    siteName: 'Nakuru Kwetu',
+    images: [{ url: `${siteUrl}/richie-portrait.jpeg`, width: 1200, height: 630, alt: 'Richie Githatu' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Campaign Updates | Richie Githatu for Governor 2027',
+    description: 'Latest news and updates from the Richie Githatu 2027 gubernatorial campaign trail in Nakuru County.',
+    images: [`${siteUrl}/richie-portrait.jpeg`],
+  },
+  alternates: {
+    canonical: `${siteUrl}/updates`,
+  },
+}
 
 export default function UpdatesPage() {
   return <SiteShell>

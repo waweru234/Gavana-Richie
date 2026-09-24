@@ -1,9 +1,8 @@
 import { MetadataRoute } from 'next'
 import { createServerClient } from '@/lib/supabase'
-import { studentProfiles } from '@/lib/student-profiles'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://gavanarichie.com'
+  const baseUrl = 'https://www.gavanarichie.com'
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -51,14 +50,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Student pages from local data
-  const studentPages: MetadataRoute.Sitemap = studentProfiles.map((student) => ({
-    url: `${baseUrl}/students/${student.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: 0.7,
-  }))
-
   // Dynamic pages from Supabase - fetch published updates
   let dynamicPages: MetadataRoute.Sitemap = []
   try {
@@ -81,5 +72,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.warn('Failed to fetch updates for sitemap:', error)
   }
 
-  return [...staticPages, ...studentPages, ...dynamicPages]
+  return [...staticPages, ...dynamicPages]
 }

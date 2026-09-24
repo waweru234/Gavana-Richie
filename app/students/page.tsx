@@ -1,8 +1,36 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
 import { JawabuKenyaBanner } from '@/components/jawabu-kenya-banner'
 import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
 import { getPublishedStudents } from '@/lib/students'
+
+const siteUrl = 'https://www.gavanarichie.com'
+
+export const metadata: Metadata = {
+  title: 'Adopt a Student | Richie Githatu for Governor 2027',
+  description: 'Join the ADOPT-A-STUDENT campaign. Pick a student, pay directly to their school, and help keep vulnerable children in Nakuru in school. Every shilling counts.',
+  keywords: ['adopt a student', 'school fees', 'education support', 'Nakuru students', 'Richie Githatu'],
+  authors: [{ name: 'Richie Githatu' }],
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    url: `${siteUrl}/students`,
+    title: 'Adopt a Student | Richie Githatu for Governor 2027',
+    description: 'Join the ADOPT-A-STUDENT campaign. Pick a student, pay directly to their school, and help keep vulnerable children in Nakuru in school.',
+    siteName: 'Nakuru Kwetu',
+    images: [{ url: `${siteUrl}/richie-portrait.jpeg`, width: 1200, height: 630, alt: 'Adopt a Student' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Adopt a Student | Richie Githatu for Governor 2027',
+    description: 'Join the ADOPT-A-STUDENT campaign. Pick a student, pay directly to their school, and help keep vulnerable children in Nakuru in school.',
+    images: [`${siteUrl}/richie-portrait.jpeg`],
+  },
+  alternates: {
+    canonical: `${siteUrl}/students`,
+  },
+}
 
 const coreValues = [
   { title: 'Dignity & Inclusion', text: 'Every child deserves respect, fairness and equal opportunity.' },

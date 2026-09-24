@@ -1,6 +1,34 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { JoinForm } from '@/components/join-form'
 import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
+
+const siteUrl = 'https://www.gavanarichie.com'
+
+export const metadata: Metadata = {
+  title: 'Join the Movement | Richie Githatu for Governor 2027',
+  description: 'Join Richie Githatu\'s people-powered campaign for Nakuru County Governor in 2027. Volunteer, share the vision, or adopt a student. Every voice counts.',
+  keywords: ['join campaign', 'volunteer Nakuru', 'Richie Githatu volunteers', 'Nakuru political campaign'],
+  authors: [{ name: 'Richie Githatu' }],
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    url: `${siteUrl}/join`,
+    title: 'Join the Movement | Richie Githatu for Governor 2027',
+    description: 'Join Richie Githatu\'s people-powered campaign for Nakuru County Governor in 2027.',
+    siteName: 'Nakuru Kwetu',
+    images: [{ url: `${siteUrl}/richie-portrait.jpeg`, width: 1200, height: 630, alt: 'Join the Movement' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Join the Movement | Richie Githatu for Governor 2027',
+    description: 'Join Richie Githatu\'s people-powered campaign for Nakuru County Governor in 2027.',
+    images: [`${siteUrl}/richie-portrait.jpeg`],
+  },
+  alternates: {
+    canonical: `${siteUrl}/join`,
+  },
+}
 
 const ways = [
   { number: '01', title: 'Volunteer your time', text: 'Help us listen at rallies, knocking doors, organising the cars at events — and reaching more people across Nakuru.' },

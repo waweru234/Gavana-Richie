@@ -1,7 +1,35 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { AgendaVideo } from '@/components/agenda-video'
 import { SocialIcons } from '@/components/social-icons'
 import { ActionBand, PageIntro, SiteShell, StatStrip } from '@/components/site-shell'
+
+const siteUrl = 'https://www.gavanarichie.com'
+
+export const metadata: Metadata = {
+  title: 'The Agenda | Richie Githatu for Governor 2027',
+  description: 'Read the full manifesto for Richie Githatu\'s 2027 Nakuru gubernatorial campaign. Eight pillars covering youth internships, Adopt-a-Student, market reform, procurement accountability, and more.',
+  keywords: ['Richie Githatu manifesto', 'Nakuru agenda 2027', 'Vijana na Tender', 'Adopt-a-Student', 'Soko Bila Rent'],
+  authors: [{ name: 'Richie Githatu' }],
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    url: `${siteUrl}/manifesto`,
+    title: 'The Agenda | Richie Githatu for Governor 2027',
+    description: 'Read the full manifesto for Richie Githatu\'s 2027 Nakuru gubernatorial campaign.',
+    siteName: 'Nakuru Kwetu',
+    images: [{ url: `${siteUrl}/richie-portrait.jpeg`, width: 1200, height: 630, alt: 'The Agenda' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The Agenda | Richie Githatu for Governor 2027',
+    description: 'Read the full manifesto for Richie Githatu\'s 2027 Nakuru gubernatorial campaign.',
+    images: [`${siteUrl}/richie-portrait.jpeg`],
+  },
+  alternates: {
+    canonical: `${siteUrl}/manifesto`,
+  },
+}
 
 type Pillar = {
   number: string

@@ -1,9 +1,37 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ActionBand, SiteShell, StatStrip } from '@/components/site-shell'
 import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
 import { studentProfiles } from '@/lib/student-profiles'
 
-const siteUrl = 'https://gavanarichie.com'
+const siteUrl = 'https://www.gavanarichie.com'
+
+export const metadata: Metadata = {
+  title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu',
+  description: 'The official campaign platform for Richie Githatu, candidate for Governor of Nakuru County in 2027. A people-powered campaign for a county that works for everyone.',
+  keywords: ['Richie Githatu', 'Nakuru Governor 2027', 'Nakuru Kwetu', 'Adopt a Student', 'Nakuru politics'],
+  authors: [{ name: 'Richie Githatu' }],
+  creator: 'Richie Githatu',
+  publisher: 'Nakuru Kwetu',
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    url: siteUrl,
+    title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu',
+    description: 'The official campaign platform for Richie Githatu, candidate for Governor of Nakuru County in 2027.',
+    siteName: 'Nakuru Kwetu',
+    images: [{ url: `${siteUrl}/richie-portrait.jpeg`, width: 1200, height: 630, alt: 'Richie Githatu' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu',
+    description: 'The official campaign platform for Richie Githatu, candidate for Governor of Nakuru County in 2027.',
+    images: [`${siteUrl}/richie-portrait.jpeg`],
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
+}
 
 const structuredData = {
   '@context': 'https://schema.org',

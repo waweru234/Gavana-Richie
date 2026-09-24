@@ -6,6 +6,8 @@ import { JawabuKenyaBanner } from '@/components/jawabu-kenya-banner'
 import { getStudentBySlug } from '@/lib/students'
 import { StudentProfile } from '@/lib/students'
 
+const siteUrl = 'https://www.gavanarichie.com'
+
 export async function generateStaticParams() {
   const { getPublishedStudents } = await import('@/lib/students')
   const students = await getPublishedStudents()
@@ -16,14 +18,25 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const student = await getStudentBySlug(slug)
   if (!student) return {}
+  
+  const studentUrl = `${siteUrl}/students/${student.slug}`
+
   return {
     title: `${student.name} — ${student.sponsored ? 'Sponsored' : 'Adopt a Student'} | Richie Githatu 2027`,
     description: student.short || student.need,
-    alternates: { canonical: `/students/${student.slug}` },
+    alternates: { canonical: studentUrl },
     openGraph: {
+      type: 'profile',
+      url: studentUrl,
       title: `${student.name} — ${student.sponsored ? 'Sponsored' : 'Adopt a Student'}`,
       description: student.short || student.need,
-      images: student.poster ? [{ url: student.poster, alt: student.name }] : [],
+      images: student.poster ? [{ url: student.poster, width: 1200, height: 630, alt: student.name }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${student.name} — ${student.sponsored ? 'Sponsored' : 'Adopt a Student'}`,
+      description: student.short || student.need,
+      images: student.poster ? [student.poster] : [],
     },
   }
 }

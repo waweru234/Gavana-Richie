@@ -1,7 +1,35 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CommentForm } from '@/components/comment-form'
 import { SocialIcons } from '@/components/social-icons'
 import { ActionBand, PageIntro, SiteShell, StatStrip } from '@/components/site-shell'
+
+const siteUrl = 'https://www.gavanarichie.com'
+
+export const metadata: Metadata = {
+  title: 'Support the Campaign | Richie Githatu for Governor 2027',
+  description: 'Support Richie Githatu\'s 2027 gubernatorial campaign for Nakuru County. Every contribution powers a people-powered movement for accountable leadership and real opportunity.',
+  keywords: ['donate to campaign', 'support Richie Githatu', 'Nakuru campaign donation', 'political donation Kenya'],
+  authors: [{ name: 'Richie Githatu' }],
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    url: `${siteUrl}/donate`,
+    title: 'Support the Campaign | Richie Githatu for Governor 2027',
+    description: 'Support Richie Githatu\'s 2027 gubernatorial campaign for Nakuru County.',
+    siteName: 'Nakuru Kwetu',
+    images: [{ url: `${siteUrl}/richie-portrait.jpeg`, width: 1200, height: 630, alt: 'Support the Campaign' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Support the Campaign | Richie Githatu for Governor 2027',
+    description: 'Support Richie Githatu\'s 2027 gubernatorial campaign for Nakuru County.',
+    images: [`${siteUrl}/richie-portrait.jpeg`],
+  },
+  alternates: {
+    canonical: `${siteUrl}/donate`,
+  },
+}
 
 export default function DonatePage() {
   return <SiteShell>
