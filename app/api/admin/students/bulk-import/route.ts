@@ -97,25 +97,84 @@ function getCellValue(row: any, keys: string[]): string {
 }
 
 function parseExcelRow(row: any, index: number): any {
-  return {
+  const parsed = {
     name: getCellValue(row, ['Name', 'name', 'Student Name', 'student_name', ' FULL NAME ', 'Full Name', 'full_name']),
     school: getCellValue(row, ['School', 'school', 'Institution', 'institution', 'college', 'College']) || 'Lionhill Vocational Centre',
-    need: getCellValue(row, ['Need', 'need', 'Funding Need', 'funding_need', 'Amount', 'amount', 'Fees', 'fees']),
+    need: getCellValue(row, ['Need', 'need', 'Funding Need', 'funding_need', 'Amount', 'amount', 'Fees', 'fees']) || 'KSh 5,000',
     paybill: getCellValue(row, ['Paybill', 'paybill', 'Pay Bill', 'pay_bill']) || '600100',
-    account: getCellValue(row, ['Account', 'account', 'Account Number', 'account_number', 'ADM. NUMBER', 'adm_number', ' Adm. Number']) || getCellValue(row, ['ADM. NUMBER', 'Adm Number', 'adm_number']),
-    tag: getCellValue(row, ['Tag', 'tag', 'Study Area', 'study_area', 'Course', 'course', 'COURSE']) || '',
-    number: getCellValue(row, ['Number', 'number', 'Student Number', 'student_number', 'ADM. NUMBER', 'adm_number', 'Adm. Number']) || getCellValue(row, [' ADM. NUMBER', 'Admission Number']) || String(index + 1),
-    short: getCellValue(row, ['Short', 'short', 'Short Description', 'short_description', 'Bio', 'bio']) || '',
-    bio: getCellValue(row, ['Bio', 'bio', 'Description', 'description', 'Short', 'short']),
+    account: getCellValue(row, ['Account', 'account', 'Account Number', 'account_number', 'ADM. NUMBER', 'adm_number', ' ADM. Number']) || '',
+    tag: getCellValue(row, ['Tag', 'tag', 'Study Area', 'study_area', 'Course', 'course', 'COURSE', 'course']) || '',
+    course: getCellValue(row, ['Course', 'course', 'COURSE']) || '',
+    number: getCellValue(row, ['Number', 'number', 'Student Number', 'student_number', 'ADM. NUMBER', 'adm_number', 'Adm. Number', 'Adm_Number']) || '',
+    gender: getCellValue(row, ['Gender', 'gender', 'GENDER']) || '',
+    phone: getCellValue(row, ['Phone Number', 'phone_number', 'Phone', 'phone', 'PHONE NUMBER']) || '',
+    short: getCellValue(row, ['Short', 'short', 'Short Description', 'short_description', 'Bio', 'bio', 'Description']) || '',
+    bio: getCellValue(row, ['Bio', 'bio', 'Description', 'description']) || '',
     image: getCellValue(row, ['Image', 'image', 'Photo', 'photo', 'STUDENT  PHOTO', 'Student Photo', 'student_photo', 'Image URL', 'image_url', 'Photo URL', 'photo_url']),
     poster: getCellValue(row, ['Poster', 'poster', 'Poster Image', 'poster_image', 'Poster URL', 'poster_url']) || '',
-    sponsored: false,
+    sponsored: getCellValue(row, ['Sponsored', 'sponsored']) === 'true' || getCellValue(row, ['Sponsored', 'sponsored']) === '1',
     sponsoredBy: getCellValue(row, ['Sponsored By', 'sponsored_by', 'Sponsor', 'sponsor']) || '',
     sponsoredDate: getCellValue(row, ['Sponsored Date', 'sponsored_date', 'Date Sponsored', 'date_sponsored']) || '',
     sponsoredQuote: getCellValue(row, ['Sponsored Quote', 'sponsored_quote', 'Quote', 'quote']) || '',
     published: getCellValue(row, ['Published', 'published']) !== 'false',
     sort_order: parseInt(getCellValue(row, ['Sort Order', 'sort_order', 'Order', 'order']) || '0') || 0,
   }
+
+  // Trim all string fields
+  for (const key of Object.keys(parsed)) {
+    if (typeof (parsed as any)[key] === 'string') {
+      (parsed as any)[key] = (parsed as any)[key].trim()
+    }
+  }
+
+  // Auto-generate short (brief description) if not provided
+  if (!parsed.short) {
+    if (parsed.tag) {
+      parsed.short = `${parsed.name} is a ${parsed.gender ? parsed.gender.toLowerCase() + ' ' : ''}student studying ${parsed.tag} at ${parsed.school}.`
+    } else if (parsed.course) {
+      parsed.short = `${parsed.name} is a ${parsed.gender ? parsed.gender.toLowerCase() + ' ' : ''}student at ${parsed.school}.`
+    } else {
+      parsed.short = `${parsed.name} is a student at ${parsed.school}.`
+    }
+  }
+
+  // Auto-generate bio paragraphs if not provided
+  if (!parsed.bio) {
+    const bioParts = []
+    if (parsed.gender) {
+      bioParts.push(`Gender: ${parsed.gender}`)
+    }
+    if (parsed.tag) {
+      bioParts.push(`Course: ${parsed.tag}`)
+    }
+    if (parsed.school) {
+      bioParts.push(`School: ${parsed.school}`)
+    }
+    if (parsed.number) {
+      bioParts.push(`Admission Number: ${parsed.number}`)
+    }
+    if (parsed.phone) {
+      bioParts.push(`Phone: ${parsed.phone}`)
+    }
+    parsed.bio = bioParts.join('\n')
+  }
+
+  // Clean up image URL - handle duplicate URLs in cell
+  if (parsed.image && parsed.image.includes('(')) {
+    const urlMatch = parsed.image.match(/(https?:\/\/[^\s(]+)/)
+    if (urlMatch) {
+      parsed.image = urlMatch[1]
+    }
+  }
+
+  // Clean up the number/account field - use ADM number
+  if (!parsed.number && !parsed.account) {
+    const adm = getCellValue(row, ['ADM. NUMBER', 'Adm Number', 'adm_number', ' ADM. NUMBER'])
+    parsed.number = adm || String(index + 1)
+    parsed.account = adm || String(index + 1)
+  }
+
+  return parsed
 }
 
 export async function POST(request: NextRequest) {
