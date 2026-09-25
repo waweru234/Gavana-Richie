@@ -10,7 +10,7 @@ const siteUrl = 'https://www.gavanarichie.com'
 
 export async function generateStaticParams() {
   const { getPublishedStudents } = await import('@/lib/students')
-  const students = await getPublishedStudents()
+  const { data: students } = await getPublishedStudents(1, 500)
   return students.map(s => ({ slug: s.slug }))
 }
 

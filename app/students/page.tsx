@@ -6,6 +6,11 @@ import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
 import { getPublishedStudents } from '@/lib/students'
 
 const siteUrl = 'https://www.gavanarichie.com'
+const STUDENTS_PER_PAGE = 8
+
+interface StudentsPageProps {
+  searchParams: Promise<{ page?: string }>
+}
 
 export const metadata: Metadata = {
   title: 'Adopt a Student | Richie Githatu for Governor 2027',
@@ -57,8 +62,10 @@ const beneficiaries = [
 
 const hashtags = ['#KeepAChildInSchool', '#EveryChildDeservesAChance', '#EducationForAll', '#YourSupportTheirFuture', '#InvestInEducation']
 
-export default async function StudentsPage() {
-  const students = await getPublishedStudents()
+export default async function StudentsPage({ searchParams }: StudentsPageProps) {
+  const params = await searchParams
+  const page = Math.max(1, parseInt(params.page || '1', 10))
+  const { data: students, total, totalPages } = await getPublishedStudents(page, STUDENTS_PER_PAGE)
 
   if (!students || students.length === 0) {
     return (
@@ -122,6 +129,24 @@ export default async function StudentsPage() {
               </Link>
             ))}
           </div>
+
+          {totalPages > 1 && (
+            <nav className="pagination" aria-label="Students pagination">
+              {page > 1 && (
+                <Link href={`/students?page=${page - 1}`} className="pagination-btn" aria-label="Previous page">
+                  <span aria-hidden>←</span> Previous
+                </Link>
+              )}
+              <span className="pagination-info" aria-live="polite">
+                Page {page} of {totalPages} · {total} students total
+              </span>
+              {page < totalPages && (
+                <Link href={`/students?page=${page + 1}`} className="pagination-btn" aria-label="Next page">
+                  Next <span aria-hidden>→</span>
+                </Link>
+              )}
+            </nav>
+          )}
 
           <JawabuKenyaBanner />
         </div>

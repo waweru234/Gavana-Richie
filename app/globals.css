@@ -1042,3 +1042,10 @@ footer .footer-social-block .eyebrow i { background: var(--jbrand-yellow); }
 .sponsor-toggle.sponsored { background: #e6f4ea; color: #1b5e20; border-color: #1b5e20; }
 .admin-filters button { padding: 8px 16px; border: 1px solid rgba(0,0,0,.12); background: #fff; border-radius: 8px; font: 600 13px var(--font-body); cursor: pointer; transition: all .2s; }
 .admin-filters button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+/* === PAGINATION === */
+.pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 40px 0; flex-wrap: wrap; }
+.pagination-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: var(--navy); color: #fff; border-radius: 8px; font: 700 13px var(--font-heading); transition: background .2s, transform .2s; }
+.pagination-btn:hover { background: var(--red); transform: translateY(-2px); }
+.pagination-info { color: var(--muted); font: 600 14px var(--font-heading); white-space: nowrap; }
+@media (max-width: 560px) { .pagination { gap: 12px; } .pagination-btn { padding: 10px 16px; font-size: 12px; } .pagination-info { font-size: 12px; } }

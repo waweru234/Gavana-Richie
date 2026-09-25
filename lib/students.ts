@@ -52,25 +52,34 @@ function generateSlug(name: string): string {
   return `${cleanName}-${randomSuffix}`
 }
 
-export async function getPublishedStudents(): Promise<StudentProfile[]> {
+export async function getPublishedStudents(page = 1, pageSize = 8): Promise<{ data: StudentProfile[]; total: number; totalPages: number }> {
   try {
     const supabase = createServerClient()
-    const { data, error } = await supabase
+    const offset = (page - 1) * pageSize
+    const { data, error, count } = await supabase
       .from('students')
-      .select('*')
+      .select('*', { count: 'exact' })
       .eq('published', true)
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false })
+      .range(offset, offset + pageSize - 1)
 
     if (error) {
       console.error('Supabase error:', error)
-      return []
+      return { data: [], total: 0, totalPages: 0 }
     }
 
-    return (data || []).map(s => mapStudent(s))
+    const total = count || 0
+    const totalPages = Math.ceil(total / pageSize)
+
+    return {
+      data: (data || []).map(s => mapStudent(s)),
+      total,
+      totalPages
+    }
   } catch (error) {
     console.error('Error fetching students:', error)
-    return []
+    return { data: [], total: 0, totalPages: 0 }
   }
 }
 
