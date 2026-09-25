@@ -50,26 +50,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Dynamic pages from Supabase - fetch published updates
+  // Dynamic pages from Supabase - fetch published updates and students
   let dynamicPages: MetadataRoute.Sitemap = []
   try {
     const supabase = createServerClient()
-    const { data: updates, error } = await supabase
+    
+    // Fetch published updates
+    const { data: updates, error: updatesError } = await supabase
       .from('updates')
       .select('slug, published_at, updated_at')
       .eq('published', true)
       .order('published_at', { ascending: false })
 
-    if (!error && updates) {
-      dynamicPages = updates.map((update) => ({
+    if (!updatesError && updates) {
+      dynamicPages.push(...updates.map((update) => ({
         url: `${baseUrl}/updates/${update.slug}`,
         lastModified: update.published_at ? new Date(update.published_at) : new Date(update.updated_at),
-        changeFrequency: 'weekly',
+        changeFrequency: 'weekly' as const,
         priority: 0.6,
-      }))
+      })))
+    }
+
+    // Fetch published students
+    const { data: students, error: studentsError } = await supabase
+      .from('students')
+      .select('slug, updated_at')
+      .eq('published', true)
+      .order('sort_order', { ascending: true })
+
+    if (!studentsError && students) {
+      dynamicPages.push(...students.map((student) => ({
+        url: `${baseUrl}/students/${student.slug}`,
+        lastModified: new Date(student.updated_at),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      })))
     }
   } catch (error) {
-    console.warn('Failed to fetch updates for sitemap:', error)
+    console.warn('Failed to fetch for sitemap:', error)
   }
 
   return [...staticPages, ...dynamicPages]
