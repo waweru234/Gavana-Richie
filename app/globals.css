@@ -982,6 +982,10 @@ footer .footer-social-block .eyebrow i { background: var(--jbrand-yellow); }
 .admin-import-section .admin-subtitle { font: 400 14px var(--font-body); color: rgba(0,0,0,.6); margin: 0 0 20px; }
 .excel-import-form { display: flex; flex-direction: column; gap: 20px; }
 .excel-import-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.excel-import-options { margin-top: 20px; padding: 16px; background: #f0f7ff; border-radius: 8px; border: 1px solid rgba(23,58,112,.12); }
+.excel-options-note { margin: 0 0 8px; font-size: 13px; color: rgba(0,0,0,.6); }
+.excel-options-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; }
+.excel-options-list li { font-size: 13px; }
 .admin-import-result { background: #f8f9fa; border-radius: 12px; padding: 20px; margin-top: 20px; border: 1px solid rgba(0,0,0,.08); }
 .admin-import-result h3 { margin: 0 0 12px; font: 700 16px var(--font-heading); color: var(--navy); }
 .admin-import-result .success { color: #1b5e20; font: 600 14px var(--font-body); }

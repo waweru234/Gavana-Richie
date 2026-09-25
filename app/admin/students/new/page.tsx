@@ -53,6 +53,7 @@ export default function NewStudentPage() {
   const [uploading, setUploading] = useState(false)
   const [importing, setImporting] = useState(false)
   const [importResult, setImportResult] = useState<any>(null)
+  const [previewData, setPreviewData] = useState<any[] | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleChange = (field: keyof StudentFormData, value: any) => {
@@ -110,11 +111,15 @@ export default function NewStudentPage() {
     setImporting(true)
     setError(null)
     setImportResult(null)
+    setPreviewData(null)
 
     try {
       const formData = new FormData()
       formData.append('file', file)
       formData.append('autoUploadImages', autoUpload.toString())
+      formData.append('defaultSchool', 'Lionhill Vocational Centre')
+      formData.append('defaultNeed', 'KSh 5,000')
+      formData.append('defaultPaybill', '600100')
 
       const res = await fetch('/api/admin/students/bulk-import', { method: 'POST', body: formData })
       const data = await res.json()
@@ -123,12 +128,52 @@ export default function NewStudentPage() {
         setError(data.error)
       } else {
         setImportResult(data)
+        setPreviewData(data.data || [])
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Import failed')
     } finally {
       setImporting(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
+  const handlePreview = async () => {
+    const file = fileInputRef.current?.files?.[0]
+    if (!file) {
+      setError('Please select an Excel file first')
+      return
+    }
+
+    setImporting(true)
+    setError(null)
+    setImportResult(null)
+    setPreviewData(null)
+
+    try {
+      const buffer = Buffer.from(await file.arrayBuffer())
+      // Note: XLSX parsing only on server, so we use the API for preview too
+      // For client-side, we'll do a limited parse
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('autoUploadImages', 'false')
+      formData.append('defaultSchool', 'Lionhill Vocational Centre')
+      formData.append('defaultNeed', 'KSh 5,000')
+      formData.append('defaultPaybill', '600100')
+
+      const res = await fetch('/api/admin/students/bulk-import', { method: 'POST', body: formData })
+      const data = await res.json()
+
+      if (data.error && !data.data) {
+        setError(data.error)
+      } else {
+        setPreviewData(data.data || [])
+        setImportResult(data)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Preview failed')
+    } finally {
+      setImporting(false)
     }
   }
 
@@ -204,7 +249,25 @@ export default function NewStudentPage() {
               >
                 {importing ? 'Importing...' : 'Import (Keep Image URLs)'}
               </button>
+              <button
+                type="button"
+                className="button button-secondary"
+                onClick={handlePreview}
+                disabled={importing || !fileInputRef.current?.files?.[0]}
+              >
+                Preview
+              </button>
               <Link href="/admin/students" className="button">Back to Students</Link>
+            </div>
+
+            <div className="excel-import-options">
+              <p className="excel-options-note">Default values applied for missing fields:</p>
+              <ul className="excel-options-list">
+                <li><b>School:</b> Lionhill Vocational Centre</li>
+                <li><b>Paybill:</b> 600100 (Adopt-a-Student campaign)</li>
+                <li><b>Need:</b> KSh 5,000 (default per student)</li>
+                <li><b>Auto-upload images:</b> Google Drive links are automatically converted to direct URLs and uploaded</li>
+              </ul>
             </div>
           </div>
 
