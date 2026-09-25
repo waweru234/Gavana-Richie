@@ -5,6 +5,8 @@ import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
 import { JawabuKenyaBanner } from '@/components/jawabu-kenya-banner'
 import { getStudentBySlug } from '@/lib/students'
 import { StudentProfile } from '@/lib/students'
+import { StudentImage } from '@/components/student-image'
+import { getDirectImageUrl } from '@/lib/utils'
 
 const siteUrl = 'https://www.gavanarichie.com'
 
@@ -18,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const student = await getStudentBySlug(slug)
   if (!student) return {}
-  
+
   const studentUrl = `${siteUrl}/students/${student.slug}`
 
   return {
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: studentUrl,
       title: `${student.name} — ${student.sponsored ? 'Sponsored' : 'Adopt a Student'}`,
       description: student.short || student.need,
-      images: student.poster ? [{ url: student.poster, width: 1200, height: 630, alt: student.name }] : [],
+      images: student.poster ? [{ url: getDirectImageUrl(student.poster), width: 1200, height: 630, alt: student.name }] : [],
     },
     twitter: {
       card: 'summary_large_image',
@@ -54,7 +56,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
     '@type': 'Person',
     name: student.name,
     url: `${siteUrl}/students/${student.slug}`,
-    image: student.image,
+    image: getDirectImageUrl(student.image),
     jobTitle: student.tag,
   }
 
@@ -69,7 +71,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
     <section className="section student-detail"><div className="container student-detail-grid">
       <div className="student-detail-art">
         <div className="student-detail-circle" />
-        <img src={student.poster || student.image || '/placeholder-student.jpg'} alt={student.name} />
+        <StudentImage src={getDirectImageUrl(student.poster || student.image)} alt={student.name} loading="eager" />
         <span className="student-detail-badge">{student.number} · {student.tag.toUpperCase()}</span>
         {student.sponsored && <span className="student-sponsored-badge student-sponsored-badge-large"><span className="student-sponsored-tick" aria-hidden>✓</span> FULLY SPONSORED</span>}
       </div>

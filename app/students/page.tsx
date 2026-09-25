@@ -4,6 +4,8 @@ import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
 import { JawabuKenyaBanner } from '@/components/jawabu-kenya-banner'
 import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
 import { getPublishedStudents } from '@/lib/students'
+import { StudentImage } from '@/components/student-image'
+import { getDirectImageUrl } from '@/lib/utils'
 
 const siteUrl = 'https://www.gavanarichie.com'
 const STUDENTS_PER_PAGE = 8
@@ -109,11 +111,11 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
           <div className="student-grid" data-reveal="stagger">
             {students.map(student => (
               <Link href={`/students/${student.slug}`} className={'student-card student-card-link' + (student.sponsored ? ' student-card-sponsored' : '')} key={student.id}>
-                <div className="student-image">
-                  <img src={student.image || '/placeholder-student.jpg'} alt={`${student.name} student profile`} loading="lazy" />
-                  {student.sponsored && <span className="student-sponsored-badge"><span className="student-sponsored-tick" aria-hidden>✓</span> SPONSORED</span>}
-                  <span>{student.number} · {student.tag.toUpperCase()}</span>
-                </div>
+<div className="student-image">
+                   <StudentImage src={getDirectImageUrl(student.image)} alt={`${student.name} student profile`} loading="lazy" />
+                   {student.sponsored && <span className="student-sponsored-badge"><span className="student-sponsored-tick" aria-hidden>✓</span> SPONSORED</span>}
+                   <span>{student.number} · {student.tag.toUpperCase()}</span>
+                 </div>
                 <div className="student-body">
                   <span className="label">{student.name.toUpperCase()}</span>
                   <h3>{student.school}</h3>

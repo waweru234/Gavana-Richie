@@ -126,6 +126,19 @@ export async function getAllStudentsAdmin(offset = 0, limit = 50): Promise<{ dat
   }
 }
 
+function toDirectGoogleDriveUrl(url: string | null): string | null {
+  if (!url) return null
+  // Only rewrite Google Drive links. Other image URLs may also have an `id` query parameter.
+  if (!/(drive\.google\.com|docs\.google\.com)/i.test(url)) return url
+  const fileId = url.match(/[?&]id=([a-zA-Z0-9_-]+)/)?.[1]
+    || url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1]
+    || url.match(/\/uc\/(?:export\/)?download\/([a-zA-Z0-9_-]+)/)?.[1]
+
+  return fileId
+    ? `https://drive.usercontent.google.com/download?id=${fileId}&export=view`
+    : url
+}
+
 function mapStudent(row: any): StudentProfile {
   return {
     id: row.id,
@@ -135,8 +148,8 @@ function mapStudent(row: any): StudentProfile {
     need: row.need,
     paybill: row.paybill,
     account: row.account,
-    image: row.image,
-    poster: row.poster,
+    image: toDirectGoogleDriveUrl(row.image),
+    poster: toDirectGoogleDriveUrl(row.poster),
     tag: row.tag,
     number: row.number,
     short: row.short,

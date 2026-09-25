@@ -124,8 +124,8 @@ export default function NewStudentPage() {
       const res = await fetch('/api/admin/students/bulk-import', { method: 'POST', body: formData })
       const data = await res.json()
 
-      if (data.error && !data.data) {
-        setError(data.error)
+      if (!res.ok && !data.data) {
+        setError(data.error || `Import failed (HTTP ${res.status})`)
       } else {
         setImportResult(data)
         setPreviewData(data.data || [])
@@ -164,8 +164,8 @@ export default function NewStudentPage() {
       const res = await fetch('/api/admin/students/bulk-import', { method: 'POST', body: formData })
       const data = await res.json()
 
-      if (data.error && !data.data) {
-        setError(data.error)
+      if (!res.ok && !data.data) {
+        setError(data.error || `Preview failed (HTTP ${res.status})`)
       } else {
         setPreviewData(data.data || [])
         setImportResult(data)
@@ -279,6 +279,16 @@ export default function NewStudentPage() {
               )}
               {importResult.errors > 0 && (
                 <p className="warning">Failed to import {importResult.errors} student{importResult.errors !== 1 ? 's' : ''}</p>
+              )}
+              {importResult.imageErrors && importResult.imageErrors.length > 0 && (
+                <details open>
+                  <summary>Image errors ({importResult.imageErrors.length})</summary>
+                  <ul>
+                    {importResult.imageErrors.map((e: any, i: number) => (
+                      <li key={i}>Row {e.row} · {e.field}: {e.error}<br /><small>{e.source}</small></li>
+                    ))}
+                  </ul>
+                </details>
               )}
               {importResult.errorDetails && importResult.errorDetails.length > 0 && (
                 <details>

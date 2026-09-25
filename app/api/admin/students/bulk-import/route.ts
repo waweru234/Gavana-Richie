@@ -14,19 +14,48 @@ function generateSlug(name: string): string {
 }
 
 function getGoogleDriveFileId(url: string): string | null {
-  // Handle various Google Drive URL formats:
-  // https://drive.google.com/open?id=FILE_ID
-  // https://drive.google.com/file/d/FILE_ID/view
-  // https://drive.google.com/open?id=FILE_ID&usp=sharing
+  // Handle Google Drive links pasted into cells or stored as Excel hyperlinks.
   const patterns = [
     /[?&]id=([a-zA-Z0-9_-]+)/,
     /\/file\/d\/([a-zA-Z0-9_-]+)/,
+    /\/uc\/(?:export\/)?download\/([a-zA-Z0-9_-]+)/,
   ]
   for (const pattern of patterns) {
     const match = url.match(pattern)
     if (match) return match[1]
   }
   return null
+}
+
+function extractUrl(value: unknown): string {
+  const text = value == null ? '' : String(value).trim()
+  if (!text) return ''
+  // Excel often contains a display label followed by the real URL.
+  const url = text.split(/\s+/).find(part => part.startsWith('http://') || part.startsWith('https://'))
+  return (url || text).replace(/[),.;]+$/, '')
+}
+
+function addExcelHyperlinks(rows: any[], worksheet: XLSX.WorkSheet): any[] {
+  const range = worksheet['!ref']
+  if (!range) return rows
+  const decoded = XLSX.utils.decode_range(range)
+  const headers: string[] = []
+  for (let column = decoded.s.c; column <= decoded.e.c; column++) {
+    const cell = worksheet[XLSX.utils.encode_cell({ r: decoded.s.r, c: column })]
+    headers[column] = cell?.v == null ? '' : String(cell.v).trim()
+  }
+
+  return rows.map((row, rowIndex) => {
+    const enriched = { ...row }
+    const worksheetRow = decoded.s.r + rowIndex + 1
+    headers.forEach((header, column) => {
+      if (!header) return
+      const cell = worksheet[XLSX.utils.encode_cell({ r: worksheetRow, c: column })]
+      const target = cell?.l?.Target || cell?.l?.target
+      if (target) enriched[header] = target
+    })
+    return enriched
+  })
 }
 
 function isGoogleDriveUrl(url: string): boolean {
@@ -43,12 +72,12 @@ function toGoogleDriveDirectUrl(url: string): string | null {
   return url.startsWith('http') ? url : null
 }
 
-async function downloadAndUploadImage(url: string, folder: string, supabase: any): Promise<string | null> {
-  if (!url || !url.trim()) return null
+async function downloadAndUploadImage(url: string, folder: string, supabase: any): Promise<{ url: string | null; error: string | null }> {
+  if (!url || !url.trim()) return { url: null, error: 'Image URL is empty' }
 
   try {
     const directUrl = toGoogleDriveDirectUrl(url.trim())
-    if (!directUrl) return null
+    if (!directUrl) return { url: null, error: 'Image URL is not a valid HTTP/HTTPS URL' }
 
     const response = await fetch(directUrl, {
       headers: {
@@ -58,40 +87,42 @@ async function downloadAndUploadImage(url: string, folder: string, supabase: any
     if (!response.ok) throw new Error(`Failed to fetch image: ${response.status}`)
 
     const blob = await response.blob()
-    const contentType = response.headers.get('content-type') || 'image/jpeg'
+    const contentType = (response.headers.get('content-type') || '').split(';')[0].toLowerCase()
+    const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+    if (!allowedImageTypes.has(contentType)) {
+      throw new Error(`The image link returned ${contentType || 'an unknown content type'}, not an image`)
+    }
     const extension = contentType.split('/')[1] || 'jpg'
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${extension}`
 
-    const formData = new FormData()
-    formData.append('file', blob, fileName)
-    formData.append('folder', folder)
+    const filePath = `${folder}/${fileName}`
+    const { error: uploadError } = await supabase.storage
+      .from('media')
+      .upload(filePath, blob, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType,
+      })
 
-    const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:3000'}/api/admin/upload`, {
-      method: 'POST',
-      body: formData,
-    })
+    if (uploadError) throw new Error(uploadError.message)
 
-    const uploadData = await uploadRes.json()
-    if (uploadData.error) throw new Error(uploadData.error)
-
-    return uploadData.url
+    const { data: publicUrl } = supabase.storage.from('media').getPublicUrl(filePath)
+    return { url: publicUrl.publicUrl, error: null }
   } catch (error) {
-    console.error('Error uploading image:', error)
-    return null
+    const message = error instanceof Error ? error.message : 'Unknown image upload error'
+    console.error(`Error uploading image from ${url}:`, error)
+    return { url: null, error: message }
   }
 }
 
 function getCellValue(row: any, keys: string[]): string {
-  const trimmedKeys = keys.map(k => k.trim())
+  const normalizeKey = (key: string) => key.trim().replace(/\s+/g, ' ').toLowerCase()
+  const normalizedKeys = new Set(keys.map(normalizeKey))
   for (const key of Object.keys(row)) {
-    const trimmedKey = key.trim()
-    if (trimmedKeys.includes(trimmedKey)) {
+    if (normalizedKeys.has(normalizeKey(key))) {
       const val = row[key]
       return val != null ? String(val) : ''
     }
-  }
-  for (const key of keys) {
-    if (row[key] != null) return String(row[key])
   }
   return ''
 }
@@ -110,7 +141,7 @@ function parseExcelRow(row: any, index: number): any {
     phone: getCellValue(row, ['Phone Number', 'phone_number', 'Phone', 'phone', 'PHONE NUMBER']) || '',
     short: getCellValue(row, ['Short', 'short', 'Short Description', 'short_description', 'Bio', 'bio', 'Description']) || '',
     bio: getCellValue(row, ['Bio', 'bio', 'Description', 'description']) || '',
-    image: getCellValue(row, ['Image', 'image', 'Photo', 'photo', 'STUDENT  PHOTO', 'Student Photo', 'student_photo', 'Image URL', 'image_url', 'Photo URL', 'photo_url']),
+    image: getCellValue(row, ['Image', 'image', 'Photo', 'photo', 'STUDENT PHOTO', 'STUDENT  PHOTO', 'Student Photo', 'student_photo', 'Image URL', 'image_url', 'Photo URL', 'photo_url', 'PHOTO URL']),
     poster: getCellValue(row, ['Poster', 'poster', 'Poster Image', 'poster_image', 'Poster URL', 'poster_url']) || '',
     sponsored: getCellValue(row, ['Sponsored', 'sponsored']) === 'true' || getCellValue(row, ['Sponsored', 'sponsored']) === '1',
     sponsoredBy: getCellValue(row, ['Sponsored By', 'sponsored_by', 'Sponsor', 'sponsor']) || '',
@@ -159,7 +190,10 @@ function parseExcelRow(row: any, index: number): any {
     parsed.bio = bioParts.join('\n')
   }
 
-  // Clean up image URL - handle duplicate URLs in cell
+  // Excel may expose a display label, a URL, or a URL followed by punctuation.
+  parsed.image = extractUrl(parsed.image)
+  parsed.poster = extractUrl(parsed.poster)
+
   if (parsed.image && parsed.image.includes('(')) {
     const urlMatch = parsed.image.match(/(https?:\/\/[^\s(]+)/)
     if (urlMatch) {
@@ -196,10 +230,10 @@ export async function POST(request: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer())
-    const workbook = XLSX.read(buffer, { type: 'buffer' })
+    const workbook = XLSX.read(buffer, { type: 'buffer', cellStyles: true })
     const sheetName = workbook.SheetNames[0]
     const worksheet = workbook.Sheets[sheetName]
-    const jsonData = XLSX.utils.sheet_to_json(worksheet)
+    const jsonData = addExcelHyperlinks(XLSX.utils.sheet_to_json(worksheet), worksheet)
 
     if (!jsonData || jsonData.length === 0) {
       return NextResponse.json({ error: 'Excel file is empty or has no data rows' }, { status: 400 })
@@ -207,6 +241,7 @@ export async function POST(request: NextRequest) {
 
     const results = []
     const errors = []
+    const imageErrors: Array<{ row: number; field: 'image' | 'poster'; source: string; error: string }> = []
 
     for (let i = 0; i < jsonData.length; i++) {
       try {
@@ -238,13 +273,25 @@ export async function POST(request: NextRequest) {
         let posterUrl = parsed.poster?.trim() || null
 
         if (autoUploadImages) {
-          if (imageUrl && imageUrl.startsWith('http')) {
-            const uploaded = await downloadAndUploadImage(imageUrl, 'students', supabase)
-            if (uploaded) imageUrl = uploaded
+          if (imageUrl) {
+            if (!/^https?:\/\//i.test(imageUrl)) {
+              imageErrors.push({ row: i + 2, field: 'image', source: imageUrl, error: 'Image value is not an HTTP/HTTPS URL' })
+            } else {
+              const sourceUrl = imageUrl
+              const uploaded = await downloadAndUploadImage(sourceUrl, 'students', supabase)
+              if (uploaded.url) imageUrl = uploaded.url
+              else if (uploaded.error) imageErrors.push({ row: i + 2, field: 'image', source: sourceUrl, error: uploaded.error })
+            }
           }
-          if (posterUrl && posterUrl.startsWith('http')) {
-            const uploaded = await downloadAndUploadImage(posterUrl, 'students', supabase)
-            if (uploaded) posterUrl = uploaded
+          if (posterUrl) {
+            if (!/^https?:\/\//i.test(posterUrl)) {
+              imageErrors.push({ row: i + 2, field: 'poster', source: posterUrl, error: 'Poster value is not an HTTP/HTTPS URL' })
+            } else {
+              const sourceUrl = posterUrl
+              const uploaded = await downloadAndUploadImage(sourceUrl, 'students', supabase)
+              if (uploaded.url) posterUrl = uploaded.url
+              else if (uploaded.error) imageErrors.push({ row: i + 2, field: 'poster', source: sourceUrl, error: uploaded.error })
+            }
           }
         }
 
@@ -300,6 +347,7 @@ export async function POST(request: NextRequest) {
       errors: errors.length,
       data: results,
       errorDetails: errors,
+      imageErrors,
     }, { status: errors.length > 0 && results.length === 0 ? 400 : 200 })
 
   } catch (error) {
