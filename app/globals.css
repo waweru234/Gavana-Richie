@@ -977,6 +977,23 @@ footer .footer-social-block .eyebrow i { background: var(--jbrand-yellow); }
 .checkbox-field input { width: auto; accent-color: var(--navy); }
 .form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,.06); }
 .form-sidebar .form-section { position: sticky; top: 100px; max-height: calc(100vh - 160px); overflow-y: auto; }
+.admin-import-section { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,.06); margin-bottom: 32px; }
+.admin-import-section h2 { margin: 0 0 8px; }
+.admin-import-section .admin-subtitle { font: 400 14px var(--font-body); color: rgba(0,0,0,.6); margin: 0 0 20px; }
+.excel-import-form { display: flex; flex-direction: column; gap: 20px; }
+.excel-import-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.admin-import-result { background: #f8f9fa; border-radius: 12px; padding: 20px; margin-top: 20px; border: 1px solid rgba(0,0,0,.08); }
+.admin-import-result h3 { margin: 0 0 12px; font: 700 16px var(--font-heading); color: var(--navy); }
+.admin-import-result .success { color: #1b5e20; font: 600 14px var(--font-body); }
+.admin-import-result .warning { color: #7b3414; font: 600 14px var(--font-body); }
+.admin-import-result details { margin-top: 12px; }
+.admin-import-result summary { cursor: pointer; font: 600 13px var(--font-body); color: var(--navy); margin-bottom: 8px; }
+.admin-import-result ul { list-style: none; padding: 0; margin: 0; }
+.admin-import-result li { padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,.04); font-size: 13px; }
+.excel-template-info h4 { margin: 20px 0 12px; font: 600 14px var(--font-heading); color: var(--navy); }
+.excel-template-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.excel-template-table th, .excel-template-table td { text-align: left; padding: 8px 12px; border-bottom: 1px solid rgba(0,0,0,.08); }
+.excel-template-table th { font: 600 12px var(--font-heading); color: var(--navy); background: #f8f9fa; }
 .admin-loading { text-align: center; padding: 60px; color: rgba(0,0,0,.5); }
 
 /* === UPDATE DETAIL PAGE === */

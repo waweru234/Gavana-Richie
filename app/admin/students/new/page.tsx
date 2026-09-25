@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { SiteShell } from '@/components/site-shell'
 
 interface StudentFormData {
@@ -50,6 +51,9 @@ export default function NewStudentPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [importing, setImporting] = useState(false)
+  const [importResult, setImportResult] = useState<any>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleChange = (field: keyof StudentFormData, value: any) => {
     setForm(prev => ({ ...prev, [field]: value }))
@@ -96,6 +100,38 @@ export default function NewStudentPage() {
     input.click()
   }
 
+  const handleExcelImport = async (autoUpload: boolean) => {
+    const file = fileInputRef.current?.files?.[0]
+    if (!file) {
+      setError('Please select an Excel file first')
+      return
+    }
+
+    setImporting(true)
+    setError(null)
+    setImportResult(null)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('autoUploadImages', autoUpload.toString())
+
+      const res = await fetch('/api/admin/students/bulk-import', { method: 'POST', body: formData })
+      const data = await res.json()
+
+      if (data.error && !data.data) {
+        setError(data.error)
+      } else {
+        setImportResult(data)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Import failed')
+    } finally {
+      setImporting(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!form.name.trim() || !form.school.trim() || !form.need.trim() || !form.paybill.trim() || !form.account.trim() || !form.tag.trim() || !form.number.trim()) {
@@ -133,6 +169,113 @@ export default function NewStudentPage() {
         </div>
 
         {error && <div className="admin-error">{error}</div>}
+
+        {/* Excel Import Section */}
+        <div className="admin-import-section">
+          <h2>Import from Excel</h2>
+          <p className="admin-subtitle">Bulk import multiple students from an Excel file. Image URLs in the file can be auto-uploaded to Supabase storage.</p>
+
+          <div className="excel-import-form">
+            <div className="form-field">
+              <label htmlFor="excel-file">Excel File (.xlsx, .xls)</label>
+              <input
+                ref={fileInputRef}
+                id="excel-file"
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={() => setError(null)}
+              />
+            </div>
+
+            <div className="excel-import-actions">
+              <button
+                type="button"
+                className="button button-primary"
+                onClick={() => handleExcelImport(true)}
+                disabled={importing || !fileInputRef.current?.files?.[0]}
+              >
+                {importing ? 'Importing...' : 'Import & Auto-Upload Images'}
+              </button>
+              <button
+                type="button"
+                className="button button-secondary"
+                onClick={() => handleExcelImport(false)}
+                disabled={importing || !fileInputRef.current?.files?.[0]}
+              >
+                {importing ? 'Importing...' : 'Import (Keep Image URLs)'}
+              </button>
+              <Link href="/admin/students" className="button">Back to Students</Link>
+            </div>
+          </div>
+
+          {importResult && (
+            <div className="admin-import-result">
+              <h3>Import Results</h3>
+              {importResult.success > 0 && (
+                <p className="success">Successfully imported {importResult.success} student{importResult.success !== 1 ? 's' : ''}</p>
+              )}
+              {importResult.errors > 0 && (
+                <p className="warning">Failed to import {importResult.errors} student{importResult.errors !== 1 ? 's' : ''}</p>
+              )}
+              {importResult.errorDetails && importResult.errorDetails.length > 0 && (
+                <details>
+                  <summary>Error details</summary>
+                  <ul>
+                    {importResult.errorDetails.map((e: any, i: number) => (
+                      <li key={i}>Row {e.row}: {e.error}</li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+              {importResult.data && importResult.data.length > 0 && (
+                <details>
+                  <summary>Imported students</summary>
+                  <ul>
+                    {importResult.data.map((s: any) => (
+                      <li key={s.id}>{s.name} ({s.slug})</li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+              <button type="button" className="button button-secondary small" onClick={() => setImportResult(null)}>
+                Clear results
+              </button>
+            </div>
+          )}
+
+          <div className="excel-template-info">
+            <h4>Excel Template Columns</h4>
+            <p>The Excel file should have the following columns (header row required):</p>
+            <table className="excel-template-table">
+              <thead>
+                <tr>
+                  <th>Column</th>
+                  <th>Required</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Name</td><td>Yes</td><td>Student full name</td></tr>
+                <tr><td>School</td><td>Yes</td><td>School / institution name</td></tr>
+                <tr><td>Need</td><td>Yes</td><td>Funding need (e.g. KSh 35,000)</td></tr>
+                <tr><td>Paybill</td><td>Yes</td><td>M-Pesa Paybill number</td></tr>
+                <tr><td>Account</td><td>Yes</td><td>M-Pesa Account number</td></tr>
+                <tr><td>Number</td><td>Yes</td><td>Student number (e.g. 01)</td></tr>
+                <tr><td>Tag</td><td>Yes</td><td>Study area / tag</td></tr>
+                <tr><td>Short</td><td>No</td><td>One-sentence summary</td></tr>
+                <tr><td>Bio</td><td>No</td><td>Full bio paragraphs</td></tr>
+                <tr><td>Image</td><td>No</td><td>Image URL (auto-uploaded if enabled)</td></tr>
+                <tr><td>Poster</td><td>No</td><td>Poster image URL</td></tr>
+                <tr><td>Sponsored</td><td>No</td><td>true/false</td></tr>
+                <tr><td>Sponsored By</td><td>No</td><td>Who sponsored</td></tr>
+                <tr><td>Sponsored Date</td><td>No</td><td>Date sponsored</td></tr>
+                <tr><td>Sponsored Quote</td><td>No</td><td>Sponsorship quote</td></tr>
+                <tr><td>Published</td><td>No</td><td>true/false</td></tr>
+                <tr><td>Sort Order</td><td>No</td><td>Display order</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="admin-form">
           <div className="form-grid">
