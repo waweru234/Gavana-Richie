@@ -11,8 +11,8 @@ export function getDirectImageUrl(url: string | null): string | null {
   const match = url.match(/(?:https?:\/\/)?(?:www\.)?drive\.google\.com\/open\?id=([^&]+)/)
   if (match && match[1]) {
     const fileId = match[1]
-    // Return direct view link
-    return `https://drive.google.com/uc?export=view&id=${fileId}`
+    // Return file/d/view link
+    return `https://drive.google.com/file/d/${fileId}/view`
   }
   // If not a Google Drive open link, return as-is (could already be a direct link)
   return url

@@ -13,7 +13,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const { data: students, error } = await supabase
   .from('students')
-  .select('id, name, number, image')
+  .select('id, name, school')
   .limit(10);
 
 if (error) {
@@ -22,5 +22,5 @@ if (error) {
 }
 
 students.forEach(s => {
-  console.log(`${s.number} ${s.name}: ${s.image}`);
+  console.log(`${s.id} | ${s.name} | school: ${s.school}`);
 });
