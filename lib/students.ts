@@ -83,6 +83,26 @@ export async function getPublishedStudents(page = 1, pageSize = 8): Promise<{ da
   }
 }
 
+/**
+ * Fetch every published student, including datasets larger than Supabase's
+ * default response limit. This is used by the school directory so grouping
+ * never splits a school across pages or silently drops students.
+ */
+export async function getAllPublishedStudents(): Promise<StudentProfile[]> {
+  const pageSize = 1000
+  const students: StudentProfile[] = []
+  let page = 1
+  while (true) {
+    const result = await getPublishedStudents(page, pageSize)
+    students.push(...result.data)
+
+    if (result.data.length < pageSize || students.length >= result.total) break
+    page += 1
+  }
+
+  return students
+}
+
 export async function getStudentBySlug(slug: string): Promise<StudentProfile | null> {
   try {
     const supabase = createServerClient()

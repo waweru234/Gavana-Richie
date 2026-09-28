@@ -1,10 +1,10 @@
-﻿export function JawabuKenyaBanner({ compact = false }: { compact?: boolean }) {
+export function JawabuKenyaBanner({ compact = false }: { compact?: boolean }) {
   return (
     <article className={'jawabu-banner' + (compact ? ' jawabu-banner-compact' : '')}>
       <div className="jawabu-banner-art">
         <div className="jawabu-banner-glow" aria-hidden />
-        <img src="/jawabu-kenya-logo.png" alt="Jawabu Kenya Â· Milimani Estate, Elgeyo Road, Nakuru" />
-        <span className="jawabu-banner-stamp">SINCE NAKURU Â· KENYA</span>
+        <img src="/jawabu-kenya-logo.png" alt="Jawabu Kenya - Milimani Estate, Elgeyo Road, Nakuru" />
+        <span className="jawabu-banner-stamp">SINCE NAKURU - KENYA</span>
       </div>
 
       <div className="jawabu-banner-copy">
@@ -21,16 +21,6 @@
               <b>Office</b>
               <span>Milimani Estate, Elgeyo Road</span>
               <span>PO Box 124 &ndash; 20100, Nakuru</span>
-            </span>
-          </li>
-          <li>
-            <span className="jawabu-banner-meta-icon" aria-hidden>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79a14.21 14.21 0 0 0 6.38 6.38l2.13-2.13a1 1 0 0 1 1.05-.24 11.65 11.65 0 0 0 3.65.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.62a1 1 0 0 1 1 1 11.65 11.65 0 0 0 .58 3.65 1 1 0 0 1-.24 1.05l-2.34 2.09Z" /></svg>
-            </span>
-            <span>
-              <b>Call</b>
-              <a href="tel:+254716774555">+254 716 774 555</a>
-              
             </span>
           </li>
           {!compact && (

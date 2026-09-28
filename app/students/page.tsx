@@ -3,15 +3,29 @@ import Link from 'next/link'
 import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
 import { JawabuKenyaBanner } from '@/components/jawabu-kenya-banner'
 import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
-import { getPublishedStudents } from '@/lib/students'
+import { getAllPublishedStudents } from '@/lib/students'
 import { StudentImage } from '@/components/student-image'
 import { getDirectImageUrl } from '@/lib/utils'
 
 const siteUrl = 'https://www.gavanarichie.com'
-const STUDENTS_PER_PAGE = 8
+const SCHOOL_GROUPS_PER_PAGE = 6
+
+type Student = Awaited<ReturnType<typeof getAllPublishedStudents>>[number]
 
 interface StudentsPageProps {
   searchParams: Promise<{ page?: string }>
+}
+
+// Helper to create URL-friendly slug from school name
+const createSchoolSlug = (schoolName: string) =>
+  schoolName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+const getNeedAmount = (need: string) => {
+  const amount = Number(need.replace(/[^0-9.]/g, ''))
+  return Number.isFinite(amount) ? amount : 0
 }
 
 export const metadata: Metadata = {
@@ -43,7 +57,7 @@ const coreValues = [
   { title: 'Dignity & Inclusion', text: 'Every child deserves respect, fairness and equal opportunity.' },
   { title: 'Integrity & Accountability', text: 'Every contribution must be managed transparently and responsibly.' },
   { title: 'Compassion & Commitment', text: 'We respond to hardship with care and remain committed to keeping children in school.' },
-  { title: 'Partnership & Collective Action', text: 'Keeping a child in school becomes everyone&apos;s responsibility.' },
+  { title: 'Partnership & Collective Action', text: 'Keeping a child in school becomes everyone&rsquo;s responsibility.' },
 ]
 
 const objectives = [
@@ -52,7 +66,7 @@ const objectives = [
   'Build a network of individual and institutional education sponsors.',
   'Encourage community ownership of education support.',
   'Establish transparent beneficiary identification and disbursement mechanisms.',
-  'Promote education support as an investment in the community&apos;s future.',
+  'Promote education support as an investment in the community&rsquo;s future.',
 ]
 
 const beneficiaries = [
@@ -67,9 +81,13 @@ const hashtags = ['#KeepAChildInSchool', '#EveryChildDeservesAChance', '#Educati
 export default async function StudentsPage({ searchParams }: StudentsPageProps) {
   const params = await searchParams
   const page = Math.max(1, parseInt(params.page || '1', 10))
-  const { data: students, total, totalPages } = await getPublishedStudents(page, STUDENTS_PER_PAGE)
 
-  if (!students || students.length === 0) {
+  // Load the complete published directory before grouping. Pagination is applied
+  // to schools, never to students, so no school is split between pages.
+  const allStudents: Student[] = await getAllPublishedStudents()
+  const total = allStudents.length
+
+  if (!allStudents || allStudents.length === 0) {
     return (
       <SiteShell>
         <PageIntro
@@ -81,24 +99,63 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
         <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
           <p>No students are currently listed. Please check back soon.</p>
         </div>
-        <ActionBand title="Every child deserves a chance to learn." text="ADOPT-A-STUDENT. Give today — and pay directly to keep a child in school." variant="jabu" />
+        <ActionBand title="Every child deserves a chance to learn." text="ADOPT-A-STUDENT. Give today - and pay directly to keep a child in school." variant="jabu" />
       </SiteShell>
     )
   }
 
+  // Sponsored students are always standalone entries. Only students still
+  // needing support are grouped together by school.
+  const sponsoredStudents = allStudents
+    .filter(student => student.sponsored)
+    .sort((a, b) => getNeedAmount(b.need) - getNeedAmount(a.need))
+
+  const schoolGroups: Record<string, Student[]> = {}
+  const schoolNames: Record<string, string> = {}
+  allStudents
+    .filter(student => !student.sponsored)
+    .forEach((student: Student) => {
+      const schoolKey = student.school.trim().replace(/\s+/g, ' ').toLocaleLowerCase()
+      if (!schoolGroups[schoolKey]) {
+        schoolGroups[schoolKey] = []
+        schoolNames[schoolKey] = student.school.trim()
+      }
+      schoolGroups[schoolKey].push(student)
+    })
+
+  const schoolGroupEntries = Object.entries(schoolGroups).map(([schoolKey, students]) => ({
+    type: 'school' as const,
+    school: schoolNames[schoolKey],
+    students: students.sort((a, b) => getNeedAmount(b.need) - getNeedAmount(a.need)),
+    sortAmount: Math.max(...students.map(student => getNeedAmount(student.need))),
+  }))
+
+  // Keep sponsored students as separate entries at the top. The remaining
+  // school groups then follow in descending order of the highest amount needed.
+  const directoryEntries = [
+    ...sponsoredStudents.map(student => ({ type: 'student' as const, student, sortAmount: getNeedAmount(student.need) })),
+    ...schoolGroupEntries.sort((a, b) => b.sortAmount - a.sortAmount),
+  ]
+
+  const startIndex = (page - 1) * SCHOOL_GROUPS_PER_PAGE
+  const endIndex = startIndex + SCHOOL_GROUPS_PER_PAGE
+  const pagedDirectoryEntries = directoryEntries.slice(startIndex, endIndex)
+  const totalDirectoryEntries = directoryEntries.length
+  const totalDirectoryPages = Math.max(1, Math.ceil(totalDirectoryEntries / SCHOOL_GROUPS_PER_PAGE))
+
   return (
     <SiteShell>
       <JawabuKenyaHero />
-      <span className="jawaban-stripe" aria-hidden />
+      <span className="jawabu-stripe" aria-hidden />
 
       <PageIntro
         eyebrow="ADOPT-A-STUDENT"
         title="Every child"
         accent="deserves education."
-        text="A people-powered campaign to keep vulnerable children in school — through school fees, examinations and the essentials that make learning possible."
+        text="A people-powered campaign to keep vulnerable children in school - through school fees, examinations and the essentials that make learning possible."
       />
 
-{/* STUDENTS FIRST */}
+      {/* STUDENTS FIRST */}
       <section id="meet-students" className="section students">
         <div className="container">
           <div className="section-heading" data-reveal="fade-up">
@@ -106,43 +163,130 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
               <p className="eyebrow"><i /> MEET THE STUDENTS</p>
               <h2>Pick a student.<br /><em>Pay the school directly.</em></h2>
             </div>
-            <p>Choose a student below to view their full profile. Use the M-Pesa details on their card or profile — payments go directly to their school. ({students.length} students ready for support)</p>
-          </div>
-          <div className="student-grid" data-reveal="stagger">
-            {students.map(student => (
-              <Link href={`/students/${student.slug}`} className={'student-card student-card-link' + (student.sponsored ? ' student-card-sponsored' : '')} key={student.id}>
-<div className="student-image">
-                   <StudentImage src={getDirectImageUrl(student.image)} alt={`${student.name} student profile`} loading="lazy" />
-                   {student.sponsored && <span className="student-sponsored-badge"><span className="student-sponsored-tick" aria-hidden>✓</span> SPONSORED</span>}
-                   <span>{student.number} · {student.tag.toUpperCase()}</span>
-                 </div>
-                <div className="student-body">
-                  <span className="label">{student.name.toUpperCase()}</span>
-                  <h3>{student.school}</h3>
-                  <p>{student.short || student.need}</p>
-                  <div className="student-details"><span>PAY BILL <b>{student.paybill}</b></span><span>ACCOUNT <b>{student.account}</b></span></div>
-                  {student.sponsored ? (
-                    <div className="need need-sponsored"><b>✓ FULLY SPONSORED</b><span>{student.sponsoredBy ? `Covered by ${student.sponsoredBy} · ${student.sponsoredDate ?? ''}` : 'Already covered · pick the next student'}</span></div>
-                  ) : (
-                    <div className="need"><b>{student.need}</b><span>Goal · any amount will help</span></div>
-                  )}
-                  <span className="card-link">View {student.sponsored ? 'success story' : 'full profile'} <span>→</span></span>
-                </div>
-              </Link>
-            ))}
+            <p>Students needing support are grouped by school, while fully sponsored students are shown individually. Listings are ordered from the highest support amount to the lowest. ({total} students listed)</p>
           </div>
 
-          {totalPages > 1 && (
-            <nav className="pagination" aria-label="Students pagination">
+          {/* School Groups Grid */}
+          <div className="school-groups-grid" data-reveal="stagger">
+            {pagedDirectoryEntries.map((entry, entryIndex) => {
+              if (entry.type === 'student') {
+                const student = entry.student
+                return (
+                  <Link
+                    href={`/students/${student.slug}`}
+                    className="school-group-link sponsored-standalone"
+                    aria-label={`View sponsored student ${student.name}`}
+                    key={student.id || student.slug || entryIndex}
+                  >
+                    <div className="school-group-card">
+                      <div className="school-group-header">
+                        <div>
+                          <p className="school-group-eyebrow">SPONSORED STUDENT</p>
+                          <h3>{student.name}</h3>
+                        </div>
+                        <span className="sponsored-tag">SPONSORED</span>
+                      </div>
+                      <div className="school-student-preview sponsored-standalone-preview">
+                        <StudentImage
+                          src={getDirectImageUrl(student.image)}
+                          alt={`${student.name} profile`}
+                          className="student-preview-image"
+                          loading="lazy"
+                        />
+                        <div className="student-preview-info">
+                          <span className="student-name">{student.school}</span>
+                          <span className="school-sponsored-status">✓ FULLY SPONSORED</span>
+                        </div>
+                      </div>
+                      <div className="school-group-action">
+                        View success story <span aria-hidden>→</span>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              }
+
+              const { school, students } = entry
+              const studentCount = students.length
+              const schoolSlug = createSchoolSlug(school)
+              // Every school entry contains only students still needing support.
+              // This keeps students from the same school together,
+              // including schools that currently have only one student.
+              const visibleStudents = students.slice(0, 3)
+
+              return (
+                <div key={school} className="school-group">
+                  <Link
+                    href={`/students/school/${schoolSlug}`}
+                    className="school-group-link"
+                    aria-label={`View all ${studentCount} students from ${school}`}
+                  >
+                    <div className="school-group-card">
+                      <div className="school-group-header">
+                        <div>
+                          <p className="school-group-eyebrow">SCHOOL</p>
+                          <h3>{school}</h3>
+                        </div>
+                        <span className="student-count">
+                          {studentCount === 1 ? '1 student' : `${studentCount} students`}
+
+                        </span>
+                      </div>
+
+                      <div className="school-group-students">
+                        {visibleStudents.map((student: Student, index: number) => (
+                          <div
+                            key={student.id || student.slug || index}
+                            className="school-student-preview"
+                          >
+                            <StudentImage
+                              src={getDirectImageUrl(student.image)}
+                              alt={`${student.name} preview`}
+                              className="student-preview-image"
+                              loading="lazy"
+                            />
+
+                            <div className="student-preview-info">
+                              <span className="student-name">{student.name}</span>
+                              {student.sponsored && (
+                                <span className="sponsored-tag">SPONSORED</span>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+
+                        {studentCount > 3 && (
+                          <div className="preview-more">
+                            +{studentCount - 3} more students
+                          </div>
+                        )}
+
+
+                      </div>
+
+                      <div className="school-group-action">
+                        View {studentCount === 1 ? 'student' : 'all students'} from {school}
+                        <span aria-hidden>→</span>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Student directory pagination */}
+          {totalDirectoryPages > 1 && (
+            <nav className="pagination" aria-label="Student directory pagination">
               {page > 1 && (
                 <Link href={`/students?page=${page - 1}`} className="pagination-btn" aria-label="Previous page">
-                  <span aria-hidden>←</span> Previous
+                  <span aria-hidden>-</span> Previous
                 </Link>
               )}
               <span className="pagination-info" aria-live="polite">
-                Page {page} of {totalPages} · {total} students total
+                Page {page} of {totalDirectoryPages} - {totalDirectoryEntries} listings total
               </span>
-              {page < totalPages && (
+              {page < totalDirectoryPages && (
                 <Link href={`/students?page=${page + 1}`} className="pagination-btn" aria-label="Next page">
                   Next <span aria-hidden>→</span>
                 </Link>
@@ -153,7 +297,6 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
           <JawabuKenyaBanner />
         </div>
       </section>
-
 
       {/* Campaign Background */}
       <section id="why-adopt" className="section programme-section">
@@ -178,12 +321,12 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
         </div>
       </section>
 
-      {/* Vision · Mission · Goal */}
+      {/* Vision - Mission - Goal */}
       <section className="section programme-section">
         <div className="container">
           <div className="section-heading">
             <div>
-              <p className="eyebrow"><i /> VISION · MISSION · GOAL</p>
+              <p className="eyebrow"><i /> VISION - MISSION - GOAL</p>
               <h2>What we are<br /><em>working toward.</em></h2>
             </div>
           </div>
@@ -230,7 +373,12 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
           <p className="eyebrow"><i /> CAMPAIGN OBJECTIVES</p>
           <h2>Six commitments<br /><em>in service of children.</em></h2>
           <ol className="programme-numbered">
-            {objectives.map((o, i) => <li key={i}><b>0{i + 1}</b><span>{o}</span></li>)}
+            {objectives.map((o, i) => (
+              <li key={i}>
+                <b>0{i + 1}</b>
+                <span>{o}</span>
+              </li>
+            ))}
           </ol>
         </div>
       </section>
@@ -243,30 +391,23 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
               <p className="eyebrow"><i /> TARGET BENEFICIARIES</p>
               <h2>Who ADOPT-A-STUDENT<br /><em>serves.</em></h2>
             </div>
-            <p>Assistance is based on demonstrated need — not political, religious, ethnic, personal or social connections.</p>
+            <p>Assistance is based on demonstrated need - not political, religious, ethnic, personal or social connections.</p>
           </div>
           <ul className="programme-list programme-list-box">
-            {beneficiaries.map((b, i) => <li key={i}><b>{`0${i + 1}`}</b><span>{b}</span></li>)}
+            {beneficiaries.map((b, i) => (
+              <li key={i}>
+                <b>0{i + 1}</b>
+                <span>{b}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </section>
 
       {/* Donor Appeal */}
-      <section className="section programme-section">
-        <div className="container programme-narrow">
-          <p className="eyebrow"><i /> DONOR APPEAL</p>
-          <h2>Every child deserves<br /><em>the chance to dream.</em></h2>
-          <p>Every child deserves the opportunity to go to school, discover their talents and dream about a better future. For some families, rising costs, unemployment, loss of income, illness, disasters and other hardships make school fees an overwhelming burden. The result can be missed classes, interrupted learning or dropout.</p>
-          <p>The ADOPT-A-STUDENT Campaign brings together individuals, families, businesses, institutions, faith communities and well-wishers to mobilize resources for children at risk of missing school because of financial hardship.</p>
-          <p>Any amount you can give will help sponsor part or all of a verified school-fees requirement.</p>
-          <p className="programme-impact"><b>YOUR CONTRIBUTION CAN HELP A CHILD REMAIN IN SCHOOL, CONTINUE LEARNING, SIT IMPORTANT EXAMINATIONS, ACCESS ESSENTIAL MATERIALS AND MOVE CLOSER TO THEIR DREAMS.</b></p>
-        </div>
-      </section>
-
-      {/* To Contribute */}
       <section className="section programme-contribute">
         <div className="container programme-contribute-inner">
-          <p className="eyebrow"><i /> TO CONTRIBUTE — ACCOUNTABILITY STANDARDS</p>
+          <p className="eyebrow"><i /> TO CONTRIBUTE - ACCOUNTABILITY STANDARDS</p>
           <h2>Pay directly.<br /><em>Send us a note.</em></h2>
           <p className="programme-contribute-lede">M-Pesa contributions are sent directly to the school of the child you choose.</p>
           <ul className="programme-list">
@@ -275,7 +416,7 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
             <li><b>Any amount will be appreciated.</b></li>
           </ul>
           <div className="programme-buttons">
-            <Link href="/students" className="button button-secondary">Pick a student <span>↗</span></Link>
+            <Link href="/students" className="button button-secondary">Pick a student <span>-</span></Link>
           </div>
         </div>
       </section>
@@ -289,7 +430,7 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
         </div>
       </section>
 
-      <ActionBand title="Every child deserves a chance to learn." text="ADOPT-A-STUDENT. Give today — and pay directly to keep a child in school." variant="jabu" />
+      <ActionBand title="Every child deserves a chance to learn." text="ADOPT-A-STUDENT. Give today - and pay directly to keep a child in school." variant="jabu" />
     </SiteShell>
   )
 }
