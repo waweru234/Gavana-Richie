@@ -32,7 +32,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: studentUrl,
       title: `${student.name} — ${student.sponsored ? 'Sponsored' : 'Adopt a Student'}`,
       description: student.short || student.need,
-      images: student.poster ? [{ url: getDirectImageUrl(student.poster), width: 1200, height: 630, alt: student.name }] : [],
+      images: student.poster 
+        ? [{ 
+            url: getDirectImageUrl(student.poster) ?? '/placeholder.jpg', 
+            width: 1200, 
+            height: 630, 
+            alt: student.name 
+          }] 
+        : [],
     },
     twitter: {
       card: 'summary_large_image',

@@ -5,22 +5,24 @@ import type { Database } from '@/types/supabase';
 
 export const dynamic = 'force-dynamic';
 
+type JoinRequestRow = Database['public']['Tables']['join_requests']['Row'];
+
 export default async function JoinRequestsPage() {
   const supabase = createServerClient();
 
   const { data: joinRequests, error } = await supabase
     .from('join_requests')
-    .select('*')
+    .select<JoinRequestRow>('*')
     .order('created_at', { ascending: false });
 
   if (error) {
     console.error('Error fetching join requests:', error);
-    // In a real app, you might want to show an error message
     return (
       <SiteShell>
         <PageIntro
           eyebrow="ERROR"
           title="Failed to load join requests"
+          accent=""
           text="Could not load join requests from the database. Please try again later."
         />
       </SiteShell>
@@ -32,6 +34,7 @@ export default async function JoinRequestsPage() {
       <PageIntro
         eyebrow="JOIN REQUESTS"
         title="Manage Join Requests"
+        accent=""
         text="View and manage all join requests submitted through the website."
       />
       <div className="overflow-x-auto">

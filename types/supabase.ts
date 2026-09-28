@@ -141,6 +141,33 @@ export interface Database {
         }
         Relationships: []
       }
+      join_requests: {
+        Row: {
+          id: string
+          full_name: string
+          email: string
+          phone_number: string | null
+          message: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          full_name: string
+          email: string
+          phone_number?: string | null
+          message?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          full_name?: string
+          email?: string
+          phone_number?: string | null
+          message?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

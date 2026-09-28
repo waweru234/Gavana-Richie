@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { JoinForm } from '@/components/join-form'
+import JoinForm from '@/components/join-form'
 import { ActionBand, PageIntro, SiteShell } from '@/components/site-shell'
 
 const siteUrl = 'https://www.gavanarichie.com'
@@ -77,7 +77,7 @@ export default function JoinPage() {
         <ul className="join-ways-grid">
           {ways.map(w => <li key={w.number}><span>{w.number}</span><div><h3>{w.title}</h3><p>{w.text}</p></div></li>)}
         </ul>
-        <p className="join-ways-foot">Already a supporter? <Link href="/donate" className="text-link">Support the movement with KSh 10 <span>→</span></Link></p>
+        <p className="join-ways-foot">Already a supporter? <Link href="/donat" className="text-link">Support the movement with KSh 10 <span>→</span></Link></p>
       </div>
     </section>
 

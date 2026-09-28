@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import type { Database } from '@/types/supabase';
 
 export async function POST(request: Request) {
   try {
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
 
     const { data, error } = await supabase
       .from('join_requests')
-      .insert([
+      .insert<Database['public']['Tables']['join_requests']['Insert']>([
         {
           full_name,
           email,
@@ -25,7 +26,7 @@ export async function POST(request: Request) {
           message: message || null,
         }
       ])
-      .select();
+      .select<Database['public']['Tables']['join_requests']['Row']>();
 
     if (error) {
       console.error('Error inserting join request:', error);

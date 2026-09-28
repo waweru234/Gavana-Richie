@@ -1,17 +1,5 @@
 import { useState } from 'react';
 
-Wait, we need to write the full component.
-
-Let's do it step by step.
-
-We'll create the file.
-
-
-<tool_call>
-<function=write>
-<parameter=content>
-import { useState } from 'react';
-
 export default function JoinForm() {
   const [formData, setFormData] = useState({
     full_name: '',
