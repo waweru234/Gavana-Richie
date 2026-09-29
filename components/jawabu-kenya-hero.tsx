@@ -27,9 +27,7 @@ export function JawabuKenyaHero({ compact = false }: { compact?: boolean }) {
           <p className="jawabu-hero-tagline">The people behind every child kept in school.</p>
 
           <p className="jawabu-hero-lede">
-            ADOPT-A-STUDENT runs under the Jawabu Kenya banner &mdash; a Nakuru-based programme dedicated to mobilising
-            individuals, families, businesses, faith communities and well-wishers to keep vulnerable children in school
-            through school fees, examinations and the essentials that make learning possible.
+            A Jawabu Kenya programme helping vulnerable students stay in school through direct education support.
           </p>
 
           <ul className="jawabu-hero-meta">
@@ -47,7 +45,7 @@ export function JawabuKenyaHero({ compact = false }: { compact?: boolean }) {
 
           {!compact && (
             <div className="jawabu-hero-actions">
-              <Link href="/students" className="button button-primary">Meet the students <span>-</span></Link>
+              <Link href="/students#meet-students" className="button button-primary">Meet the students <span>-</span></Link>
               <Link href="#why-adopt" className="text-link jawabu-hero-anchor">About the programme <span>-</span></Link>
             </div>
           )}

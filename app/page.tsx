@@ -1,14 +1,17 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ActionBand, SiteShell, StatStrip } from '@/components/site-shell'
-import { JawabuKenyaHero } from '@/components/jawabu-kenya-hero'
-import { studentProfiles } from '@/lib/student-profiles'
+import { SiteShell } from '@/components/site-shell'
+import { AskMeButton } from '@/components/ask-me-button'
+import { StudentImage } from '@/components/student-image'
+import { getAllPublishedStudents } from '@/lib/students'
+import { getPublishedUpdates } from '@/lib/updates'
+import { getDirectImageUrl } from '@/lib/utils'
 
 const siteUrl = 'https://www.gavanarichie.com'
 
 export const metadata: Metadata = {
   title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu',
-  description: 'The official campaign platform for Richie Githatu, candidate for Governor of Nakuru County in 2027. A people-powered campaign for a county that works for everyone.',
+  description: 'Richie Githatu and Nakuru Kwetu envision a healthier, better-governed, youth-driven, economically empowered Nakuru—built with the people, for the people.',
   keywords: ['Richie Githatu', 'Nakuru Governor 2027', 'Nakuru Kwetu', 'Adopt a Student', 'Nakuru politics'],
   authors: [{ name: 'Richie Githatu' }],
   creator: 'Richie Githatu',
@@ -18,14 +21,14 @@ export const metadata: Metadata = {
     type: 'website',
     url: siteUrl,
     title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu',
-    description: 'The official campaign platform for Richie Githatu, candidate for Governor of Nakuru County in 2027.',
+    description: 'A healthier, better-governed, youth-driven Nakuru, built with the people, for the people.',
     siteName: 'Nakuru Kwetu',
     images: [{ url: `${siteUrl}/richie-portrait.jpeg`, width: 1200, height: 630, alt: 'Richie Githatu' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Richie Githatu for Governor 2027 | Nakuru Kwetu',
-    description: 'The official campaign platform for Richie Githatu, candidate for Governor of Nakuru County in 2027.',
+    description: 'A healthier, better-governed, youth-driven Nakuru, built with the people, for the people.',
     images: [`${siteUrl}/richie-portrait.jpeg`],
   },
   alternates: {
@@ -62,103 +65,343 @@ const structuredData = {
   },
 }
 
-export default function Home() {
-  const featuredStudents = studentProfiles.slice(0, 2)
-  const moreStudents = studentProfiles.slice(2)
+const fallbackUpdates = [
+  {
+    tag: 'CAMPAIGN · 14 SEP 2026',
+    title: 'A Sunday word from Richie',
+    excerpt: '“ADOPT-A-STUDENT. Give today. Every shilling from many people is the path that puts a child back in class.”',
+    href: '/updates',
+  },
+  {
+    tag: 'EVENT · 18 AUG 2026',
+    title: 'Richie Githatu turned 30',
+    excerpt: 'A community homecoming that brought people together and sharpened the work ahead for Nakuru.',
+    href: '/updates',
+  },
+  {
+    tag: 'STUDENT · AUG 2026',
+    title: 'Shawn’s fees were covered',
+    excerpt: 'The first Adopt-a-Student success story. Shawn Ndungu Mbugua is back in class and on track to finish his technical education.',
+    href: '/students/shawn-ndungu',
+  },
+]
 
-  return <SiteShell>
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-    <section className="hero hero-richie"><div className="container hero-grid"><div className="hero-copy"><p className="eyebrow"><i /> 2027 GOVERNOR · NAKURU COUNTY</p><h1>RICHIE GITHATU<br /><em>Nakuru Kwetu.</em></h1><p className="hero-kicker">New Generation leadership for Nakuru County</p><p className="hero-text">Richie Githatu is running for Governor of Nakuru County in 2027 — with a practical agenda for opportunity, accountable leadership, and a county that works for everyone.</p><div className="hero-actions"><Link href="/about" className="button button-primary">Meet Richie Githatu <span>↗</span></Link><Link href="/students" className="button button-secondary">Adopt a Student <span>↗</span></Link><Link href="/manifesto" className="text-link">Read the agenda <span>→</span></Link></div><div className="hero-election-badge"><strong>2027</strong><span>YOUR VOICE<br />YOUR CHOICE</span></div><div className="promise"><b>032</b><span><strong>Linda Nakuru.</strong><br />Nakuru Kwetu · New Generation</span></div></div><div className="hero-visual hero-cutout"><div className="hero-orbit hero-orbit-one" /><div className="hero-orbit hero-orbit-two" /><img src="/richie-cutout.png" alt="Richie Githatu in a white shirt" /><div className="floating-note"><b>NAKURU</b><span>KWETU.</span></div><div className="hero-signature">Richie Githatu</div></div></div></section>
+const getNeedAmount = (need: string) => {
+  const amount = Number(need.replace(/[^0-9.]/g, ''))
+  return Number.isFinite(amount) ? amount : 0
+}
 
-    <section className="programme-banner programme-feature" data-reveal="fade-up"><div className="container programme-banner-inner"><div className="programme-mark">01</div><div><p className="eyebrow">ADOPT-A-STUDENT PROGRAMME</p><h2>No bright mind<br /><em>left behind.</em></h2><p>Stand with determined Nakuru students. Pick a profile, pay directly to their school, and help keep a child learning.</p></div><Link href="/students" className="button button-primary">ADOPT-A-STUDENT. GIVE TODAY. <span>↗</span></Link></div></section>
+const formatUpdateDate = (date: string | null) => {
+  if (!date) return 'LATEST UPDATE'
+  const parsedDate = new Date(date)
+  return Number.isNaN(parsedDate.getTime())
+    ? 'LATEST UPDATE'
+    : parsedDate.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }).toUpperCase()
+}
 
-    <JawabuKenyaHero />
-    <span className="jawaban-stripe" aria-hidden />
+export default async function Home() {
+  const [allStudents, updateResult] = await Promise.all([
+    getAllPublishedStudents(),
+    getPublishedUpdates(3),
+  ])
 
-    <section className="section students students-home" data-reveal="fade-up">
-      <div className="container">
-        <div className="section-heading">
-          <div><p className="eyebrow"><i /> ADOPT-A-STUDENT PROGRAMME</p><h2>Students<br /><em>ready to learn.</em></h2></div>
-          <p>Pick a student. Pay directly to their school. Any amount will be appreciated.</p>
-        </div>
-        <div className="student-grid" data-reveal="stagger">{featuredStudents.map(student => <Link href={`/students/${student.slug}`} className={'student-card student-card-link' + (student.sponsored ? ' student-card-sponsored' : '')} key={student.slug}><div className="student-image"><img src={student.image} alt={student.name} />{student.sponsored && <span className="student-sponsored-badge"><span className="student-sponsored-tick" aria-hidden>✓</span> SPONSORED</span>}<span>{student.number} · {student.tag.toUpperCase()}</span></div><div className="student-body"><span className="label">{student.name.toUpperCase()}</span><h3>{student.school}</h3><p>{student.short}</p><div className="student-details"><span>PAY BILL <b>{student.paybill}</b></span><span>ACCOUNT <b>{student.account}</b></span></div>{student.sponsored ? <div className="need need-sponsored"><b>✓ FULLY SPONSORED</b><span>{student.sponsoredBy ? `Covered by ${student.sponsoredBy} · ${student.sponsoredDate ?? ''}` : 'Already covered · pick the next student'}</span></div> : <div className="need"><b>{student.need}</b><span>Goal · any amount will help</span></div>}<span className="card-link">View full profile <span>→</span></span></div></Link>)}</div>
+  const featuredStudents = [...allStudents]
+    .sort((a, b) => Number(a.sponsored) - Number(b.sponsored) || getNeedAmount(b.need) - getNeedAmount(a.need))
+    .slice(0, 2)
+  const publishedUpdates = updateResult.data.map((update) => {
+    const excerpt = (update.excerpt || update.content)
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
 
-        <div className="students-more-prompt" data-reveal="soft-pop">
-          <div>
-            <p className="eyebrow"><i /> MORE WAITING</p>
-            <strong>There are more students in this programme.</strong>
-            <span>Francis is studying automotive engineering at Rift Valley Institute of Business Studies — his full story and his account details are waiting on the next page.</span>
+    return {
+      tag: `${(update.category || 'UPDATE').toUpperCase()} · ${formatUpdateDate(update.published_at || update.created_at)}`,
+      title: update.title,
+      excerpt: excerpt.length > 220 ? `${excerpt.slice(0, 217).trimEnd()}…` : excerpt,
+      href: `/updates/${update.slug}`,
+    }
+  })
+  const recentUpdates = [...publishedUpdates, ...fallbackUpdates].slice(0, 3)
+
+  return (
+    <SiteShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+
+      <section className="hero hero-richie home-hero">
+        <div className="container hero-grid">
+          <div className="hero-copy home-hero-copy">
+            <p className="eyebrow"><i /> RICHIE GITHATU · NAKURU KWETU</p>
+            <h1>OUR NAKURU.<br /><em>OUR FUTURE.</em></h1>
+            <p className="hero-kicker">2027 GOVERNOR · NAKURU COUNTY</p>
+            <p className="hero-text">
+              A necessary vision for a healthier, better-governed, youth-driven and economically
+              empowered Nakuru — built with the people, for the people.
+            </p>
+            <div className="hero-actions">
+              <Link href="/manifesto" className="button button-primary">Learn more <span>↗</span></Link>
+              <Link href="/about" className="text-link">Meet Richie Githatu <span>→</span></Link>
+            </div>
           </div>
-          <Link href="/students" className="button button-primary">See all profiles <span>↗</span></Link>
-        </div>
 
-        <div className="adopt-cta-strip" data-reveal="soft-pop"><div><p className="eyebrow"><i /> ADOPT-A-STUDENT</p><strong>ADOPT-A-STUDENT. GIVE TODAY.</strong><span>Pay directly to the school of the child you choose. Any amount will be appreciated.</span></div><Link href="/students" className="button button-primary">Choose a student <span>→</span></Link></div>
-
-        <div className="student-hashtags" data-reveal="fade-up">
-          <p className="eyebrow"><i /> CAMPAIGN</p>
-          <strong>ADOPT-A-STUDENT. <em>Give today.</em></strong>
-          <ul className="hashtag-chips">
-            <li>#KeepAChildInSchool</li>
-            <li>#EveryChildDeservesAChance</li>
-            <li>#EducationForAll</li>
-            <li>#YourSupportTheirFuture</li>
-            <li>#InvestInEducation</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <div data-reveal="scale-in"><StatStrip items={[{ value: '', label: 'students you can adopt' }, { value: '11/11', label: 'sub-counties served' }, { value: '1,000,000', label: 'jobs target in term one' }, { value: 'Your voice', label: 'your power' }]} /></div>
-
-    <section className="section voter-section" data-reveal="tilt-in"><div className="container voter-quote"><p className="eyebrow">A MESSAGE FOR NAKURU</p><blockquote>“If you are eligible to vote, register. Your voice is your power, and your participation will help shape Nakuru County&apos;s future in 2027.”</blockquote><cite>— Richie Githatu</cite></div></section>
-
-    <section className="section about-feature" data-reveal="fade-left"><div className="container about-feature-grid"><div className="about-cutout" data-reveal="fade-right"><div className="about-circle" /><img src="/richie-seated-cutout.png" alt="Richie Githatu seated and smiling" /><span>TOGETHER<br /><b>WE RISE.</b></span></div><div className="about-feature-copy"><p className="eyebrow">ABOUT RICHIE GITHATU</p><h2>Together we rise.<br /><em>Leadership opens doors.</em></h2><p>Leadership begins with showing up: listening closely, opening doors, and believing in the people who make Nakuru home.</p><p>Richie Githatu brings a new-generation spirit to public service — practical, warm, and focused on turning ideas into opportunity.</p><Link href="/about" className="button button-primary">Read about Richie <span>↗</span></Link></div></div></section>
-
-    <section className="section feature-section feature-section-redesign"><div className="container"><div className="section-heading" data-reveal="fade-up"><div><p className="eyebrow">THE AGENDA</p><h2>Ideas that move<br /><em>people forward.</em></h2></div><p>Two ideas leading the manifesto, anchored by eight pillars of transformation — built to put county spending and county markets to work for Nakuru&apos;s young people.</p></div><div className="feature-grid feature-grid-four" data-reveal="stagger"><Link href="/manifesto" className="feature-card feature-card-dark"><span>01 · YOUTH</span><h3>Vijana na Tender</h3><p>Every county tender above KSh 5M takes on 5 youth interns for 6 months — paid by the county.</p><i className="feature-stat">2,840</i><small>internships a term from 568 contracts</small><b>Explore the policy →</b></Link><Link href="/students" className="feature-card feature-card-blue"><span>02 · EDUCATION</span><h3>Adopt-a-Student</h3><p>Pay directly to a student&apos;s school. Keep a child in class and learning toward their dream.</p><i className="feature-stat">—</i><small>students you can support today</small><b>Meet the students →</b></Link><Link href="/manifesto" className="feature-card feature-card-red"><span>03 · MARKETS</span><h3>Soko Bila Rent</h3><p>Regular ward market days across all 11 sub-counties — direct access to customers, no shop rent.</p><i className="feature-stat">0</i><small>shop rent to reach first customers</small><b>Read the policy →</b></Link><Link href="/manifesto" className="feature-card feature-card-navy"><span>04 · GOVERNANCE</span><h3>Procurement Scorecard</h3><p>Publish every award. Public interns tracking. Performance contracts. Accountability by design.</p><i className="feature-stat">0</i><small>tolerance for corruption and wastage</small><b>Read pillar 8 →</b></Link></div></div></section>
-
-    <section className="section support-section" data-reveal="fade-right"><div className="container support-grid"><div><p className="eyebrow">SUPPORT THE MOVEMENT</p><h2>Stand with Richie.<br /><em>Keep the movement moving.</em></h2><p>Small support from many people creates a powerful path forward for Nakuru. Help us keep the campaign open, people-powered, and moving — alongside students in your Adopt-a-Student programme.</p><Link href="/donate" className="button button-primary">Support the movement <span>↗</span></Link></div><div className="support-visual"><img src="/richie-standing-cutout.png" alt="Richie Githatu standing and smiling" /><div><strong>People-powered.</strong><br />Built together.</div></div></div></section>
-
-    <section className="section page-story page-story-quiet" data-reveal="fade-up"><div className="container page-story-grid"><div className="page-story-art" data-reveal="fade-right"><span className="page-story-circle" /><img src="/richie-main.png" alt="Richie Githatu &mdash; candidate for Governor of Nakuru County 2027" /></div><div className="page-story-copy" data-reveal="fade-left"><p className="eyebrow"><i /> FROM THE TRAIL</p><h2>Walking the county,<br /><em>one ward at a time.</em></h2><p>Door-by-door and ward-by-ward &mdash; the campaign is built from the ground up. Every conversation shapes the agenda, every supporter shapes the movement, and every shilling from many people fuels the work of opening doors for Nakuru.</p><Link href="/updates" className="button button-primary">See the latest updates <span>&rarr;</span></Link></div></div></section>
-
-    <section className="section homepage-newsroom" data-reveal="fade-up">
-      <div className="container">
-        <div className="section-heading">
-          <div><p className="eyebrow"><i /> LATEST</p><h2>Newsroom.<br /><em>Three things, one at a time.</em></h2></div>
-          <p>The latest three things from the campaign — one after another, in order.</p>
-        </div>
-        <ol className="newsroom-list" data-reveal="stagger">
-          <li className="newsroom-item">
-            <span className="newsroom-number">01</span>
-            <div className="newsroom-body">
-              <span className="newsroom-tag">CAMPAIGN · 14 SEP 2026</span>
-              <h3>A Sunday word from Richie</h3>
-              <p>&ldquo;ADOPT-A-STUDENT. Give today. Every shilling from many people is the path that puts a child back in class.&rdquo;</p>
+          <div className="hero-visual home-hero-visual">
+            <div className="home-hero-photo-frame">
+              <img
+                src="/WhatsApp%20Image%202026-09-28%20at%2016.58.34.jpeg"
+                alt="Nakuru residents taking part in a community walk together."
+              />
             </div>
-            <Link href="/updates" className="text-link">Read it <span>→</span></Link>
-          </li>
-          <li className="newsroom-item">
-            <span className="newsroom-number">02</span>
-            <div className="newsroom-body">
-              <span className="newsroom-tag">EVENT · 18 AUG 2026</span>
-              <h3>Richie Githatu turned 30</h3>
-              <p>A community homecoming that sharpened what we&apos;re walking into: a county-shaped person stepping forward to lead the county.</p>
+            <div className="home-hero-stamp">
+              <b>NAKURU KWETU</b>
+              <span>Our future, together.</span>
             </div>
-            <Link href="/updates" className="text-link">Read it <span>→</span></Link>
-          </li>
-          <li className="newsroom-item">
-            <span className="newsroom-number">03</span>
-            <div className="newsroom-body">
-              <span className="newsroom-tag">STUDENT · AUG 2026</span>
-              <h3>Shawn&apos;s fees were covered</h3>
-              <p>The first Adopt-a-Student success story. Shawn Ndungu Mbugua is back in class — fully sponsored — and on track to finish his technical education.</p>
-            </div>
-            <Link href="/students/shawn-ndungu" className="text-link">Read it <span>→</span></Link>
-          </li>
-        </ol>
-        <p className="newsroom-foot">Want the full feed? <Link href="/updates" className="text-link">See all updates from the campaign <span>→</span></Link></p>
-      </div>
-    </section>
+          </div>
+        </div>
+      </section>
 
-    <section className="join-cta" data-reveal="rise"><div className="container join-cta-inner"><div><p className="eyebrow">2027 GOVERNOR CAMPAIGN</p><h2>Bring your voice.<br /><em>Choose your future.</em></h2></div><Link href="/join" className="button">Join the movement <span>↗</span></Link></div></section>
-  </SiteShell>
+      <section id="manifesto" className="home-manifesto">
+        <div className="container">
+          <div className="home-manifesto-intro">
+            <p className="eyebrow"><i /> THE MANIFESTO</p>
+            <h2>A Nakuru that works<br /><em>for everyone.</em></h2>
+            <p>
+              For the mama at the market, the boda rider on the road, the graduate at home, and the
+              family waiting at the clinic — not just for the few.
+            </p>
+          </div>
+
+          <div className="home-manifesto-grid">
+            <Link href="/manifesto" className="home-manifesto-card home-manifesto-card-ideas">
+              <div className="home-manifesto-card-copy">
+                <p className="home-manifesto-card-label">THE AGENDA</p>
+                <h3>Ideas that move people forward.</h3>
+                <p>Explore the plans for jobs, education, health, and accountable leadership.</p>
+                <span className="home-manifesto-card-link">Explore the manifesto <span aria-hidden="true">→</span></span>
+              </div>
+            </Link>
+
+            <Link href="/updates" className="home-manifesto-card home-manifesto-card-photo">
+              <img
+                src="/WhatsApp%20Image%202026-09-28%20at%2016.57.04.jpeg"
+                alt="Richie Githatu sharing food with a local resident during a Nakuru community visit."
+                loading="lazy"
+              />
+              <div className="home-manifesto-card-copy">
+                <p className="home-manifesto-card-label">FROM THE TRAIL</p>
+                <h3>Walking the county, one ward at a time.</h3>
+                <p>Listen, learn, and shape Nakuru&apos;s future together.</p>
+                <span className="home-manifesto-card-link">Follow the journey <span aria-hidden="true">→</span></span>
+              </div>
+            </Link>
+
+            <Link href="/updates" className="home-manifesto-card home-manifesto-card-photo">
+              <img
+                src="/WhatsApp%20Image%202026-09-28%20at%2020.04.39.jpeg"
+                alt="Richie Githatu in conversation during a Pawa Radio interview."
+                loading="lazy"
+              />
+              <div className="home-manifesto-card-copy">
+                <p className="home-manifesto-card-label">NEWSROOM</p>
+                <h3>Stories and updates from Nakuru.</h3>
+                <p>See the conversations, events, and work happening across the county.</p>
+                <span className="home-manifesto-card-link">Visit the newsroom <span aria-hidden="true">→</span></span>
+              </div>
+            </Link>
+
+            <Link href="/donate" className="home-manifesto-card home-manifesto-card-support">
+              <div className="home-manifesto-card-copy">
+                <p className="home-manifesto-card-label">SUPPORT / MERCHANDISE</p>
+                <h3>Keep the people-powered work moving.</h3>
+                <p>Support the campaign or contact the team about campaign merchandise.</p>
+                <span className="home-manifesto-card-link">Ways to support <span aria-hidden="true">→</span></span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="home-jawabu">
+        <div className="container home-jawabu-grid">
+          <div className="home-jawabu-brand">
+            <img src="/jawabu-kenya-logo.png" alt="Jawabu Kenya" loading="lazy" />
+            <span>COMMUNITY PROGRAMMES</span>
+          </div>
+          <div className="home-jawabu-copy">
+            <p className="eyebrow"><i /> JAWABU KENYA</p>
+            <h2>Change begins when people can take part.</h2>
+            <p>
+              We believe meaningful change begins when people understand their rights, participate
+              in decisions that affect them, and have the opportunity to shape their communities.
+            </p>
+            <div className="home-jawabu-actions">
+              <Link href="/students#meet-students" className="button button-primary">
+                Adopt a student <span>↗</span>
+              </Link>
+              <Link href="/join" className="button button-secondary">
+                Community drives <span>↗</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="message-nakuru" className="home-message">
+        <div className="container home-message-grid">
+          <div className="home-message-copy">
+            <p className="eyebrow"><i /> A MESSAGE FOR NAKURU</p>
+            <blockquote>
+              “If you are eligible to vote, register. Your voice is your power, and your participation
+              will help shape Nakuru County&apos;s future.”
+            </blockquote>
+            <cite>— Richie Githatu</cite>
+          </div>
+          <div className="home-ask-card">
+            <p className="home-ask-label">ASK ME?</p>
+            <h2>Have a question?</h2>
+            <p>Ask about the manifesto, community drives, education support, or the campaign.</p>
+            <AskMeButton />
+          </div>
+        </div>
+      </section>
+
+      <section id="featured-students" className="section students students-home home-students">
+        <div className="container">
+          <div className="section-heading" data-reveal="fade-up">
+            <div>
+              <p className="eyebrow"><i /> ADOPT-A-STUDENT</p>
+              <h2>Students ready<br /><em>to learn.</em></h2>
+            </div>
+            <p>Choose a student, read their story, and use the school payment details on their profile to support them directly.</p>
+          </div>
+
+          {featuredStudents.length ? (
+            <div className="student-grid" data-reveal="stagger">
+              {featuredStudents.map((student) => (
+                <Link
+                  href={`/students/${student.slug}`}
+                  className={`student-card student-card-link${student.sponsored ? ' student-card-sponsored' : ''}`}
+                  key={student.id}
+                >
+                  <div className="student-image">
+                    <StudentImage
+                      src={getDirectImageUrl(student.image)}
+                      alt={`${student.name} student profile`}
+                      loading="lazy"
+                    />
+                    {student.sponsored && (
+                      <span className="student-sponsored-badge">
+                        <span className="student-sponsored-tick" aria-hidden="true">✓</span>
+                        SPONSORED
+                      </span>
+                    )}
+                    <span className="student-number">
+                      {student.number} · {student.tag.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="student-body">
+                    <span className="label">{student.name.toUpperCase()}</span>
+                    <h3>{student.school}</h3>
+                    <p>{student.short || student.need}</p>
+                    <div className="student-details">
+                      <span>PAY BILL <b>{student.paybill}</b></span>
+                      <span>ACCOUNT <b>{student.account}</b></span>
+                    </div>
+                    {student.sponsored ? (
+                      <div className="need need-sponsored">
+                        <b>✓ FULLY SPONSORED</b>
+                        <span>{student.sponsoredBy ? `Covered by ${student.sponsoredBy}` : 'Already covered · read their story'}</span>
+                      </div>
+                    ) : (
+                      <div className="need">
+                        <b>{student.need}</b>
+                        <span>Goal · any amount will help</span>
+                      </div>
+                    )}
+                    <span className="card-link">
+                      View {student.sponsored ? 'success story' : 'full profile'} <span>→</span>
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="home-students-empty">Student profiles will appear here as they are published.</p>
+          )}
+
+          <div className="students-more-prompt" data-reveal="soft-pop">
+            <div>
+              <p className="eyebrow"><i /> MORE STUDENTS</p>
+              <strong>Find students by school and explore the full directory.</strong>
+              <span>School folders include every published student, with sponsored students shown alongside them.</span>
+            </div>
+            <Link href="/students#meet-students" className="button button-primary">See all students <span>↗</span></Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section support-section home-support" data-reveal="fade-right">
+        <div className="container support-grid">
+          <div>
+            <p className="eyebrow">SUPPORT NAKURU KWETU</p>
+            <h2>Keep the people-powered work moving.</h2>
+            <p>Every contribution helps the campaign keep listening, sharing its plans, and working alongside Nakuru communities.</p>
+            <div className="home-support-actions">
+              <Link href="/donate" className="button button-primary">Donate to the campaign <span>↗</span></Link>
+              <Link href="/join" className="text-link">Join the movement <span>→</span></Link>
+            </div>
+          </div>
+          <div className="support-visual">
+            <img src="/richie-standing-cutout.png" alt="Richie Githatu standing and smiling" loading="lazy" />
+            <div><strong>People-powered.</strong><br />Built together.</div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section homepage-newsroom home-newsroom" id="newsroom" data-reveal="fade-up">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow"><i /> NEWSROOM</p>
+              <h2>Updates from<br /><em>around Nakuru.</em></h2>
+            </div>
+            <p>A few recent stories from the campaign trail and the people shaping our county.</p>
+          </div>
+
+          <div className="home-newsroom-grid">
+            <Link href="/updates" className="home-newsroom-feature">
+              <img
+                src="/WhatsApp%20Image%202026-09-28%20at%2020.04.39.jpeg"
+                alt="Richie Githatu in conversation during a Pawa Radio interview."
+                loading="lazy"
+              />
+              <span className="home-newsroom-feature-copy">
+                <b>NAKURU KWETU IN CONVERSATION</b>
+                <strong>News, voices, and moments from the county.</strong>
+                <span>Visit the newsroom <span aria-hidden="true">→</span></span>
+              </span>
+            </Link>
+
+            <ol className="newsroom-list" data-reveal="stagger">
+              {recentUpdates.map((update, index) => (
+                <li className="newsroom-item" key={`${update.title}-${index}`}>
+                  <span className="newsroom-number">{String(index + 1).padStart(2, '0')}</span>
+                  <div className="newsroom-body">
+                    <span className="newsroom-tag">{update.tag}</span>
+                    <h3>{update.title}</h3>
+                    <p>{update.excerpt}</p>
+                  </div>
+                  <Link href={update.href} className="text-link">Read it <span>→</span></Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <p className="newsroom-foot">Want the full feed? <Link href="/updates" className="text-link">See all campaign updates <span>→</span></Link></p>
+        </div>
+      </section>
+    </SiteShell>
+  )
 }

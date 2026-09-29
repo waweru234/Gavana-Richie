@@ -8,7 +8,7 @@ import { StudentImage } from '@/components/student-image'
 import { getDirectImageUrl } from '@/lib/utils'
 
 const siteUrl = 'https://www.gavanarichie.com'
-const SCHOOL_GROUPS_PER_PAGE = 6
+const DIRECTORY_ITEMS_PER_PAGE = 6
 
 type Student = Awaited<ReturnType<typeof getAllPublishedStudents>>[number]
 
@@ -16,17 +16,17 @@ interface StudentsPageProps {
   searchParams: Promise<{ page?: string }>
 }
 
-// Helper to create URL-friendly slug from school name
-const createSchoolSlug = (schoolName: string) =>
-  schoolName
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-
 const getNeedAmount = (need: string) => {
   const amount = Number(need.replace(/[^0-9.]/g, ''))
   return Number.isFinite(amount) ? amount : 0
 }
+
+const createSchoolSlug = (schoolName: string) =>
+  schoolName
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
 
 export const metadata: Metadata = {
   title: 'Adopt a Student | Richie Githatu for Governor 2027',
@@ -80,10 +80,13 @@ const hashtags = ['#KeepAChildInSchool', '#EveryChildDeservesAChance', '#Educati
 
 export default async function StudentsPage({ searchParams }: StudentsPageProps) {
   const params = await searchParams
-  const page = Math.max(1, parseInt(params.page || '1', 10))
+  const requestedPage = Number(params.page ?? '1')
+  const validRequestedPage = Number.isSafeInteger(requestedPage) && requestedPage > 0
+    ? requestedPage
+    : 1
 
-  // Load the complete published directory before grouping. Pagination is applied
-  // to schools, never to students, so no school is split between pages.
+  // Load the complete published directory before grouping so no school or
+  // student is omitted from the directory.
   const allStudents: Student[] = await getAllPublishedStudents()
   const total = allStudents.length
 
@@ -104,44 +107,44 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
     )
   }
 
-  // Sponsored students are always standalone entries. Only students still
-  // needing support are grouped together by school.
-  const sponsoredStudents = allStudents
-    .filter(student => student.sponsored)
-    .sort((a, b) => getNeedAmount(b.need) - getNeedAmount(a.need))
+  const schoolGroups = new Map<string, { school: string; students: Student[] }>()
+  allStudents.filter((student) => !student.sponsored).forEach((student) => {
+    const schoolName = student.school.trim().replace(/\s+/g, ' ')
+    const schoolKey = schoolName.toLocaleLowerCase()
+    const group = schoolGroups.get(schoolKey)
+    if (group) {
+      group.students.push(student)
+    } else {
+      schoolGroups.set(schoolKey, { school: schoolName, students: [student] })
+    }
+  })
 
-  const schoolGroups: Record<string, Student[]> = {}
-  const schoolNames: Record<string, string> = {}
-  allStudents
-    .filter(student => !student.sponsored)
-    .forEach((student: Student) => {
-      const schoolKey = student.school.trim().replace(/\s+/g, ' ').toLocaleLowerCase()
-      if (!schoolGroups[schoolKey]) {
-        schoolGroups[schoolKey] = []
-        schoolNames[schoolKey] = student.school.trim()
-      }
-      schoolGroups[schoolKey].push(student)
-    })
-
-  const schoolGroupEntries = Object.entries(schoolGroups).map(([schoolKey, students]) => ({
+  const schoolEntries = [...schoolGroups.values()].map(({ school, students }) => ({
     type: 'school' as const,
-    school: schoolNames[schoolKey],
+    school,
     students: students.sort((a, b) => getNeedAmount(b.need) - getNeedAmount(a.need)),
-    sortAmount: Math.max(...students.map(student => getNeedAmount(student.need))),
+    sortAmount: Math.max(...students.map((student) => getNeedAmount(student.need))),
   }))
-
-  // Keep sponsored students as separate entries at the top. The remaining
-  // school groups then follow in descending order of the highest amount needed.
-  const directoryEntries = [
-    ...sponsoredStudents.map(student => ({ type: 'student' as const, student, sortAmount: getNeedAmount(student.need) })),
-    ...schoolGroupEntries.sort((a, b) => b.sortAmount - a.sortAmount),
-  ]
-
-  const startIndex = (page - 1) * SCHOOL_GROUPS_PER_PAGE
-  const endIndex = startIndex + SCHOOL_GROUPS_PER_PAGE
-  const pagedDirectoryEntries = directoryEntries.slice(startIndex, endIndex)
+  const sponsoredEntries = allStudents
+    .filter((student) => student.sponsored)
+    .map((student) => ({
+      type: 'student' as const,
+      student,
+      sortAmount: getNeedAmount(student.need),
+    }))
+  const directoryEntries = [...schoolEntries, ...sponsoredEntries]
+    .sort((a, b) => b.sortAmount - a.sortAmount)
   const totalDirectoryEntries = directoryEntries.length
-  const totalDirectoryPages = Math.max(1, Math.ceil(totalDirectoryEntries / SCHOOL_GROUPS_PER_PAGE))
+  const totalDirectoryPages = Math.max(
+    1,
+    Math.ceil(totalDirectoryEntries / DIRECTORY_ITEMS_PER_PAGE),
+  )
+  const page = Math.min(validRequestedPage, totalDirectoryPages)
+  const startIndex = (page - 1) * DIRECTORY_ITEMS_PER_PAGE
+  const paginatedDirectoryEntries = directoryEntries.slice(
+    startIndex,
+    startIndex + DIRECTORY_ITEMS_PER_PAGE,
+  )
 
   return (
     <SiteShell>
@@ -152,7 +155,7 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
         eyebrow="ADOPT-A-STUDENT"
         title="Every child"
         accent="deserves education."
-        text="A people-powered campaign to keep vulnerable children in school - through school fees, examinations and the essentials that make learning possible."
+        text="Browse students by school, or read a sponsored student’s story."
       />
 
       {/* STUDENTS FIRST */}
@@ -163,14 +166,14 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
               <p className="eyebrow"><i /> MEET THE STUDENTS</p>
               <h2>Pick a student.<br /><em>Pay the school directly.</em></h2>
             </div>
-            <p>Students needing support are grouped by school, while fully sponsored students are shown individually. Listings are ordered from the highest support amount to the lowest. ({total} students listed)</p>
+            <p>Browse students by school. Sponsored students appear as individual stories, and single-student schools are included. Folders are ordered by the highest student need. ({total} students listed)</p>
           </div>
 
-          {/* School Groups Grid */}
           <div className="school-groups-grid" data-reveal="stagger">
-            {pagedDirectoryEntries.map((entry, entryIndex) => {
+            {paginatedDirectoryEntries.map((entry, entryIndex) => {
               if (entry.type === 'student') {
                 const student = entry.student
+
                 return (
                   <Link
                     href={`/students/${student.slug}`}
@@ -199,7 +202,7 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
                         </div>
                       </div>
                       <div className="school-group-action">
-                        View success story <span aria-hidden>→</span>
+                        View success story <span aria-hidden="true">→</span>
                       </div>
                     </div>
                   </Link>
@@ -207,11 +210,8 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
               }
 
               const { school, students } = entry
-              const studentCount = students.length
               const schoolSlug = createSchoolSlug(school)
-              // Every school entry contains only students still needing support.
-              // This keeps students from the same school together,
-              // including schools that currently have only one student.
+              const studentCount = students.length
               const visibleStudents = students.slice(0, 3)
 
               return (
@@ -219,7 +219,7 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
                   <Link
                     href={`/students/school/${schoolSlug}`}
                     className="school-group-link"
-                    aria-label={`View all ${studentCount} students from ${school}`}
+                    aria-label={`View ${studentCount} students needing support from ${school}`}
                   >
                     <div className="school-group-card">
                       <div className="school-group-header">
@@ -228,45 +228,34 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
                           <h3>{school}</h3>
                         </div>
                         <span className="student-count">
-                          {studentCount === 1 ? '1 student' : `${studentCount} students`}
-
+                          {studentCount === 1 ? '1 student needs support' : `${studentCount} students need support`}
                         </span>
                       </div>
 
                       <div className="school-group-students">
-                        {visibleStudents.map((student: Student, index: number) => (
-                          <div
-                            key={student.id || student.slug || index}
-                            className="school-student-preview"
-                          >
+                        {visibleStudents.map((student) => (
+                          <div key={student.id} className="school-student-preview">
                             <StudentImage
                               src={getDirectImageUrl(student.image)}
                               alt={`${student.name} preview`}
                               className="student-preview-image"
                               loading="lazy"
                             />
-
                             <div className="student-preview-info">
                               <span className="student-name">{student.name}</span>
-                              {student.sponsored && (
-                                <span className="sponsored-tag">SPONSORED</span>
-                              )}
                             </div>
                           </div>
                         ))}
-
-                        {studentCount > 3 && (
+                        {studentCount > visibleStudents.length && (
                           <div className="preview-more">
-                            +{studentCount - 3} more students
+                            +{studentCount - visibleStudents.length} more students
                           </div>
                         )}
-
-
                       </div>
 
                       <div className="school-group-action">
                         View {studentCount === 1 ? 'student' : 'all students'} from {school}
-                        <span aria-hidden>→</span>
+                        <span aria-hidden="true">→</span>
                       </div>
                     </div>
                   </Link>
@@ -275,20 +264,19 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
             })}
           </div>
 
-          {/* Student directory pagination */}
           {totalDirectoryPages > 1 && (
             <nav className="pagination" aria-label="Student directory pagination">
               {page > 1 && (
-                <Link href={`/students?page=${page - 1}`} className="pagination-btn" aria-label="Previous page">
-                  <span aria-hidden>-</span> Previous
+                <Link href={`/students?page=${page - 1}#meet-students`} className="pagination-btn" aria-label="Previous page">
+                  <span aria-hidden="true">←</span> Previous
                 </Link>
               )}
               <span className="pagination-info" aria-live="polite">
-                Page {page} of {totalDirectoryPages} - {totalDirectoryEntries} listings total
+                Page {page} of {totalDirectoryPages} · {totalDirectoryEntries} school and sponsored-student listings
               </span>
               {page < totalDirectoryPages && (
-                <Link href={`/students?page=${page + 1}`} className="pagination-btn" aria-label="Next page">
-                  Next <span aria-hidden>→</span>
+                <Link href={`/students?page=${page + 1}#meet-students`} className="pagination-btn" aria-label="Next page">
+                  Next <span aria-hidden="true">→</span>
                 </Link>
               )}
             </nav>
@@ -416,7 +404,7 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
             <li><b>Any amount will be appreciated.</b></li>
           </ul>
           <div className="programme-buttons">
-            <Link href="/students" className="button button-secondary">Pick a student <span>-</span></Link>
+            <Link href="/students#meet-students" className="button button-secondary">Pick a student <span>-</span></Link>
           </div>
         </div>
       </section>

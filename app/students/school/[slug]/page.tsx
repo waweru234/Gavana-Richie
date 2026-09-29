@@ -9,9 +9,11 @@ import { StudentImage } from '@/components/student-image'
 import { getDirectImageUrl } from '@/lib/utils'
 
 const siteUrl = 'https://www.gavanarichie.com'
+const STUDENTS_PER_PAGE = 6
 
 interface SchoolPageProps {
   params: Promise<{ slug: string }>
+  searchParams: Promise<{ page?: string }>
 }
 
 const createSchoolSlug = (schoolName: string) =>
@@ -20,6 +22,11 @@ const createSchoolSlug = (schoolName: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
+
+const getNeedAmount = (need: string) => {
+  const amount = Number(need.replace(/[^0-9.]/g, ''))
+  return Number.isFinite(amount) ? amount : 0
+}
 
 async function getSchoolStudents(slug: string) {
   const data = await getAllPublishedStudents()
@@ -102,11 +109,25 @@ export async function generateMetadata({
   }
 }
 
-export default async function SchoolPage({ params }: SchoolPageProps) {
-  const { slug } = await params
+export default async function SchoolPage({ params, searchParams }: SchoolPageProps) {
+  const [{ slug }, query] = await Promise.all([params, searchParams])
   const schoolStudents = await getSchoolStudents(slug)
 
   if (!schoolStudents) notFound()
+
+  const requestedPage = Number(query.page ?? '1')
+  const validRequestedPage = Number.isSafeInteger(requestedPage) && requestedPage > 0
+    ? requestedPage
+    : 1
+  const totalPages = Math.max(1, Math.ceil(schoolStudents.length / STUDENTS_PER_PAGE))
+  const page = Math.min(validRequestedPage, totalPages)
+  const sortedSchoolStudents = [...schoolStudents].sort(
+    (a, b) => getNeedAmount(b.need) - getNeedAmount(a.need),
+  )
+  const paginatedStudents = sortedSchoolStudents.slice(
+    (page - 1) * STUDENTS_PER_PAGE,
+    page * STUDENTS_PER_PAGE,
+  )
 
   const schoolName = schoolStudents[0].school
   const sponsoredStudents = schoolStudents.filter((student) => student.sponsored)
@@ -128,8 +149,8 @@ export default async function SchoolPage({ params }: SchoolPageProps) {
       <section id="school-students" className="section students school-students-page">
         <div className="container">
           <div className="school-page-top" data-reveal="fade-up">
-            <Link href="/students" className="back-link">
-              <span aria-hidden="true">←</span> All schools
+            <Link href="/students#meet-students" className="back-link">
+              <span aria-hidden="true">←</span> All students
             </Link>
 
             <div className="school-page-heading">
@@ -138,7 +159,7 @@ export default async function SchoolPage({ params }: SchoolPageProps) {
                 <h2>
                   {schoolName}
                   <br />
-                  <em>Students needing support.</em>
+                  <em>Students at this school.</em>
                 </h2>
               </div>
 
@@ -168,7 +189,7 @@ export default async function SchoolPage({ params }: SchoolPageProps) {
           </div>
 
           <div className="student-grid school-student-grid" data-reveal="stagger">
-            {schoolStudents.map((student) => (
+            {paginatedStudents.map((student) => (
               <Link
                 href={`/students/${student.slug}`}
                 className={`student-card student-card-link${student.sponsored ? ' student-card-sponsored' : ''}`}
@@ -229,6 +250,32 @@ export default async function SchoolPage({ params }: SchoolPageProps) {
             ))}
           </div>
 
+          {totalPages > 1 && (
+            <nav className="pagination" aria-label={`${schoolName} student directory pagination`}>
+              {page > 1 && (
+                <Link
+                  href={`/students/school/${schoolSlug}?page=${page - 1}#school-students`}
+                  className="pagination-btn"
+                  aria-label="Previous page"
+                >
+                  <span aria-hidden="true">←</span> Previous
+                </Link>
+              )}
+              <span className="pagination-info" aria-live="polite">
+                Page {page} of {totalPages} · {schoolStudents.length} students total
+              </span>
+              {page < totalPages && (
+                <Link
+                  href={`/students/school/${schoolSlug}?page=${page + 1}#school-students`}
+                  className="pagination-btn"
+                  aria-label="Next page"
+                >
+                  Next <span aria-hidden="true">→</span>
+                </Link>
+              )}
+            </nav>
+          )}
+
           <JawabuKenyaBanner />
         </div>
       </section>
@@ -282,11 +329,11 @@ export default async function SchoolPage({ params }: SchoolPageProps) {
           </div>
 
           <div className="programme-buttons">
-            <Link href="/students" className="button button-secondary">
-              ← Back to all schools
+            <Link href="/students#meet-students" className="button button-secondary">
+              ← Back to all students
             </Link>
-            <Link href={`/students/school/${schoolSlug}`} className="button button-primary">
-              View this school <span>→</span>
+            <Link href="#school-students" className="button button-primary">
+              View students from this school <span>→</span>
             </Link>
           </div>
         </div>

@@ -29,6 +29,12 @@ export function HelpAssistant() {
     }
   }, [messages, sending, open])
 
+  useEffect(() => {
+    const openAssistant = () => setOpen(true)
+    window.addEventListener('nakuru:open-campaign-assistant', openAssistant)
+    return () => window.removeEventListener('nakuru:open-campaign-assistant', openAssistant)
+  }, [])
+
   const send = async (text?: string) => {
     const value = (text ?? draft).trim()
     if (!value || sending) return
@@ -61,14 +67,14 @@ export function HelpAssistant() {
   return (
     <div className="help-assistant" aria-live="polite">
       {open && (
-        <div className="help-panel" role="dialog" aria-label="Richie's campaign assistant">
+        <div className="help-panel" id="campaign-help-dialog" role="dialog" aria-label="Richie's campaign assistant">
           <div className="help-header">
             <div className="help-header-art">
               <img src="/richie-cutout.png" alt="Richie Githatu's campaign assistant" />
             </div>
             <div className="help-header-copy">
               <b>Ask Richie&apos;s campaign</b>
-              <small>Powered by Gemini Â· Nakuru Kwetu 2027</small>
+              <small>Powered by Gemini · Nakuru Kwetu 2027</small>
             </div>
             <button type="button" className="help-close" aria-label="Close assistant" onClick={() => setOpen(false)}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>
@@ -104,7 +110,7 @@ export function HelpAssistant() {
           >
             <input
               type="text"
-              placeholder="Ask anything about the campaignâ€¦"
+              placeholder="Ask anything about the campaign…"
               value={draft}
               onChange={e => setDraft(e.target.value)}
               disabled={sending}

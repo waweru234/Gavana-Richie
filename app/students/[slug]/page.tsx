@@ -408,7 +408,7 @@ export default async function StudentDetailPage({
                   </Link>
 
                   <Link
-                    href="/students"
+                    href="/students#meet-students"
                     className="button"
                   >
                     Adopt the next student
@@ -492,7 +492,7 @@ export default async function StudentDetailPage({
                   </Link>
 
                   <Link
-                    href="/students"
+                    href="/students#meet-students"
                     className="text-link"
                   >
                     View all students
@@ -554,7 +554,7 @@ export default async function StudentDetailPage({
             <Link
               href={`/students/school/${createSchoolSlug(
                 student.school,
-              )}`}
+              )}#school-students`}
               className="button button-secondary"
             >
               View students from this school
