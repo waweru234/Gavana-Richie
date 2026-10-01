@@ -1215,3 +1215,170 @@ footer a:focus-visible { outline: 2px solid var(--flamingo-pink); outline-offset
   .home-donate-button { width: 100%; justify-content: center; }
   .footer-main { padding: 48px 0 38px; }
 }
+
+/* Cohesive pink, plum, and lavender surfaces across public pages */
+:root {
+  --surface-soft: #F5EFF8;
+  --sky: #FAF2F6;
+  --blush-tint: #F8EAF0;
+  --surface-purple: #EEE7F6;
+  --purple-rich: #51365F;
+  --glass-surface: rgba(255, 255, 255, .66);
+  --glass-border: rgba(81, 54, 95, .16);
+}
+
+html { background: linear-gradient(135deg, #FFF5F7 0%, #F2ECF8 52%, #FFF3F6 100%); }
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FFF5F7 0%, #F2ECF8 52%, #FFF3F6 100%);
+  background-attachment: fixed;
+}
+
+.nav-wrap {
+  background: rgba(255, 248, 251, .82);
+  border-bottom-color: rgba(81, 54, 95, .14);
+  backdrop-filter: blur(18px) saturate(145%);
+}
+
+.hero,
+.page-intro,
+.home-hero {
+  background: linear-gradient(120deg, #FFF4F7 0%, #F2ECF8 58%, #F9EFF5 100%);
+}
+
+.about-feature,
+.voter-section,
+.feature-section,
+.text-section,
+.events-section,
+.join-section,
+.page-story,
+.programme-banner,
+.programme-section,
+.student-row-section,
+.form-section,
+.home-jawabu {
+  background: linear-gradient(135deg, #FBF2F6 0%, #F1EBF7 100%);
+}
+
+.page-story-quiet,
+.feature-section-redesign,
+.join-ways,
+.wanavijiji-section,
+.wanavijiji-concurrent,
+.jawabu-hero {
+  background: linear-gradient(135deg, #F9EEF4 0%, #EFE8F6 52%, #FCF3F7 100%);
+}
+
+.home-manifesto,
+.manifesto-feature,
+.feature-card-dark,
+.feature-card-navy,
+.newsroom-feature,
+.home-newsroom-feature,
+.student-raise,
+.home-donate,
+footer {
+  background: linear-gradient(130deg, #3E0C1B 0%, #51365F 100%);
+}
+
+.feature-card-blue { background: var(--purple-rich); }
+
+.student-card,
+.school-group-card,
+.payment,
+.hashtag-chips li,
+.manifesto-cards article,
+.manifesto-foreword,
+.manifesto-pillars,
+.target-item,
+.programme-list li,
+.programme-list-box li,
+.programme-numbered li,
+.programme-contribute,
+.programme-contribute .programme-list li,
+.indicator,
+.hashtags li,
+.event-card,
+.update-card,
+.updates-card,
+.student-payment-box > div,
+.student-payment-goal,
+.vm-card,
+.value-card,
+.pillar-card,
+.vm-triple-card,
+.student-row-card,
+.students-more-prompt,
+.about-contact-card,
+.about-moments-pill,
+.newsroom-item,
+.donate-comment-form,
+.donate-contact-bar,
+.donate-pay-grid div,
+.donate-richie-image,
+.join-form-next-list li,
+.join-ways-grid li,
+.wanavijiji-quote,
+.wanavijiji-need,
+.jawabu-banner-art,
+.jawaban-partner-note,
+.help-panel,
+.help-header-art,
+.help-bubble-model,
+.help-typing,
+.help-quick-chip,
+.help-form,
+.updates-connect,
+.home-jawabu-brand,
+.home-manifesto-card:not(.home-manifesto-card-ideas),
+.home-ask-card,
+.home-students-empty,
+.jawabu-hero-art {
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px) saturate(135%);
+  box-shadow: 0 16px 36px rgba(81, 54, 95, .09);
+}
+
+.student-image span,
+.student-detail-badge,
+.donate-richie-tag,
+.agenda-richie-tag,
+.manifesto-foreword-art span,
+.jawabu-banner-copy h3 em,
+.wanavijiji-photo figcaption,
+.join-form-fieldset legend,
+.student-payment-goal,
+.donate-comment-field input,
+.donate-comment-field textarea,
+.form-field input,
+.form-field textarea,
+.form-field select {
+  background-color: rgba(255, 246, 250, .9);
+}
+
+.action-band .button,
+.adopt-cta-strip .button,
+.about-video-actions .button,
+.join-cta .button:hover,
+.social-icons-gold a:hover,
+.help-quick-chip:hover,
+.home-donate-button {
+  background: #F8EAF0;
+  color: var(--purple-rich);
+}
+
+.student-detail,
+.donate-message-section,
+.agenda-richie-image,
+.home-message {
+  background: linear-gradient(135deg, #FAEFF4 0%, #F0EAF7 100%);
+}
+
+.page-story-circle,
+.student-detail-circle { background: rgba(227, 215, 239, .72); }
+
+.footer-top-line {
+  background: linear-gradient(90deg, #4A2E5D 0 30%, #FC9CA4 30% 58%, #8A2242 58% 100%);
+}

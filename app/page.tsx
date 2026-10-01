@@ -89,10 +89,10 @@ const formatUpdateDate = (date: string | null) => {
   return Number.isNaN(parsedDate.getTime())
     ? 'LATEST UPDATE'
     : parsedDate.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      }).toUpperCase()
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).toUpperCase()
 }
 
 export default async function Home() {
@@ -135,8 +135,8 @@ export default async function Home() {
           <div className="hero-visual home-hero-visual">
             <div className="home-hero-photo-frame">
               <img
-                src="/richie-portrait.jpeg"
-                alt="Richie Githatu, featured in the Nakuru Kwetu campaign."
+                src="/WhatsApp%20Image%202026-09-28%20at%2016.58.34.jpeg"
+                alt="Nakuru residents taking part in a community walk together."
               />
             </div>
             <div className="home-hero-stamp">
