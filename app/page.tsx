@@ -294,6 +294,19 @@ export default async function Home() {
           <p className="newsroom-foot">Want the full feed? <Link href="/updates" className="text-link">See all campaign updates <span>→</span></Link></p>
         </div>
       </section>
+
+      <section className="home-donate" aria-labelledby="home-donate-title">
+        <div className="container home-donate-inner">
+          <div className="home-donate-copy">
+            <p className="eyebrow"><i /> SUPPORT NAKURU KWETU</p>
+            <h2 id="home-donate-title">Help move the campaign forward.</h2>
+            <p>Your contribution helps us keep listening, sharing our plans, and working alongside Nakuru communities.</p>
+          </div>
+          <Link href="/donate" className="button home-donate-button">
+            Donate to the campaign <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </section>
     </SiteShell>
   )
 }
