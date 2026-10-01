@@ -135,8 +135,8 @@ export default async function Home() {
           <div className="hero-visual home-hero-visual">
             <div className="home-hero-photo-frame">
               <img
-                src="/WhatsApp%20Image%202026-09-28%20at%2016.58.34.jpeg"
-                alt="Nakuru residents taking part in a community walk together."
+                src="/richie-portrait.jpeg"
+                alt="Richie Githatu, featured in the Nakuru Kwetu campaign."
               />
             </div>
             <div className="home-hero-stamp">
@@ -196,12 +196,12 @@ export default async function Home() {
               </div>
             </Link>
 
-            <Link href="/donate" className="home-manifesto-card home-manifesto-card-support">
+            <Link href="/students#meet-students" className="home-manifesto-card home-manifesto-card-support">
               <div className="home-manifesto-card-copy">
-                <p className="home-manifesto-card-label">SUPPORT NAKURU KWETU</p>
-                <h3>Donate to the campaign.</h3>
-                <p>Every contribution helps the campaign keep listening and working alongside Nakuru communities.</p>
-                <span className="home-manifesto-card-link">Donate to the campaign <span aria-hidden="true">→</span></span>
+                <p className="home-manifesto-card-label">JAWABU KENYA · ADOPT-A-STUDENT</p>
+                <h3>Help a student stay in school.</h3>
+                <p>Choose a student and support their education directly through their school.</p>
+                <span className="home-manifesto-card-link">Adopt a student <span aria-hidden="true">→</span></span>
               </div>
             </Link>
           </div>
