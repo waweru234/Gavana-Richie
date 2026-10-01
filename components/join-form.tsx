@@ -67,7 +67,7 @@ export default function JoinForm() {
             value={formData.full_name}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-[#F6E9EB] rounded-md focus:outline-none focus:ring-2 focus:ring-[#8A2242]"
           />
         </div>
         <div>
@@ -78,7 +78,7 @@ export default function JoinForm() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-[#F6E9EB] rounded-md focus:outline-none focus:ring-2 focus:ring-[#8A2242]"
           />
         </div>
         <div>
@@ -88,7 +88,7 @@ export default function JoinForm() {
             name="phone_number"
             value={formData.phone_number}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-[#F6E9EB] rounded-md focus:outline-none focus:ring-2 focus:ring-[#8A2242]"
           />
         </div>
         <div>
@@ -98,25 +98,25 @@ export default function JoinForm() {
             value={formData.message}
             onChange={handleChange}
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-[#F6E9EB] rounded-md focus:outline-none focus:ring-2 focus:ring-[#8A2242]"
           />
         </div>
         <button
           type="submit"
           disabled={submitStatus === 'loading'}
-          className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors disabled:opacity-50"
+          className="w-full bg-[#8A2242] text-white px-4 py-2 rounded-md hover:bg-[#3E0C1B] focus:outline-none focus:ring-2 focus:ring-[#FC9CA4] transition-colors disabled:opacity-50"
         >
           {submitStatus === 'loading' ? 'Submitting...' : 'Submit'}
         </button>
       </form>
 
       {submitStatus === 'success' && (
-        <div className="mt-4 p-3 bg-green-100 text-green-800 rounded-md text-center">
+        <div className="mt-4 p-3 bg-[#F6E9EB] text-[#3E0C1B] rounded-md text-center">
           Thank you for joining! We will get back to you soon.
         </div>
       )}
       {submitStatus === 'error' && (
-        <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-md text-center">
+        <div className="mt-4 p-3 bg-[#FC9CA4] text-[#3E0C1B] rounded-md text-center">
           {submitError || 'Failed to submit. Please try again.'}
         </div>
       )}

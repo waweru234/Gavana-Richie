@@ -3,7 +3,7 @@ export function JawabuKenyaBanner({ compact = false }: { compact?: boolean }) {
     <article className={'jawabu-banner' + (compact ? ' jawabu-banner-compact' : '')}>
       <div className="jawabu-banner-art">
         <div className="jawabu-banner-glow" aria-hidden />
-        <img src="/jawabu-kenya-logo.png" alt="Jawabu Kenya - Milimani Estate, Elgeyo Road, Nakuru" />
+        <img src="/jawabu_logo_logo-removebg-preview.png" alt="Jawabu Kenya - Milimani Estate, Elgeyo Road, Nakuru" />
         <span className="jawabu-banner-stamp">SINCE NAKURU - KENYA</span>
       </div>
 

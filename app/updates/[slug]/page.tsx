@@ -76,19 +76,19 @@ function formatDate(dateStr: string | null) {
 
 function getCategoryColor(category: string) {
   const colors: Record<string, string> = {
-    CIVIC: '#4a2c6a',
-    HEALTH: '#1b5e20',
-    FIELD: '#173a70',
-    EVENT: '#d97706',
-    EDUCATION: '#0277bd',
-    ECONOMY: '#5d4037',
-    GOVERNANCE: '#37474f',
-    ENVIRONMENT: '#2e7d32',
-    YOUTH: '#c62828',
-    ENGAGEMENT: '#6a1b9a',
-    OTHER: '#455a64',
+    CIVIC: '#8A2242',
+    HEALTH: '#E23E4E',
+    FIELD: '#173A70',
+    EVENT: '#8A2242',
+    EDUCATION: '#8A2242',
+    ECONOMY: '#1A1315',
+    GOVERNANCE: '#3E0C1B',
+    ENVIRONMENT: '#8A2242',
+    YOUTH: '#E23E4E',
+    ENGAGEMENT: '#3E0C1B',
+    OTHER: '#8A2242',
   }
-  return colors[category.toUpperCase()] || '#455a64'
+  return colors[category.toUpperCase()] || '#8A2242'
 }
 
 export default async function UpdatePage({ params }: UpdatePageProps) {

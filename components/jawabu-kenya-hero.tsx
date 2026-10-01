@@ -11,7 +11,7 @@ export function JawabuKenyaHero({ compact = false }: { compact?: boolean }) {
       <div className="container jawabu-hero-grid">
         <div className="jawabu-hero-art">
           <div className="jawabu-hero-ring" aria-hidden />
-          <img src="/jawabu-kenya-logo.png" alt="Jawabu Kenya - Milimani Estate, Elgeyo Road - PO Box 124 - 20100, Nakuru" />
+          <img src="/jawabu_logo_logo-removebg-preview.png" alt="Jawabu Kenya - Milimani Estate, Elgeyo Road - PO Box 124 - 20100, Nakuru" />
           {!compact && <span className="jawabu-mark" aria-label="dot">*</span>}
           {compact && <span className="jawabu-hero-tag">PROGRAMME PARTNER</span>}
         </div>

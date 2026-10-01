@@ -2,10 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SiteShell } from '@/components/site-shell'
 import { AskMeButton } from '@/components/ask-me-button'
-import { StudentImage } from '@/components/student-image'
-import { getAllPublishedStudents } from '@/lib/students'
 import { getPublishedUpdates } from '@/lib/updates'
-import { getDirectImageUrl } from '@/lib/utils'
 
 const siteUrl = 'https://www.gavanarichie.com'
 
@@ -86,11 +83,6 @@ const fallbackUpdates = [
   },
 ]
 
-const getNeedAmount = (need: string) => {
-  const amount = Number(need.replace(/[^0-9.]/g, ''))
-  return Number.isFinite(amount) ? amount : 0
-}
-
 const formatUpdateDate = (date: string | null) => {
   if (!date) return 'LATEST UPDATE'
   const parsedDate = new Date(date)
@@ -104,14 +96,7 @@ const formatUpdateDate = (date: string | null) => {
 }
 
 export default async function Home() {
-  const [allStudents, updateResult] = await Promise.all([
-    getAllPublishedStudents(),
-    getPublishedUpdates(3),
-  ])
-
-  const featuredStudents = [...allStudents]
-    .sort((a, b) => Number(a.sponsored) - Number(b.sponsored) || getNeedAmount(b.need) - getNeedAmount(a.need))
-    .slice(0, 2)
+  const updateResult = await getPublishedUpdates(3)
   const publishedUpdates = updateResult.data.map((update) => {
     const excerpt = (update.excerpt || update.content)
       .replace(/<[^>]*>/g, ' ')
@@ -134,8 +119,8 @@ export default async function Home() {
       <section className="hero hero-richie home-hero">
         <div className="container hero-grid">
           <div className="hero-copy home-hero-copy">
-            <p className="eyebrow"><i /> RICHIE GITHATU · NAKURU KWETU</p>
-            <h1>OUR NAKURU.<br /><em>OUR FUTURE.</em></h1>
+            <p className="eyebrow"><i /> A PEOPLE-POWERED CAMPAIGN</p>
+            <h1>Richie Githatu<br /><em>Nakuru Kwetu</em></h1>
             <p className="hero-kicker">2027 GOVERNOR · NAKURU COUNTY</p>
             <p className="hero-text">
               A necessary vision for a healthier, better-governed, youth-driven and economically
@@ -213,10 +198,10 @@ export default async function Home() {
 
             <Link href="/donate" className="home-manifesto-card home-manifesto-card-support">
               <div className="home-manifesto-card-copy">
-                <p className="home-manifesto-card-label">SUPPORT / MERCHANDISE</p>
-                <h3>Keep the people-powered work moving.</h3>
-                <p>Support the campaign or contact the team about campaign merchandise.</p>
-                <span className="home-manifesto-card-link">Ways to support <span aria-hidden="true">→</span></span>
+                <p className="home-manifesto-card-label">SUPPORT NAKURU KWETU</p>
+                <h3>Donate to the campaign.</h3>
+                <p>Every contribution helps the campaign keep listening and working alongside Nakuru communities.</p>
+                <span className="home-manifesto-card-link">Donate to the campaign <span aria-hidden="true">→</span></span>
               </div>
             </Link>
           </div>
@@ -226,7 +211,7 @@ export default async function Home() {
       <section className="home-jawabu">
         <div className="container home-jawabu-grid">
           <div className="home-jawabu-brand">
-            <img src="/jawabu-kenya-logo.png" alt="Jawabu Kenya" loading="lazy" />
+            <img src="/jawabu_logo_logo-removebg-preview.png" alt="Jawabu Kenya" loading="lazy" />
             <span>COMMUNITY PROGRAMMES</span>
           </div>
           <div className="home-jawabu-copy">
@@ -263,99 +248,6 @@ export default async function Home() {
             <h2>Have a question?</h2>
             <p>Ask about the manifesto, community drives, education support, or the campaign.</p>
             <AskMeButton />
-          </div>
-        </div>
-      </section>
-
-      <section id="featured-students" className="section students students-home home-students">
-        <div className="container">
-          <div className="section-heading" data-reveal="fade-up">
-            <div>
-              <p className="eyebrow"><i /> ADOPT-A-STUDENT</p>
-              <h2>Students ready<br /><em>to learn.</em></h2>
-            </div>
-            <p>Choose a student, read their story, and use the school payment details on their profile to support them directly.</p>
-          </div>
-
-          {featuredStudents.length ? (
-            <div className="student-grid" data-reveal="stagger">
-              {featuredStudents.map((student) => (
-                <Link
-                  href={`/students/${student.slug}`}
-                  className={`student-card student-card-link${student.sponsored ? ' student-card-sponsored' : ''}`}
-                  key={student.id}
-                >
-                  <div className="student-image">
-                    <StudentImage
-                      src={getDirectImageUrl(student.image)}
-                      alt={`${student.name} student profile`}
-                      loading="lazy"
-                    />
-                    {student.sponsored && (
-                      <span className="student-sponsored-badge">
-                        <span className="student-sponsored-tick" aria-hidden="true">✓</span>
-                        SPONSORED
-                      </span>
-                    )}
-                    <span className="student-number">
-                      {student.number} · {student.tag.toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="student-body">
-                    <span className="label">{student.name.toUpperCase()}</span>
-                    <h3>{student.school}</h3>
-                    <p>{student.short || student.need}</p>
-                    <div className="student-details">
-                      <span>PAY BILL <b>{student.paybill}</b></span>
-                      <span>ACCOUNT <b>{student.account}</b></span>
-                    </div>
-                    {student.sponsored ? (
-                      <div className="need need-sponsored">
-                        <b>✓ FULLY SPONSORED</b>
-                        <span>{student.sponsoredBy ? `Covered by ${student.sponsoredBy}` : 'Already covered · read their story'}</span>
-                      </div>
-                    ) : (
-                      <div className="need">
-                        <b>{student.need}</b>
-                        <span>Goal · any amount will help</span>
-                      </div>
-                    )}
-                    <span className="card-link">
-                      View {student.sponsored ? 'success story' : 'full profile'} <span>→</span>
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <p className="home-students-empty">Student profiles will appear here as they are published.</p>
-          )}
-
-          <div className="students-more-prompt" data-reveal="soft-pop">
-            <div>
-              <p className="eyebrow"><i /> MORE STUDENTS</p>
-              <strong>Find students by school and explore the full directory.</strong>
-              <span>School folders include every published student, with sponsored students shown alongside them.</span>
-            </div>
-            <Link href="/students#meet-students" className="button button-primary">See all students <span>↗</span></Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="section support-section home-support" data-reveal="fade-right">
-        <div className="container support-grid">
-          <div>
-            <p className="eyebrow">SUPPORT NAKURU KWETU</p>
-            <h2>Keep the people-powered work moving.</h2>
-            <p>Every contribution helps the campaign keep listening, sharing its plans, and working alongside Nakuru communities.</p>
-            <div className="home-support-actions">
-              <Link href="/donate" className="button button-primary">Donate to the campaign <span>↗</span></Link>
-              <Link href="/join" className="text-link">Join the movement <span>→</span></Link>
-            </div>
-          </div>
-          <div className="support-visual">
-            <img src="/richie-standing-cutout.png" alt="Richie Githatu standing and smiling" loading="lazy" />
-            <div><strong>People-powered.</strong><br />Built together.</div>
           </div>
         </div>
       </section>
