@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
+import {
+  findKnowledgeMatch,
+  getActiveKnowledge,
+  getChatbotSettings,
+  knowledgeAsPrompt,
+  logChatExchange,
+} from '@/lib/chatbot'
 
 export const dynamic = 'force-dynamic'
 
@@ -93,7 +100,10 @@ function replyFor(input: string): string {
   return `I might not have a quick answer for that one. Try asking about M-Pesa payments, ADOPT-A-STUDENT, Vijana na Tender, Soko Bila Rent, the 8-pillar manifesto, or how to join the movement. You can also reach the team directly: ${CAMPAIGN.phone} · ${CAMPAIGN.email}.`
 }
 
-async function callGeminiIfAvailable(messages: { role: 'user' | 'model'; parts: { text: string }[] }[]): Promise<string | null> {
+async function callGeminiIfAvailable(
+  messages: { role: 'user' | 'model'; parts: { text: string }[] }[],
+  extraSystem: string
+): Promise<string | null> {
   const apiKey = process.env.GEMINI_API_KEY?.trim()
   if (!apiKey) return null
   const model = process.env.GEMINI_MODEL?.trim() || 'gemini-2.0-flash'
@@ -102,7 +112,8 @@ async function callGeminiIfAvailable(messages: { role: 'user' | 'model'; parts: 
     `Keep answers short (under 120 words), warm, and practical. Use plain language — avoid jargon. ` +
     `When you suggest an action that involves money, always say: "${MONEY_GUARD}" ` +
     `Speak for the people-powered movement: Vijana na Tender, Soko Bila Rent, ADOPT-A-STUDENT, and 8 pillars of transformation. ` +
-    `If a question is outside the campaign, gently redirect to the closest programme page or the campaign contact line.`
+    `If a question is outside the campaign, gently redirect to the closest programme page or the campaign contact line.` +
+    extraSystem
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`
   try {
     const res = await fetch(url, {
@@ -131,17 +142,50 @@ export async function POST(req: NextRequest) {
     if (!lastUser || !String(lastUser.text || '').trim()) {
       return NextResponse.json({ text: 'Please type a question to begin.' }, { status: 200 })
     }
-    const seedPrev = messages
-      .filter(m => m.role === 'user' || m.role === 'model')
-      .map(m => ({ role: m.role as 'user' | 'model', parts: [{ text: String(m.text || '') }] }))
-    const trimmed = seedPrev.slice(-12)
-    const geminiReply = await callGeminiIfAvailable(trimmed)
-    if (geminiReply) {
-      return NextResponse.json({ text: geminiReply }, { status: 200 })
+    const userText = String(lastUser.text || '').trim().slice(0, 2000)
+    const [settings, knowledge] = await Promise.all([getChatbotSettings(), getActiveKnowledge()])
+
+    let reply: string | null = null
+    let source: 'knowledge' | 'gemini' | 'rules' = 'rules'
+
+    // 1. Answers trained in the admin dashboard win when they clearly match
+    const match = findKnowledgeMatch(userText, knowledge)
+    if (match) {
+      reply = match.answer
+      source = 'knowledge'
     }
-    const userText = String(lastUser.text || '').trim()
-    const local = replyFor(userText)
-    return NextResponse.json({ text: local }, { status: 200 })
+
+    // 2. Gemini, briefed with the admin's instructions and trained answers
+    if (!reply) {
+      const seedPrev = messages
+        .filter(m => m.role === 'user' || m.role === 'model')
+        .map(m => ({ role: m.role as 'user' | 'model', parts: [{ text: String(m.text || '') }] }))
+      const extra =
+        (settings.instructions.trim() ? `\n\nAdditional guidance from the campaign team:\n${settings.instructions.trim()}` : '') +
+        knowledgeAsPrompt(knowledge)
+      reply = await callGeminiIfAvailable(seedPrev.slice(-12), extra)
+      if (reply) source = 'gemini'
+    }
+
+    // 3. Built-in rules, with the admin's custom fallback for unknown questions
+    if (!reply) {
+      reply = replyFor(userText)
+      if (settings.fallback.trim() && reply.startsWith('I might not have a quick answer')) {
+        reply = settings.fallback.trim()
+      }
+    }
+
+    await logChatExchange({
+      conversationId: body?.conversationId,
+      visitorId: body?.visitorId,
+      path: body?.path,
+      userAgent: req.headers.get('user-agent'),
+      userText,
+      replyText: reply,
+      source,
+    })
+
+    return NextResponse.json({ text: reply, source }, { status: 200 })
   } catch {
     return NextResponse.json(
       { text: 'Please type a question to begin.' },
@@ -150,9 +194,12 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Public assistant configuration (greeting + suggested questions) for the chat widget
 export async function GET() {
+  const settings = await getChatbotSettings()
   return NextResponse.json({
     ok: true,
-    message: 'Ask Richie campaign assistant endpoint. POST { messages: [{ role, text }] }.',
+    greeting: settings.greeting,
+    quickQuestions: settings.quickQuestions.filter(q => q.trim()),
   })
 }

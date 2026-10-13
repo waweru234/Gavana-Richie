@@ -1,27 +1,49 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { getVisitorId, newConversationId, trackEvent } from '@/lib/analytics-client'
 
 type Msg = { role: 'user' | 'model'; text: string }
 
-const QUICK = [
+const DEFAULT_QUICK = [
   'How do I pay M-Pesa?',
   'What is Vijana na Tender?',
   'How can I adopt a student?',
 ]
 
+const DEFAULT_GREETING =
+  "Hi, I'm Richie Githatu's campaign assistant for the 2027 Governor race in Nakuru County. I can help with payments, the agenda, ADOPT-A-STUDENT, Vijana na Tender, Soko Bila Rent, and how to join the movement. What would you like to know?"
+
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
 export function HelpAssistant() {
+  const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const [messages, setMessages] = useState<Msg[]>([
-    {
-      role: 'model',
-      text:
-        "Hi, I'm Richie Githatu's campaign assistant for the 2027 Governor race in Nakuru County. I can help with payments, the agenda, ADOPT-A-STUDENT, Vijana na Tender, Soko Bila Rent, and how to join the movement. What would you like to know?",
-    },
-  ])
+  const [quick, setQuick] = useState(DEFAULT_QUICK)
+  const [messages, setMessages] = useState<Msg[]>([{ role: 'model', text: DEFAULT_GREETING }])
   const [draft, setDraft] = useState('')
   const [sending, setSending] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
+  const conversationId = useRef<string | null>(null)
+  const configLoaded = useRef(false)
+
+  // Load the greeting and suggested questions configured in the admin dashboard
+  useEffect(() => {
+    if (!open || configLoaded.current) return
+    configLoaded.current = true
+    trackEvent('chat_open')
+    fetch('/api/help')
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data?.greeting === 'string' && data.greeting.trim()) {
+          setMessages(prev => (prev.length === 1 ? [{ role: 'model', text: data.greeting }] : prev))
+        }
+        if (Array.isArray(data?.quickQuestions) && data.quickQuestions.length) setQuick(data.quickQuestions)
+      })
+      .catch(() => {})
+  }, [open])
 
   useEffect(() => {
     if (listRef.current) {
@@ -46,7 +68,12 @@ export function HelpAssistant() {
       const res = await fetch('/api/help', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({
+          messages: next,
+          conversationId: (conversationId.current ??= newConversationId()),
+          visitorId: getVisitorId(),
+          path: window.location.pathname,
+        }),
       })
       const data = await res.json()
       const reply = (data?.text as string | undefined) ?? "I'm having trouble reaching my notes right now. Try again, or Reach the team via the Join form on the website."
@@ -63,6 +90,8 @@ export function HelpAssistant() {
       setSending(false)
     }
   }
+
+  if (pathname?.startsWith('/admin')) return null
 
   return (
     <div className="help-assistant" aria-live="polite">
@@ -83,7 +112,7 @@ export function HelpAssistant() {
           <div className="help-list" ref={listRef}>
             {messages.map((m, i) => (
               <div key={i} className={`help-bubble help-bubble-${m.role}`}>
-                <p dangerouslySetInnerHTML={{ __html: m.text.replace(/\n/g, '<br/>') }} />
+                <p dangerouslySetInnerHTML={{ __html: escapeHtml(m.text).replace(/\n/g, '<br/>') }} />
               </div>
             ))}
             {sending && (
@@ -94,7 +123,7 @@ export function HelpAssistant() {
           </div>
           {messages.length <= 1 && (
             <div className="help-quick">
-              {QUICK.map(q => (
+              {quick.map(q => (
                 <button key={q} type="button" className="help-quick-chip" onClick={() => send(q)} disabled={sending}>
                   {q}
                 </button>

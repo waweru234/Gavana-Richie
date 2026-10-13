@@ -3,6 +3,10 @@ import Link from 'next/link'
 import { SiteShell } from '@/components/site-shell'
 import { AskMeButton } from '@/components/ask-me-button'
 import { getPublishedUpdates } from '@/lib/updates'
+import { getHomeContent, type ManifestoCard } from '@/lib/home-content'
+
+// Re-render at most every minute; CMS saves also revalidate immediately
+export const revalidate = 60
 
 const siteUrl = 'https://www.gavanarichie.com'
 
@@ -95,8 +99,14 @@ const formatUpdateDate = (date: string | null) => {
     }).toUpperCase()
 }
 
+const manifestoCardClass = (card: ManifestoCard, index: number) => {
+  if (card.image) return 'home-manifesto-card-photo'
+  return index === 0 ? 'home-manifesto-card-ideas' : 'home-manifesto-card-support'
+}
+
 export default async function Home() {
-  const updateResult = await getPublishedUpdates(3)
+  const [updateResult, content] = await Promise.all([getPublishedUpdates(3), getHomeContent()])
+  const { hero, manifesto, jawabu, message, newsroom, donate } = content
   const publishedUpdates = updateResult.data.map((update) => {
     const excerpt = (update.excerpt || update.content)
       .replace(/<[^>]*>/g, ' ')
@@ -119,29 +129,23 @@ export default async function Home() {
       <section className="hero hero-richie home-hero">
         <div className="container hero-grid">
           <div className="hero-copy home-hero-copy">
-            <p className="eyebrow"><i /> A PEOPLE-POWERED CAMPAIGN</p>
-            <h1>Richie Githatu<br /><em>Nakuru Kwetu</em></h1>
-            <p className="hero-kicker">2027 GOVERNOR · NAKURU COUNTY</p>
-            <p className="hero-text">
-              A necessary vision for a healthier, better-governed, youth-driven and economically
-              empowered Nakuru — built with the people, for the people.
-            </p>
+            <p className="eyebrow"><i /> {hero.eyebrow}</p>
+            <h1>{hero.title}<br /><em>{hero.titleAccent}</em></h1>
+            <p className="hero-kicker">{hero.kicker}</p>
+            <p className="hero-text">{hero.text}</p>
             <div className="hero-actions">
-              <Link href="/manifesto" className="button button-primary">Learn more <span>↗</span></Link>
-              <Link href="/about" className="text-link">Meet Richie Githatu <span>→</span></Link>
+              <Link href={hero.primaryCtaHref} className="button button-primary">{hero.primaryCtaLabel} <span>↗</span></Link>
+              <Link href={hero.secondaryCtaHref} className="text-link">{hero.secondaryCtaLabel} <span>→</span></Link>
             </div>
           </div>
 
           <div className="hero-visual home-hero-visual">
             <div className="home-hero-photo-frame">
-              <img
-                src="/WhatsApp%20Image%202026-09-28%20at%2016.58.34.jpeg"
-                alt="Nakuru residents taking part in a community walk together."
-              />
+              <img src={hero.image} alt={hero.imageAlt} />
             </div>
             <div className="home-hero-stamp">
-              <b>NAKURU KWETU</b>
-              <span>Our future, together.</span>
+              <b>{hero.stampTitle}</b>
+              <span>{hero.stampText}</span>
             </div>
           </div>
         </div>
@@ -150,60 +154,23 @@ export default async function Home() {
       <section id="manifesto" className="home-manifesto">
         <div className="container">
           <div className="home-manifesto-intro">
-            <p className="eyebrow"><i /> THE MANIFESTO</p>
-            <h2>A Nakuru that works<br /><em>for everyone.</em></h2>
-            <p>
-              For the mama at the market, the boda rider on the road, the graduate at home, and the
-              family waiting at the clinic — not just for the few.
-            </p>
+            <p className="eyebrow"><i /> {manifesto.eyebrow}</p>
+            <h2>{manifesto.title}<br /><em>{manifesto.titleAccent}</em></h2>
+            <p>{manifesto.text}</p>
           </div>
 
           <div className="home-manifesto-grid">
-            <Link href="/manifesto" className="home-manifesto-card home-manifesto-card-ideas">
-              <div className="home-manifesto-card-copy">
-                <p className="home-manifesto-card-label">THE AGENDA</p>
-                <h3>Ideas that move people forward.</h3>
-                <p>Explore the plans for jobs, education, health, and accountable leadership.</p>
-                <span className="home-manifesto-card-link">Explore the manifesto <span aria-hidden="true">→</span></span>
-              </div>
-            </Link>
-
-            <Link href="/updates" className="home-manifesto-card home-manifesto-card-photo">
-              <img
-                src="/WhatsApp%20Image%202026-09-28%20at%2016.57.04.jpeg"
-                alt="Richie Githatu sharing food with a local resident during a Nakuru community visit."
-                loading="lazy"
-              />
-              <div className="home-manifesto-card-copy">
-                <p className="home-manifesto-card-label">FROM THE TRAIL</p>
-                <h3>Walking the county, one ward at a time.</h3>
-                <p>Listen, learn, and shape Nakuru&apos;s future together.</p>
-                <span className="home-manifesto-card-link">Follow the journey <span aria-hidden="true">→</span></span>
-              </div>
-            </Link>
-
-            <Link href="/updates" className="home-manifesto-card home-manifesto-card-photo">
-              <img
-                src="/WhatsApp%20Image%202026-09-28%20at%2020.04.39.jpeg"
-                alt="Richie Githatu in conversation during a Pawa Radio interview."
-                loading="lazy"
-              />
-              <div className="home-manifesto-card-copy">
-                <p className="home-manifesto-card-label">NEWSROOM</p>
-                <h3>Stories and updates from Nakuru.</h3>
-                <p>See the conversations, events, and work happening across the county.</p>
-                <span className="home-manifesto-card-link">Visit the newsroom <span aria-hidden="true">→</span></span>
-              </div>
-            </Link>
-
-            <Link href="/students#meet-students" className="home-manifesto-card home-manifesto-card-support">
-              <div className="home-manifesto-card-copy">
-                <p className="home-manifesto-card-label">JAWABU KENYA · ADOPT-A-STUDENT</p>
-                <h3>Help a student stay in school.</h3>
-                <p>Choose a student and support their education directly through their school.</p>
-                <span className="home-manifesto-card-link">Adopt a student <span aria-hidden="true">→</span></span>
-              </div>
-            </Link>
+            {manifesto.cards.map((card, index) => (
+              <Link key={index} href={card.href} className={`home-manifesto-card ${manifestoCardClass(card, index)}`}>
+                {card.image && <img src={card.image} alt={card.imageAlt} loading="lazy" />}
+                <div className="home-manifesto-card-copy">
+                  <p className="home-manifesto-card-label">{card.label}</p>
+                  <h3>{card.title}</h3>
+                  <p>{card.text}</p>
+                  <span className="home-manifesto-card-link">{card.linkLabel} <span aria-hidden="true">→</span></span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -211,22 +178,19 @@ export default async function Home() {
       <section className="home-jawabu">
         <div className="container home-jawabu-grid">
           <div className="home-jawabu-brand">
-            <img src="/jawabu_logo_logo-removebg-preview.png" alt="Jawabu Kenya" loading="lazy" />
-            <span>COMMUNITY PROGRAMMES</span>
+            <img src={jawabu.logo} alt="Jawabu Kenya" loading="lazy" />
+            <span>{jawabu.brandLabel}</span>
           </div>
           <div className="home-jawabu-copy">
-            <p className="eyebrow"><i /> JAWABU KENYA</p>
-            <h2>Change begins when people can take part.</h2>
-            <p>
-              We believe meaningful change begins when people understand their rights, participate
-              in decisions that affect them, and have the opportunity to shape their communities.
-            </p>
+            <p className="eyebrow"><i /> {jawabu.eyebrow}</p>
+            <h2>{jawabu.title}</h2>
+            <p>{jawabu.text}</p>
             <div className="home-jawabu-actions">
-              <Link href="/students#meet-students" className="button button-primary">
-                Adopt a student <span>↗</span>
+              <Link href={jawabu.primaryCtaHref} className="button button-primary">
+                {jawabu.primaryCtaLabel} <span>↗</span>
               </Link>
-              <Link href="/join" className="button button-secondary">
-                Community drives <span>↗</span>
+              <Link href={jawabu.secondaryCtaHref} className="button button-secondary">
+                {jawabu.secondaryCtaLabel} <span>↗</span>
               </Link>
             </div>
           </div>
@@ -236,17 +200,14 @@ export default async function Home() {
       <section id="message-nakuru" className="home-message">
         <div className="container home-message-grid">
           <div className="home-message-copy">
-            <p className="eyebrow"><i /> A MESSAGE FOR NAKURU</p>
-            <blockquote>
-              “If you are eligible to vote, register. Your voice is your power, and your participation
-              will help shape Nakuru County&apos;s future.”
-            </blockquote>
-            <cite>— Richie Githatu</cite>
+            <p className="eyebrow"><i /> {message.eyebrow}</p>
+            <blockquote>“{message.quote}”</blockquote>
+            <cite>— {message.author}</cite>
           </div>
           <div className="home-ask-card">
-            <p className="home-ask-label">ASK ME?</p>
-            <h2>Have a question?</h2>
-            <p>Ask about the manifesto, community drives, education support, or the campaign.</p>
+            <p className="home-ask-label">{message.askLabel}</p>
+            <h2>{message.askTitle}</h2>
+            <p>{message.askText}</p>
             <AskMeButton />
           </div>
         </div>
@@ -256,23 +217,19 @@ export default async function Home() {
         <div className="container">
           <div className="section-heading">
             <div>
-              <p className="eyebrow"><i /> NEWSROOM</p>
-              <h2>Updates from<br /><em>around Nakuru.</em></h2>
+              <p className="eyebrow"><i /> {newsroom.eyebrow}</p>
+              <h2>{newsroom.title}<br /><em>{newsroom.titleAccent}</em></h2>
             </div>
-            <p>A few recent stories from the campaign trail and the people shaping our county.</p>
+            <p>{newsroom.text}</p>
           </div>
 
           <div className="home-newsroom-grid">
             <Link href="/updates" className="home-newsroom-feature">
-              <img
-                src="/WhatsApp%20Image%202026-09-28%20at%2020.04.39.jpeg"
-                alt="Richie Githatu in conversation during a Pawa Radio interview."
-                loading="lazy"
-              />
+              <img src={newsroom.featureImage} alt={newsroom.featureImageAlt} loading="lazy" />
               <span className="home-newsroom-feature-copy">
-                <b>NAKURU KWETU IN CONVERSATION</b>
-                <strong>News, voices, and moments from the county.</strong>
-                <span>Visit the newsroom <span aria-hidden="true">→</span></span>
+                <b>{newsroom.featureLabel}</b>
+                <strong>{newsroom.featureTitle}</strong>
+                <span>{newsroom.featureLinkLabel} <span aria-hidden="true">→</span></span>
               </span>
             </Link>
 
@@ -298,12 +255,12 @@ export default async function Home() {
       <section className="home-donate" aria-labelledby="home-donate-title">
         <div className="container home-donate-inner">
           <div className="home-donate-copy">
-            <p className="eyebrow"><i /> SUPPORT NAKURU KWETU</p>
-            <h2 id="home-donate-title">Help move the campaign forward.</h2>
-            <p>Your contribution helps us keep listening, sharing our plans, and working alongside Nakuru communities.</p>
+            <p className="eyebrow"><i /> {donate.eyebrow}</p>
+            <h2 id="home-donate-title">{donate.title}</h2>
+            <p>{donate.text}</p>
           </div>
-          <Link href="/donate" className="button home-donate-button">
-            Donate to the campaign <span aria-hidden="true">→</span>
+          <Link href={donate.buttonHref} className="button home-donate-button">
+            {donate.buttonLabel} <span aria-hidden="true">→</span>
           </Link>
         </div>
       </section>

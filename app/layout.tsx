@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { HelpAssistant } from '@/components/help-assistant'
 import { ScrollReveal } from '@/components/scroll-reveal'
+import { AnalyticsTracker } from '@/components/analytics-tracker'
 
 const siteUrl = 'https://gavanarichie.com'
 const siteName = 'Richie Githatu for Governor 2027 | Nakuru Kwetu'
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {children}
         <HelpAssistant />
         <ScrollReveal />
+        <AnalyticsTracker />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
