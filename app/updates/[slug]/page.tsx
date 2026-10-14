@@ -4,6 +4,12 @@ import Link from 'next/link'
 import { SiteShell } from '@/components/site-shell'
 import { UpdatesVideo } from '@/components/updates-video'
 import { getUpdateBySlug, UpdatePost } from '@/lib/updates'
+import { renderMarkdown } from '@/lib/markdown'
+
+// Refresh from Supabase at least every minute; admin saves also revalidate immediately.
+// Slugs not built at deploy time are rendered on first request.
+export const revalidate = 60
+export const dynamicParams = true
 
 interface UpdatePageProps {
   params: Promise<{ slug: string }>
@@ -179,7 +185,7 @@ export default async function UpdatePage({ params }: UpdatePageProps) {
         <div className="update-content" data-reveal="fade-up">
           <div
             className="markdown-content"
-            dangerouslySetInnerHTML={{ __html: update.content }}
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(update.content) }}
           />
         </div>
 

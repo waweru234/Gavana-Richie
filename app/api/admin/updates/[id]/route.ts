@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
+import { revalidateUpdatePages } from '@/lib/revalidate-updates'
 
 export const dynamic = 'force-dynamic'
 
@@ -104,6 +105,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Failed to update update', details: error.message }, { status: 500 })
     }
 
+    revalidateUpdatePages()
     return NextResponse.json({ data })
   } catch (error) {
     console.error('Error updating update:', error)
@@ -133,6 +135,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Failed to delete update', details: error.message }, { status: 500 })
     }
 
+    revalidateUpdatePages()
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting update:', error)

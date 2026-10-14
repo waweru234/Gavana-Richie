@@ -4,6 +4,7 @@ import { SiteShell } from '@/components/site-shell'
 import { AskMeButton } from '@/components/ask-me-button'
 import { getPublishedUpdates } from '@/lib/updates'
 import { getHomeContent, type ManifestoCard } from '@/lib/home-content'
+import { stripToText } from '@/lib/markdown'
 
 // Re-render at most every minute; CMS saves also revalidate immediately
 export const revalidate = 60
@@ -108,10 +109,7 @@ export default async function Home() {
   const [updateResult, content] = await Promise.all([getPublishedUpdates(3), getHomeContent()])
   const { hero, manifesto, jawabu, message, newsroom, donate } = content
   const publishedUpdates = updateResult.data.map((update) => {
-    const excerpt = (update.excerpt || update.content)
-      .replace(/<[^>]*>/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
+    const excerpt = stripToText(update.excerpt || update.content)
 
     return {
       tag: `${(update.category || 'UPDATE').toUpperCase()} · ${formatUpdateDate(update.published_at || update.created_at)}`,

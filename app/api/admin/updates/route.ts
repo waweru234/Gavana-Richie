@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
+import { revalidateUpdatePages } from '@/lib/revalidate-updates'
 
 export const dynamic = 'force-dynamic'
 
@@ -99,6 +100,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create update', details: error.message }, { status: 500 })
     }
 
+    revalidateUpdatePages()
     return NextResponse.json({ data }, { status: 201 })
   } catch (error) {
     console.error('Error creating update:', error)
