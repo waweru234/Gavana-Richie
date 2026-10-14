@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { SiteShell } from '@/components/site-shell'
+import { AdminShell } from '@/components/admin/admin-shell'
 
 interface StudentFormData {
   name: string
@@ -165,16 +165,16 @@ export default function EditStudentPage() {
 
   if (loading) {
     return (
-      <SiteShell>
+      <AdminShell>
         <div className="container admin-student-form">
           <div className="admin-loading">Loading student...</div>
         </div>
-      </SiteShell>
+      </AdminShell>
     )
   }
 
   return (
-    <SiteShell>
+    <AdminShell>
       <div className="container admin-student-form">
         <div className="admin-form-header">
           <h1>Edit Student</h1>
@@ -420,6 +420,6 @@ export default function EditStudentPage() {
           </div>
         </form>
       </div>
-    </SiteShell>
+    </AdminShell>
   )
 }

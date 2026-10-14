@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { SiteShell } from '@/components/site-shell'
+import { AdminShell } from '@/components/admin/admin-shell'
 
 interface Student {
   id: string
@@ -87,7 +87,7 @@ export default function AdminStudentsPage() {
   }
 
   return (
-    <SiteShell>
+    <AdminShell>
       <div className="container admin-students">
         <div className="admin-header">
           <div>
@@ -174,6 +174,6 @@ export default function AdminStudentsPage() {
           </div>
         )}
       </div>
-    </SiteShell>
+    </AdminShell>
   )
 }

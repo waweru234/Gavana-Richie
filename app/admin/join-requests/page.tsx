@@ -1,5 +1,4 @@
-import { PageIntro, SiteShell } from '@/components/site-shell';
-import { JawabuKenyaBanner } from '@/components/jawabu-kenya-banner';
+import { AdminShell } from '@/components/admin/admin-shell';
 import { createServerClient } from '@/lib/supabase';
 import type { Database } from '@/types/supabase';
 
@@ -18,26 +17,20 @@ export default async function JoinRequestsPage() {
   if (error) {
     console.error('Error fetching join requests:', error);
     return (
-      <SiteShell>
-        <PageIntro
-          eyebrow="ERROR"
-          title="Failed to load join requests"
-          accent=""
-          text="Could not load join requests from the database. Please try again later."
-        />
-      </SiteShell>
+      <AdminShell title="Join requests">
+        <div className="adm-notice adm-notice-error">
+          Could not load join requests from the database. Please try again later.
+        </div>
+      </AdminShell>
     );
   }
 
   return (
-    <SiteShell>
-      <PageIntro
-        eyebrow="JOIN REQUESTS"
-        title="Manage Join Requests"
-        accent=""
-        text="View and manage all join requests submitted through the website."
-      />
-      <div className="overflow-x-auto">
+    <AdminShell
+      title="Join requests"
+      subtitle={`${joinRequests?.length ?? 0} people have asked to join the movement`}
+    >
+      <div className="overflow-x-auto adm-card" style={{ padding: 0 }}>
         <table className="min-w-full bg-white border border-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -86,7 +79,7 @@ export default async function JoinRequestsPage() {
             ))}
             {!joinRequests || joinRequests.length === 0 ? (
               <tr>
-                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
                   No join requests found.
                 </td>
               </tr>
@@ -94,6 +87,6 @@ export default async function JoinRequestsPage() {
           </tbody>
         </table>
       </div>
-    </SiteShell>
+    </AdminShell>
   );
 }

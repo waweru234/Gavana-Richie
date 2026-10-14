@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { SiteShell } from '@/components/site-shell'
+import { AdminShell } from '@/components/admin/admin-shell'
 import { UpdatePostFormData } from '@/lib/update-types'
 
 const CATEGORIES = [
@@ -145,16 +145,16 @@ export default function EditUpdatePage() {
 
   if (loading) {
     return (
-      <SiteShell>
+      <AdminShell>
         <div className="container admin-update-form">
           <div className="admin-loading">Loading update...</div>
         </div>
-      </SiteShell>
+      </AdminShell>
     )
   }
 
   return (
-    <SiteShell>
+    <AdminShell>
       <div className="container admin-update-form">
         <div className="admin-form-header">
           <h1>Edit Update</h1>
@@ -373,6 +373,6 @@ export default function EditUpdatePage() {
           </div>
         </form>
       </div>
-    </SiteShell>
+    </AdminShell>
   )
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { SiteShell } from '@/components/site-shell'
+import { AdminShell } from '@/components/admin/admin-shell'
 import { UpdatePostFormData } from '@/lib/update-types'
 
 const CATEGORIES = [
@@ -116,7 +116,7 @@ export default function NewUpdatePage() {
   }
 
   return (
-    <SiteShell>
+    <AdminShell>
       <div className="container admin-update-form">
         <div className="admin-form-header">
           <h1>New Update</h1>
@@ -335,6 +335,6 @@ export default function NewUpdatePage() {
           </div>
         </form>
       </div>
-    </SiteShell>
+    </AdminShell>
   )
 }

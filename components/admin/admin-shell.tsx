@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
+  ArrowLeft,
   ChartColumn,
   BookOpen,
   ExternalLink,
@@ -17,6 +18,13 @@ import {
   UserPlus,
 } from 'lucide-react'
 import './admin.css'
+
+// Parent page for the back button: /admin/updates/123/edit → /admin/updates, /admin/updates → /admin
+function parentPath(pathname: string | null): string | null {
+  const parts = (pathname || '').split('/').filter(Boolean)
+  if (parts.length <= 1) return null
+  return parts.length === 2 ? '/admin' : `/admin/${parts[1]}`
+}
 
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -35,7 +43,7 @@ export function AdminShell({
   actions,
   children,
 }: {
-  title: string
+  title?: string
   subtitle?: string
   actions?: React.ReactNode
   children: React.ReactNode
@@ -43,6 +51,8 @@ export function AdminShell({
   const pathname = usePathname()
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
+  const back = parentPath(pathname)
+  const backLabel = back === '/admin' ? 'Dashboard' : NAV.find(n => n.href === back)?.label || 'Back'
 
   const logout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' })
@@ -86,8 +96,13 @@ export function AdminShell({
           <button type="button" className="adm-menu" aria-label="Open menu" onClick={() => setMenuOpen(o => !o)}>
             <Menu size={20} />
           </button>
+          {back && (
+            <Link href={back} className="adm-btn adm-btn-ghost adm-btn-sm adm-back">
+              <ArrowLeft size={15} aria-hidden="true" /> {backLabel}
+            </Link>
+          )}
           <div className="adm-top-copy">
-            <h1>{title}</h1>
+            {title && <h1>{title}</h1>}
             {subtitle && <p>{subtitle}</p>}
           </div>
           {actions && <div className="adm-top-actions">{actions}</div>}

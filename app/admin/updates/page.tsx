@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { SiteShell } from '@/components/site-shell'
+import { AdminShell } from '@/components/admin/admin-shell'
 
 interface UpdatePost {
   id: string
@@ -72,7 +72,7 @@ export default function AdminUpdatesPage() {
   }
 
   return (
-    <SiteShell>
+    <AdminShell>
       <div className="container admin-updates">
         <div className="admin-header">
           <div>
@@ -161,6 +161,6 @@ export default function AdminUpdatesPage() {
           </div>
         )}
       </div>
-    </SiteShell>
+    </AdminShell>
   )
 }

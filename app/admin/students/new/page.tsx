@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { SiteShell } from '@/components/site-shell'
+import { AdminShell } from '@/components/admin/admin-shell'
 
 interface StudentFormData {
   name: string
@@ -206,7 +206,7 @@ export default function NewStudentPage() {
   }
 
   return (
-    <SiteShell>
+    <AdminShell>
       <div className="container admin-student-form">
         <div className="admin-form-header">
           <h1>New Student</h1>
@@ -587,6 +587,6 @@ export default function NewStudentPage() {
           </div>
         </form>
       </div>
-    </SiteShell>
+    </AdminShell>
   )
 }

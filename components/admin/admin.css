@@ -35,6 +35,9 @@
 .adm-main { min-width: 0; display: flex; flex-direction: column; }
 .adm-top { display: flex; align-items: center; gap: 16px; padding: 26px 32px 6px; }
 .adm-top-copy { flex: 1; min-width: 0; }
+.adm-back { flex: 0 0 auto; }
+/* Older admin pages keep their own containers and headings inside the shell */
+.adm-content > .container { width: 100%; margin: 0; padding-top: 0; }
 .adm-top h1 { margin: 0; font: 800 26px/1.15 var(--font-heading); letter-spacing: -.02em; color: var(--adm-ink); }
 .adm-top p { margin: 4px 0 0; color: var(--adm-ink-2); font-size: 14px; }
 .adm-top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
